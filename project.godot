@@ -8,6 +8,16 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "Node",
+"class": &"TreeNode",
+"language": &"GDScript",
+"path": "res://reorder_tree/TreeNode.gd"
+}]
+_global_script_class_icons={
+"TreeNode": ""
+}
+
 [application]
 
 config/name="Foothold2"

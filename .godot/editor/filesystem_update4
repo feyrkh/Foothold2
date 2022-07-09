@@ -1,2 +1,3 @@
-res://reorder_tree/reorder_tree.tscn
-res://reorder_tree/reorder_tree.gd
+res://reorder_tree/ReorderTree.tscn
+res://reorder_tree/TreeNode.gd
+res://reorder_tree/ReorderTree.gd

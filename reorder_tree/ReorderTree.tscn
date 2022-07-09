@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqknm47t86x4h"]
+
+[ext_resource type="Script" path="res://reorder_tree/ReorderTree.gd" id="1_anstb"]
+
+[node name="ReorderTree" type="Tree"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+hide_root = true
+select_mode = 2
+script = ExtResource("1_anstb")

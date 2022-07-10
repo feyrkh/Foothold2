@@ -12,10 +12,14 @@ func _ready():
 	#if get_parent() == get_tree().root:
 	var item1 = add_item(GameItem.new('Wizard Tower'), root)
 	var item2 = add_item(GameItem.new('Stone chamber'), item1)
+	item2.get_metadata(0).owner_lock_id = 'chamber'
 	var item3 = add_item(GameItem.new('Rooftop'), item1)
-	add_item(GameItem.new('rubbish'), item2)
-	add_item(GameItem.new('rubbish'), item2)
-	add_item(GameItem.new('rubbish'), item2)
+	var item4 = add_item(GameItem.new('rubbish'), item2)
+	item4.get_metadata(0).allowed_owner_lock_id = 'chamber'
+	var item5 = add_item(GameItem.new('rubbish'), item2)
+	item5.get_metadata(0).allowed_owner_lock_id = 'chamber'
+	var item6 = add_item(GameItem.new('rubbish'), item2)
+	item6.get_metadata(0).allowed_owner_lock_id = 'chamber'
 	for i in range(100):
 		var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 

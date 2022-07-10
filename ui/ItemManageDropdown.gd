@@ -18,6 +18,8 @@ func setup_dropdown(game_ui, game_item, action_panel):
 	if game_item.can_delete():
 		connect('delete_item', game_ui.delete_item, [game_item])
 		$PopupMenu.add_item('Delete', CMD_DELETE)
+	if $PopupMenu.item_count == 0:
+		queue_free()
 
 
 func _on_popup_menu_id_pressed(id):
@@ -32,3 +34,4 @@ func _on_popup_menu_id_pressed(id):
 
 func _on_item_manage_dropdown_pressed():
 	$PopupMenu.popup()
+	$PopupMenu.position = self.global_position + Vector2(0, size.y)

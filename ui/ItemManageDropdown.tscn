@@ -8,6 +8,7 @@ texture_normal = ExtResource("1_el5jf")
 script = ExtResource("2_8uily")
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(100, 20)
 
 [connection signal="pressed" from="." to="." method="_on_item_manage_dropdown_pressed"]
 [connection signal="id_pressed" from="PopupMenu" to="." method="_on_popup_menu_id_pressed"]

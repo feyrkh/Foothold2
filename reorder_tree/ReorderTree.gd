@@ -10,12 +10,12 @@ func _ready():
 	connect('multi_selected', on_multi_selected)
 	var root = add_item(TreeNode.new('root'), null)
 	#if get_parent() == get_tree().root:
-	var item1 = add_item(TreeNode.new('Wizard Tower'), root)
-	var item2 = add_item(TreeNode.new('Stone chamber'), item1)
-	var item3 = add_item(TreeNode.new('Rooftop'), item1)
-	add_item(TreeNode.new('rubbish'), item2)
-	add_item(TreeNode.new('rubbish'), item2)
-	add_item(TreeNode.new('rubbish'), item2)
+	var item1 = add_item(GameItem.new('Wizard Tower'), root)
+	var item2 = add_item(GameItem.new('Stone chamber'), item1)
+	var item3 = add_item(GameItem.new('Rooftop'), item1)
+	add_item(GameItem.new('rubbish'), item2)
+	add_item(GameItem.new('rubbish'), item2)
+	add_item(GameItem.new('rubbish'), item2)
 	for i in range(100):
 		var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 
@@ -141,23 +141,37 @@ func _drop_data(position, dropped_item_list):
 
 func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offset):
 	var placeholder
+	var item_set = {}
+	for item in dropped_item_list:
+		item_set[item] = true
 	if offset == 0:
 		if target_item.get_child_count() == 0:
 			# no child, so we have to create one before we can move the dropped items to the end, and then remove it again
 			placeholder = target_item.create_child()
 		var last_child = target_item.get_child(target_item.get_child_count()-1)
 		for item in dropped_item_list:
-			item.move_after(last_child)
-			last_child = item
+			if !ancestor_is_moving(item, item_set):
+				item.move_after(last_child)
+				last_child = item
 	elif offset == 1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_after(target_item)
 		for item in dropped_item_list:
-			item.move_before(placeholder)
+			if !ancestor_is_moving(item, item_set):
+				item.move_before(placeholder)
 	elif offset == -1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_before(target_item)
 		for item in dropped_item_list:
-			item.move_before(target_item)
+			if !ancestor_is_moving(item, item_set):
+				item.move_before(target_item)
 	if placeholder:
 		placeholder.free()
+
+func ancestor_is_moving(item, item_set):
+	var p = item.get_parent()
+	while p != null:
+		if item_set.has(p):
+			return true
+		p = p.get_parent()
+	return false

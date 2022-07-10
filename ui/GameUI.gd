@@ -16,5 +16,9 @@ func _on_item_tree_selected_nodes_changed(selected_nodes):
 			if node.has_method('build_action_panel'):
 				var panel = node.build_action_panel(self)
 				action_panels[node] = panel
-				ActionContainer.add_child(panel)
+				var container = preload("res://ui/ActionContainer.tscn").instantiate()
+				container.set_contents(panel)
+				ActionContainer.add_child(container)
 		
+func _can_drop_data(at_position, data):
+	return true

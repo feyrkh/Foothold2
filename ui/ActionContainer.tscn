@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://j6nyo3otfgkn"]
+
+[ext_resource type="Script" path="res://ui/ActionContainer.gd" id="1_hiaba"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdf5v"]
+bg_color = Color(0.129412, 0.129412, 0.133333, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="ActionContainer" type="MarginContainer"]
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+script = ExtResource("1_hiaba")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(55, 55)
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 62.0
+offset_bottom = 62.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xdf5v")
+
+[node name="InnerContainer" type="MarginContainer" parent="PanelContainer"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 54.0
+offset_bottom = 54.0
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6

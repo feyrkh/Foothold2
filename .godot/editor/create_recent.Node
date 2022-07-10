@@ -1,12 +1,12 @@
+MarginContainer
+PanelContainer
 HBoxContainer
 VBoxContainer
 Label
 PopupMenu
 TextureButton
 Button
-PanelContainer
 HFlowContainer
-MarginContainer
 HSplitContainer
 CenterContainer
 Tree

@@ -26,6 +26,7 @@ anchor_bottom = 0.0
 offset_right = 355.0
 offset_bottom = 600.0
 size_flags_vertical = 3
+mouse_filter = 1
 
 [node name="ActionContainer" type="HFlowContainer" parent="SplitPanel"]
 offset_left = 367.0

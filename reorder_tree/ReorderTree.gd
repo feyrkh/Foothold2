@@ -67,7 +67,7 @@ func _get_drag_data(position: Vector2):
 		label.modulate = DRAG_COLOR
 		drag_preview.add_child(label)
 		label.position = get_item_area_rect(item).position - start_pos
-		print('item_region: ', get_item_area_rect(item))
+		#print('item_region: ', get_item_area_rect(item))
 	set_drag_preview(drag_preview)
 	return selected
 
@@ -88,7 +88,7 @@ func _can_drop_data(position, dropped_item_list):
 	if offset == -100:
 		# dropped at the bottom of the list, this can always work since it will move the item to the end of the list
 		drop_mode_flags = DROP_MODE_INBETWEEN
-		print('offset -100')
+		#print('offset -100')
 		return false
 	if target_item.get_child_count() > 0 and !target_item.collapsed:
 		offset = 0
@@ -97,18 +97,18 @@ func _can_drop_data(position, dropped_item_list):
 		if !check_valid_drop(target_item, dropped_item_list):
 			offset = -1
 			drop_mode_flags = DROP_MODE_DISABLED
-			print('drop on top, but invalid drop')
+			#print('drop on top, but invalid drop')
 			return false
 		else:
 			return true
 	if offset != 0:
 		if !check_valid_drop(target_item.get_parent(), dropped_item_list):
 			drop_mode_flags = DROP_MODE_DISABLED
-			print('drop before/after, but invalid drop')
+			#print('drop before/after, but invalid drop')
 			return false
 		else:
 			drop_mode_flags = DROP_MODE_INBETWEEN
-			print('valid drop')
+			#print('valid drop')
 			return true
 
 func _drop_data(position, dropped_item_list):

@@ -30,11 +30,11 @@ func on_multi_selected(item:TreeItem, column:int, selected:bool):
 	if selected and (Input.is_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_CTRL)):
 		var item_parent = item.get_parent()
 		var cur_selected = get_next_selected(null)
-		while cur_selected != null:
-			if cur_selected.get_parent() != item_parent:
-				item.deselect(column)
-				return
-			cur_selected = get_next_selected(cur_selected)
+		#while cur_selected != null:
+		#	if cur_selected.get_parent() != item_parent:
+		#		item.deselect(column)
+		#		return
+		#	cur_selected = get_next_selected(cur_selected)
 	elif !selected:
 		item.deselect(column)
 	emit_signal('selected_nodes_changed', get_selected_nodes())
@@ -117,8 +117,15 @@ func _drop_data(position, dropped_item_list):
 	if offset == -100:
 		target_item = dropped_item_list[0].get_parent().get_child(-1)
 		offset = 1
-	if target_item.get_child_count() > 0 and !target_item.collapsed:
-		offset = 0
+	if target_item.get_child_count() > 0 and !target_item.collapsed and offset > 0:
+		if !check_valid_drop(target_item, dropped_item_list):
+			return
+		else:
+			var placeholder = create_item()
+			placeholder.move_before(target_item.get_first_child())
+			perform_drop(placeholder, dropped_item_list, -1)
+			placeholder.free()
+			return
 	if offset == 0:
 		if !check_valid_drop(target_item, dropped_item_list):
 			offset = -1
@@ -149,7 +156,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offse
 			item.move_before(placeholder)
 	elif offset == -1:
 		placeholder = target_item.get_parent().create_child()
-		placeholder.move_after(target_item)
+		placeholder.move_before(target_item)
 		for item in dropped_item_list:
 			item.move_before(target_item)
 	if placeholder:

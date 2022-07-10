@@ -24,3 +24,9 @@ func can_create_subfolder():
 
 func get_action_panel_scene_path()->String:
 	return "res://items/GameItemActions.tscn"
+
+func get_tags()->Dictionary:
+	return {Tags.TAG_FOLDER:true}
+
+func get_allowed_tags()->Dictionary:
+	return get_closest_nonfolder_parent().get_allowed_tags()

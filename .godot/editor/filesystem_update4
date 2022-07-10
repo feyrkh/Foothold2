@@ -14,3 +14,4 @@ res://items/FolderItemActions.tscn
 res://items/FolderItemActions.gd
 res://items/GameItemActions.tscn
 res://items/GameItemActions.gd
+res://items/Tags.gd

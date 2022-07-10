@@ -9,18 +9,49 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "GameItem",
+"class": &"FolderItem",
+"language": &"GDScript",
+"path": "res://items/FolderItem.gd"
+}, {
+"base": "TreeNode",
+"class": &"GameItem",
+"language": &"GDScript",
+"path": "res://items/GameItem.gd"
+}, {
+"base": "Object",
+"class": &"GameItemAware",
+"language": &"GDScript",
+"path": "res://ui/GameItemAware.gd"
+}, {
+"base": "PanelContainer",
+"class": &"GameUI",
+"language": &"GDScript",
+"path": "res://ui/GameUI.gd"
+}, {
+"base": "Tree",
+"class": &"ReorderTree",
+"language": &"GDScript",
+"path": "res://reorder_tree/ReorderTree.gd"
+}, {
 "base": "Node",
 "class": &"TreeNode",
 "language": &"GDScript",
 "path": "res://reorder_tree/TreeNode.gd"
 }]
 _global_script_class_icons={
+"FolderItem": "",
+"GameItem": "",
+"GameItemAware": "",
+"GameUI": "",
+"ReorderTree": "",
 "TreeNode": ""
 }
 
 [application]
 
 config/name="Foothold2"
+run/main_scene="res://ui/GameUI.tscn"
 config/features=PackedStringArray("4.0", "Vulkan Mobile")
 config/icon="res://icon.png"
 

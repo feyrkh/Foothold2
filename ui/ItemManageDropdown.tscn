@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bncs0wdryttnb"]
+
+[ext_resource type="Texture2D" uid="uid://csoc7wlxqb8ix" path="res://assets/icon/menu-settings-icon.png" id="1_el5jf"]
+[ext_resource type="Script" path="res://ui/ItemManageDropdown.gd" id="2_8uily"]
+
+[node name="ItemManageDropdown" type="TextureButton"]
+texture_normal = ExtResource("1_el5jf")
+script = ExtResource("2_8uily")
+
+[node name="PopupMenu" type="PopupMenu" parent="."]

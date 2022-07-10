@@ -1,3 +1,16 @@
 res://reorder_tree/ReorderTree.tscn
 res://reorder_tree/TreeNode.gd
 res://reorder_tree/ReorderTree.gd
+res://items/FolderItem.gd
+res://ui/OkCancel.tscn
+res://ui/OkCancel.gd
+res://ui/GameUI.tscn
+res://ui/GameUI.gd
+res://ui/ItemManageDropdown.tscn
+res://ui/ItemManageDropdown.gd
+res://items/GameItem.gd
+res://ui/GameItemAware.gd
+res://items/FolderItemActions.tscn
+res://items/FolderItemActions.gd
+res://items/GameItemActions.tscn
+res://items/GameItemActions.gd

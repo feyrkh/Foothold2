@@ -1,4 +1,7 @@
 extends Tree
+class_name ReorderTree
+
+signal selected_nodes_changed(selected_nodes:Array[TreeNode])
 
 const DRAG_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 
@@ -6,15 +9,15 @@ const DRAG_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 func _ready():
 	connect('multi_selected', on_multi_selected)
 	var root = add_item(TreeNode.new('root'), null)
-	if get_parent() == get_tree().root:
-		var item1 = add_item(TreeNode.new('Wizard Tower'), root)
-		var item2 = add_item(TreeNode.new('Stone chamber'), item1)
-		var item3 = add_item(TreeNode.new('Rooftop'), item1)
-		add_item(TreeNode.new('rubbish'), item2)
-		add_item(TreeNode.new('rubbish'), item2)
-		add_item(TreeNode.new('rubbish'), item2)
-		for i in range(100):
-			var padding_item = add_item(TreeNode.new('padding #'+str(i)), root)
+	#if get_parent() == get_tree().root:
+	var item1 = add_item(TreeNode.new('Wizard Tower'), root)
+	var item2 = add_item(TreeNode.new('Stone chamber'), item1)
+	var item3 = add_item(TreeNode.new('Rooftop'), item1)
+	add_item(TreeNode.new('rubbish'), item2)
+	add_item(TreeNode.new('rubbish'), item2)
+	add_item(TreeNode.new('rubbish'), item2)
+	for i in range(100):
+		var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 
 func add_item(tree_node:TreeNode, parent_item:TreeItem):
 	var new_item = create_item(parent_item)
@@ -24,7 +27,7 @@ func add_item(tree_node:TreeNode, parent_item:TreeItem):
 	return new_item
 	
 func on_multi_selected(item:TreeItem, column:int, selected:bool):
-	if Input.is_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_CTRL):
+	if selected and (Input.is_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_CTRL)):
 		var item_parent = item.get_parent()
 		var cur_selected = get_next_selected(null)
 		while cur_selected != null:
@@ -32,12 +35,23 @@ func on_multi_selected(item:TreeItem, column:int, selected:bool):
 				item.deselect(column)
 				return
 			cur_selected = get_next_selected(cur_selected)
+	elif !selected:
+		item.deselect(column)
+	emit_signal('selected_nodes_changed', get_selected_nodes())
 
 func get_selected_items()->Array[TreeItem]:
 	var result:Array[TreeItem] = []
 	var cur_selected = get_next_selected(null)
 	while cur_selected != null:
 		result.append(cur_selected)
+		cur_selected = get_next_selected(cur_selected)
+	return result
+
+func get_selected_nodes()->Array:
+	var result:Array[TreeNode] = []
+	var cur_selected = get_next_selected(null)
+	while cur_selected != null:
+		result.append(cur_selected.get_metadata(0))
 		cur_selected = get_next_selected(cur_selected)
 	return result
 

@@ -23,8 +23,8 @@ func _on_item_tree_selected_nodes_changed(selected_nodes):
 func _can_drop_data(at_position, data):
 	return true
 
-func new_folder(tree_node, new_name):
-	pass
+func new_folder(new_name, tree_node):
+	ItemTree.add_item(FolderItem.new(new_name), tree_node.tree_item)
 
 func delete_item(tree_node, keep_children):
 	pass

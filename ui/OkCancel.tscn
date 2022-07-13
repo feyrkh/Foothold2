@@ -11,6 +11,7 @@ size_flags_horizontal = 3
 script = ExtResource("1_igsva")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(100, 30)
 offset_right = 510.0
 offset_bottom = 600.0
 size_flags_horizontal = 3
@@ -24,6 +25,7 @@ size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="CenterContainer2" type="CenterContainer" parent="."]
+custom_minimum_size = Vector2(100, 30)
 offset_left = 514.0
 offset_right = 1024.0
 offset_bottom = 600.0

@@ -8,7 +8,7 @@ const CMD_RENAME = 1
 const CMD_NEW = 2
 const CMD_DELETE = 3
 
-func setup_dropdown(game_ui, game_item, action_panel):
+func setup_dropdown(game_ui, game_item):
 	if game_item.can_create_subfolder():
 		connect('new_folder', game_ui.new_folder, [game_item])
 		$PopupMenu.add_item('New folder', CMD_NEW)
@@ -25,9 +25,17 @@ func setup_dropdown(game_ui, game_item, action_panel):
 func _on_popup_menu_id_pressed(id):
 	match id:
 		CMD_NEW:
-			pass
+			var popup:PopupPanel = preload("res://ui/popup/GetStringPopup.tscn").instantiate()
+			popup.set_prompt("Create a new folder?")
+			add_child(popup)
+			popup.connect('ok_button_pressed', func(folder_name):emit_signal('new_folder', folder_name))
+			popup.popup_centered()
 		CMD_RENAME:
-			pass
+			var popup:PopupPanel = preload("res://ui/popup/GetStringPopup.tscn").instantiate()
+			popup.set_prompt("Rename this item?")
+			add_child(popup)
+			popup.connect('ok_button_pressed', func(folder_name):emit_signal('new_folder', folder_name))
+			popup.popup_centered()
 		CMD_DELETE:
 			pass
 

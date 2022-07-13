@@ -1,8 +1,10 @@
-MarginContainer
 PanelContainer
-HBoxContainer
-VBoxContainer
+LineEdit
 Label
+VBoxContainer
+PopupPanel
+MarginContainer
+HBoxContainer
 PopupMenu
 TextureButton
 Button

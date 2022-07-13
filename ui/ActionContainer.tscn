@@ -1,18 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://j6nyo3otfgkn"]
 
 [ext_resource type="Script" path="res://ui/ActionContainer.gd" id="1_hiaba"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdf5v"]
-bg_color = Color(0.129412, 0.129412, 0.133333, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_blend = true
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[ext_resource type="Theme" uid="uid://c4v5mpv1jocyy" path="res://ui/default_theme.tres" id="2_g6fd2"]
 
 [node name="ActionContainer" type="MarginContainer"]
 theme_override_constants/margin_left = 7
@@ -27,7 +16,7 @@ offset_left = 7.0
 offset_top = 7.0
 offset_right = 62.0
 offset_bottom = 62.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_xdf5v")
+theme = ExtResource("2_g6fd2")
 
 [node name="InnerContainer" type="MarginContainer" parent="PanelContainer"]
 offset_left = 1.0

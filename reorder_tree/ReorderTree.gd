@@ -75,7 +75,7 @@ func _get_drag_data(position: Vector2):
 	set_drag_preview(drag_preview)
 	return selected
 
-func check_valid_drop(target_item, dropped_item_list):
+func check_valid_drop(target_item, dropped_item_list):	
 	for dropped_item in dropped_item_list:
 		var dropped_node = dropped_item.get_metadata(0)
 		if !target_item.get_metadata(0).can_accept_drop(dropped_node):
@@ -93,6 +93,9 @@ func _can_drop_data(position, dropped_item_list):
 		# dropped at the bottom of the list, this can always work since it will move the item to the end of the list
 		drop_mode_flags = DROP_MODE_INBETWEEN
 		#print('offset -100')
+		return false
+	if target_item in dropped_item_list:
+		drop_mode_flags = DROP_MODE_DISABLED
 		return false
 	if target_item.get_child_count() > 0 and !target_item.collapsed:
 		offset = 0

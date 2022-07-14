@@ -16,3 +16,4 @@ res://ui/popup/GetStringPopup.gd
 res://reorder_tree/TreeNode.gd
 res://ui/GameUI.gd
 res://ui/ActionContainer.gd
+res://reorder_tree/ReorderTree.gd

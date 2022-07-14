@@ -13,6 +13,7 @@ func _ready():
 	OkCancelButtons.set_ok_enabled(false)
 	OkCancelButtons.connect('ok_button_pressed', ok)
 	OkCancelButtons.connect('cancel_button_pressed', cancel)
+	OkCancelButtons.connect('visibility_changed', focus_on_folder)
 	if get_parent() == get_tree().root:
 		popup()
 
@@ -33,3 +34,7 @@ func _on_folder_text_changed(new_text):
 func _on_folder_text_submitted(new_text):
 	if !OkCancelButtons.get_ok_disabled():
 		ok()
+
+func focus_on_folder():
+	await get_tree().process_frame
+	FolderName.grab_focus()

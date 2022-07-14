@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://xteian44tehy"]
+
+[node name="ComfyMargin" type="MarginContainer"]
+offset_right = 20.0
+offset_bottom = 10.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10

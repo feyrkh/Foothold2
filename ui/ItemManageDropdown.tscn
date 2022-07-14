@@ -3,12 +3,17 @@
 [ext_resource type="Texture2D" uid="uid://csoc7wlxqb8ix" path="res://assets/icon/menu-settings-icon.png" id="1_el5jf"]
 [ext_resource type="Script" path="res://ui/ItemManageDropdown.gd" id="2_8uily"]
 
-[node name="ItemManageDropdown" type="TextureButton"]
-texture_normal = ExtResource("1_el5jf")
+[node name="ItemManageDropdown" type="CenterContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource("2_8uily")
 
-[node name="PopupMenu" type="PopupMenu" parent="."]
-size = Vector2i(100, 20)
+[node name="ItemManageButton" type="TextureButton" parent="."]
+offset_left = 502.0
+offset_top = 290.0
+offset_right = 522.0
+offset_bottom = 310.0
+texture_normal = ExtResource("1_el5jf")
 
-[connection signal="pressed" from="." to="." method="_on_item_manage_dropdown_pressed"]
-[connection signal="id_pressed" from="PopupMenu" to="." method="_on_popup_menu_id_pressed"]
+[node name="PopupMenu" type="PopupMenu" parent="ItemManageButton"]
+size = Vector2i(100, 20)

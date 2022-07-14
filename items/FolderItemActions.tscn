@@ -9,6 +9,10 @@ anchor_bottom = 1.0
 script = ExtResource("1_14j55")
 
 [node name="ItemManageDropdown" parent="." instance=ExtResource("2_a8yhr")]
+offset_left = 502.0
+offset_top = 290.0
+offset_right = 522.0
+offset_bottom = 310.0
 
 [node name="GameItemLabel" type="Label" parent="."]
 offset_right = 40.0

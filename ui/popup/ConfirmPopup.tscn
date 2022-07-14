@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://dbugdy00i0amv"]
+
+[ext_resource type="Script" path="res://ui/popup/ConfirmPopup.gd" id="1_x5hdu"]
+[ext_resource type="Theme" uid="uid://c4v5mpv1jocyy" path="res://ui/default_theme.tres" id="2_frkdk"]
+[ext_resource type="PackedScene" uid="uid://xteian44tehy" path="res://ui/ComfyMargin.tscn" id="3_1rw1n"]
+[ext_resource type="PackedScene" uid="uid://b4hjp3plvy6es" path="res://ui/OkCancel.tscn" id="3_2st4f"]
+
+[node name="ConfirmPopup" type="PopupPanel"]
+size = Vector2i(5008, 5008)
+visible = true
+exclusive = true
+script = ExtResource("1_x5hdu")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 5004.0
+offset_bottom = 5004.0
+theme = ExtResource("2_frkdk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+custom_minimum_size = Vector2(0, 100)
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 4999.0
+offset_bottom = 4999.0
+alignment = 1
+
+[node name="ComfyMargin" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_1rw1n")]
+offset_top = 2458.0
+offset_right = 4998.0
+offset_bottom = 2494.0
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/ComfyMargin"]
+offset_left = 10.0
+offset_right = 4988.0
+offset_bottom = 26.0
+text = "Create a new folder?"
+horizontal_alignment = 1
+
+[node name="OkCancel" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_2st4f")]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 2498.0
+offset_right = 4998.0
+offset_bottom = 2539.0

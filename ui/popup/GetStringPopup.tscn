@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://banc3g0dksmkx"]
+[gd_scene load_steps=5 format=3 uid="uid://banc3g0dksmkx"]
 
 [ext_resource type="Theme" uid="uid://c4v5mpv1jocyy" path="res://ui/default_theme.tres" id="2_frkdk"]
+[ext_resource type="PackedScene" uid="uid://xteian44tehy" path="res://ui/ComfyMargin.tscn" id="2_qi50d"]
 [ext_resource type="PackedScene" uid="uid://b4hjp3plvy6es" path="res://ui/OkCancel.tscn" id="3_2st4f"]
 
 [sub_resource type="GDScript" id="GDScript_gj4lc"]
@@ -19,8 +20,12 @@ func _ready():
 	OkCancelButtons.set_ok_enabled(allow_empty)
 	OkCancelButtons.connect('ok_button_pressed', ok)
 	OkCancelButtons.connect('cancel_button_pressed', cancel)
+	focus_on_input()
 	if get_parent() == get_tree().root:
 		popup()
+
+func focus_on_input():
+	FolderName.grab_focus()
 
 func set_prompt(prompt):
 	find_child('Label').set_text(prompt)
@@ -44,40 +49,53 @@ func _on_folder_text_submitted(new_text):
 		ok()
 "
 
-[node name="CreateFolderPopup" type="PopupPanel"]
-size = Vector2i(214, 106)
+[node name="GetStringPopup" type="PopupPanel"]
+size = Vector2i(220, 152)
 script = SubResource("GDScript_gj4lc")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 210.0
-offset_bottom = 102.0
+offset_right = 216.0
+offset_bottom = 148.0
 theme = ExtResource("2_frkdk")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 offset_left = 1.0
 offset_top = 1.0
-offset_right = 205.0
-offset_bottom = 97.0
+offset_right = 211.0
+offset_bottom = 143.0
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
-offset_right = 204.0
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+offset_right = 210.0
+offset_bottom = 36.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer"]
+offset_left = 10.0
+offset_right = 200.0
 offset_bottom = 26.0
 text = "Create a new folder?"
 horizontal_alignment = 1
 
-[node name="Folder" type="LineEdit" parent="PanelContainer/VBoxContainer"]
-offset_top = 30.0
-offset_right = 204.0
-offset_bottom = 61.0
+[node name="ComfyMargin" parent="PanelContainer/VBoxContainer" instance=ExtResource("2_qi50d")]
+offset_top = 40.0
+offset_right = 210.0
+offset_bottom = 81.0
+
+[node name="Folder" type="LineEdit" parent="PanelContainer/VBoxContainer/ComfyMargin"]
+offset_left = 10.0
+offset_right = 200.0
+offset_bottom = 31.0
 
 [node name="OkCancel" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_2st4f")]
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_top = 65.0
-offset_right = 204.0
-offset_bottom = 96.0
+offset_top = 85.0
+offset_right = 210.0
+offset_bottom = 126.0
 
-[connection signal="text_changed" from="PanelContainer/VBoxContainer/Folder" to="." method="_on_folder_text_changed"]
-[connection signal="text_submitted" from="PanelContainer/VBoxContainer/Folder" to="." method="_on_folder_text_submitted"]
+[connection signal="text_changed" from="PanelContainer/VBoxContainer/ComfyMargin/Folder" to="." method="_on_folder_text_changed"]
+[connection signal="text_submitted" from="PanelContainer/VBoxContainer/ComfyMargin/Folder" to="." method="_on_folder_text_submitted"]

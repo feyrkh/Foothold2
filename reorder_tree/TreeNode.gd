@@ -2,6 +2,7 @@ extends Node
 class_name TreeNode
 
 signal label_updated(new_label)
+signal deleting_node(tree_node)
 
 var tree_item:TreeItem # owner of this metadata
 var label
@@ -25,12 +26,28 @@ func get_allowed_owner_lock_id():
 func get_tags() -> Dictionary:
 	return tags
 
+func delete(keep_children):
+	if keep_children:
+		var placeholder = tree_item.get_parent().create_child()
+		for child in tree_item.get_children():
+			child.move_after(placeholder)
+		placeholder.free()
+	else:
+		for child in tree_item.get_children():
+			var node = child.get_metadata(0)
+			node.delete(false)
+			child.free()
+	emit_signal('deleting_node', self)
+	tree_item.free()
+	self.queue_free()
+
 # Text to display on the TreeItem this metadata is associated with
 func get_label():
 	return label
 
 func set_label(new_val):
 	label = new_val
+	tree_item.set_text(0, label)
 	emit_signal("label_updated", label)
 
 func can_accept_drop(dropped_item:TreeNode):

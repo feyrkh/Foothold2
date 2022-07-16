@@ -28,10 +28,8 @@ func get_tags() -> Dictionary:
 
 func delete(keep_children):
 	if keep_children:
-		var placeholder = tree_item.get_parent().create_child()
 		for child in tree_item.get_children():
-			child.move_after(placeholder)
-		placeholder.free()
+			child.move_before(tree_item)
 	else:
 		for child in tree_item.get_children():
 			var node = child.get_metadata(0)

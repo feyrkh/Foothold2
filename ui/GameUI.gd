@@ -27,6 +27,3 @@ func _can_drop_data(at_position, data):
 
 func new_folder(new_name, tree_node):
 	ItemTree.add_item(FolderItem.new(new_name), tree_node.tree_item)
-
-func delete_item(tree_node):
-	pass

@@ -1,6 +1,8 @@
 extends GameItem
 class_name PcItem
 
+var base_effort = {WorkTypes.EXPLORE: 1.0}
+
 func get_action_panel_scene_path()->String:
 	return "res://items/PcItemActions.tscn"
 
@@ -14,3 +16,6 @@ func get_allowed_tags()->Dictionary:
 
 func get_work_amount(work_type:String) -> float:
 	return 1.0
+
+func get_description():
+	return "A cool guy."

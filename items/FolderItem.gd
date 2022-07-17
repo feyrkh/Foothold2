@@ -1,6 +1,12 @@
 extends GameItem
 class_name FolderItem
 
+func _ready():
+	connect('contents_updated', _contents_updated)
+
+func _contents_updated():
+	get_closest_nonfolder_parent().emit_signal('contents_updated')
+
 func get_closest_nonfolder_parent():
 	var cur_tree_item = tree_item.get_parent()
 	while cur_tree_item.get_metadata(0) is FolderItem:

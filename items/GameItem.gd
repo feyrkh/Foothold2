@@ -15,7 +15,7 @@ func can_delete():
 	return false
 
 func can_create_subfolder():
-	return !(super.get_allowed_tags().is_empty())
+	return !(get_allowed_tags().is_empty())
 
 func build_action_panel(game_ui):
 	var path = get_action_panel_scene_path()

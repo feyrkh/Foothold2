@@ -27,3 +27,4 @@ res://ui/sections/DescriptionSection.tscn
 res://items/WorkPartyItemActions.tscn
 res://reorder_tree/ReorderTree.gd
 res://reorder_tree/TreeNode.gd
+res://items/FolderItem.gd

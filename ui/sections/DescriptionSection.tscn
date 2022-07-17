@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpksxa2m8ulri"]
+
+[ext_resource type="Script" path="res://ui/sections/DescriptionSection.gd" id="1_5vmt3"]
+
+[node name="DescriptionSection" type="Label"]
+script = ExtResource("1_5vmt3")

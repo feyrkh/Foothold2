@@ -9,25 +9,27 @@ const DRAG_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 func _ready():
 	connect('multi_selected', on_multi_selected)
 	var root = add_item(TreeNode.new('root'), null)
-	#if get_parent() == get_tree().root:
-	var item1 = add_item(GameItem.new('Wizard Tower'), root)
-	var item2 = add_item(GameItem.new('Stone chamber'), item1)
-	item2.get_metadata(0).owner_lock_id = 'chamber'
-	var item3 = add_item(GameItem.new('Rooftop'), item1)
-	var item4 = add_item(GameItem.new('rubbish'), item2)
-	item4.get_metadata(0).allowed_owner_lock_id = 'chamber'
-	var item5 = add_item(GameItem.new('rubbish'), item2)
-	item5.get_metadata(0).allowed_owner_lock_id = 'chamber'
-	var item6 = add_item(GameItem.new('rubbish'), item2)
-	item6.get_metadata(0).allowed_owner_lock_id = 'chamber'
-	for i in range(100):
-		var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
+#	if get_parent() == get_tree().root:
+#		var item1 = add_item(GameItem.new('Wizard Tower'), root)
+#		var item2 = add_item(GameItem.new('Stone chamber'), item1)
+#		item2.get_metadata(0).owner_lock_id = 'chamber'
+#		var item3 = add_item(GameItem.new('Rooftop'), item1)
+#		var item4 = add_item(GameItem.new('rubbish'), item2)
+#		item4.get_metadata(0).allowed_owner_lock_id = 'chamber'
+#		var item5 = add_item(GameItem.new('rubbish'), item2)
+#		item5.get_metadata(0).allowed_owner_lock_id = 'chamber'
+#		var item6 = add_item(GameItem.new('rubbish'), item2)
+#		item6.get_metadata(0).allowed_owner_lock_id = 'chamber'
+#		for i in range(100):
+#			var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 
-func add_item(tree_node:TreeNode, parent_item:TreeItem):
+func add_item(tree_node:TreeNode, parent_item:TreeItem=null):
 	var new_item = create_item(parent_item)
 	new_item.set_metadata(0, tree_node)
 	new_item.set_text(0, tree_node.get_label())
 	tree_node.tree_item = new_item
+	if parent_item:
+		parent_item.get_metadata(0).emit_signal('contents_updated')
 	return new_item
 	
 func on_multi_selected(item:TreeItem, column:int, selected:bool):
@@ -156,22 +158,40 @@ func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offse
 			# no child, so we have to create one before we can move the dropped items to the end, and then remove it again
 			placeholder = target_item.create_child()
 		var last_child = target_item.get_child(target_item.get_child_count()-1)
+		var new_parent = last_child.get_parent().get_metadata(0)
 		for item in dropped_item_list:
 			if !ancestor_is_moving(item, item_set):
+				var previous_parent = item.get_parent().get_metadata(0)
 				item.move_after(last_child)
+				if previous_parent:
+					previous_parent.emit_signal('contents_updated')
+				if new_parent:
+					new_parent.emit_signal('contents_updated')
 				last_child = item
 	elif offset == 1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_after(target_item)
+		var new_parent = placeholder.get_parent().get_metadata(0)
 		for item in dropped_item_list:
 			if !ancestor_is_moving(item, item_set):
+				var previous_parent = item.get_parent().get_metadata(0)
 				item.move_before(placeholder)
+				if previous_parent:
+					previous_parent.emit_signal('contents_updated')
+				if new_parent:
+					new_parent.emit_signal('contents_updated')
 	elif offset == -1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_before(target_item)
+		var new_parent = placeholder.get_parent().get_metadata(0)
 		for item in dropped_item_list:
 			if !ancestor_is_moving(item, item_set):
+				var previous_parent = item.get_parent().get_metadata(0)
 				item.move_before(target_item)
+				if previous_parent:
+					previous_parent.emit_signal('contents_updated')
+				if new_parent:
+					new_parent.emit_signal('contents_updated')
 	if placeholder:
 		placeholder.free()
 

@@ -1,7 +1,7 @@
 extends PanelContainer
 class_name GameUI
 
-@onready var ItemTree = find_child('ItemTree')
+@onready var ItemTree:ReorderTree = find_child('ItemTree')
 @onready var ActionContainer = find_child('ActionContainer')
 
 var action_panels = {}

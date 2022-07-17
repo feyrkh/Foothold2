@@ -10,6 +10,11 @@ config_version=5
 
 _global_script_classes=[{
 "base": "GameItem",
+"class": &"AreaItem",
+"language": &"GDScript",
+"path": "res://items/AreaItem.gd"
+}, {
+"base": "GameItem",
 "class": &"FolderItem",
 "language": &"GDScript",
 "path": "res://items/FolderItem.gd"
@@ -18,6 +23,11 @@ _global_script_classes=[{
 "class": &"GameItem",
 "language": &"GDScript",
 "path": "res://items/GameItem.gd"
+}, {
+"base": "Control",
+"class": &"GameItemActions",
+"language": &"GDScript",
+"path": "res://items/GameItemActions.gd"
 }, {
 "base": "Object",
 "class": &"GameItemAware",
@@ -29,37 +39,74 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://ui/GameUI.gd"
 }, {
+"base": "GameItem",
+"class": &"LocationItem",
+"language": &"GDScript",
+"path": "res://items/LocationItem.gd"
+}, {
+"base": "GameItem",
+"class": &"PcItem",
+"language": &"GDScript",
+"path": "res://items/PcItem.gd"
+}, {
 "base": "Tree",
 "class": &"ReorderTree",
 "language": &"GDScript",
 "path": "res://reorder_tree/ReorderTree.gd"
 }, {
+"base": "Control",
+"class": &"Section",
+"language": &"GDScript",
+"path": "res://ui/sections/Section.gd"
+}, {
 "base": "Object",
 "class": &"Tags",
 "language": &"GDScript",
-"path": "res://items/Tags.gd"
+"path": "res://util/Tags.gd"
 }, {
 "base": "Node",
 "class": &"TreeNode",
 "language": &"GDScript",
 "path": "res://reorder_tree/TreeNode.gd"
+}, {
+"base": "GameItem",
+"class": &"WorkPartyItem",
+"language": &"GDScript",
+"path": "res://items/WorkPartyItem.gd"
+}, {
+"base": "Object",
+"class": &"WorkTypes",
+"language": &"GDScript",
+"path": "res://util/WorkTypes.gd"
 }]
 _global_script_class_icons={
+"AreaItem": "",
 "FolderItem": "",
 "GameItem": "",
+"GameItemActions": "",
 "GameItemAware": "",
 "GameUI": "",
+"LocationItem": "",
+"PcItem": "",
 "ReorderTree": "",
+"Section": "",
 "Tags": "",
-"TreeNode": ""
+"TreeNode": "",
+"WorkPartyItem": "",
+"WorkTypes": ""
 }
 
 [application]
 
 config/name="Foothold2"
-run/main_scene="res://ui/GameUI.tscn"
+run/main_scene="res://Game.tscn"
 config/features=PackedStringArray("4.0", "Vulkan Mobile")
 config/icon="res://icon.png"
+
+[autoload]
+
+IdManager="*res://util/IdManager.gd"
+Events="*res://Events.gd"
 
 [rendering]
 

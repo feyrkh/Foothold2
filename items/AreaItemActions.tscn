@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://np11wu4s83y0"]
+
+[ext_resource type="Script" path="res://items/AreaItemActions.gd" id="1_6yxea"]
+[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_a8yhr"]
+[ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_251d2"]
+[ext_resource type="PackedScene" uid="uid://c3dekc42x885w" path="res://ui/sections/ExploreSection.tscn" id="4_vjig7"]
+
+[node name="AreaItemActions" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_6yxea")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 1024.0
+offset_bottom = 23.0
+
+[node name="ItemManageDropdown" parent="HBoxContainer" instance=ExtResource("2_a8yhr")]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 20.0
+offset_bottom = 23.0
+
+[node name="GameItemLabel" type="Label" parent="HBoxContainer"]
+offset_left = 24.0
+offset_right = 25.0
+offset_bottom = 23.0
+
+[node name="DescriptionSection" parent="." instance=ExtResource("3_251d2")]
+offset_top = 27.0
+offset_right = 1024.0
+offset_bottom = 50.0
+
+[node name="ExploreSection" parent="." instance=ExtResource("4_vjig7")]
+offset_top = 54.0
+offset_right = 1024.0
+offset_bottom = 85.0

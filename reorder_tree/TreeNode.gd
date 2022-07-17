@@ -3,12 +3,15 @@ class_name TreeNode
 
 signal label_updated(new_label)
 signal deleting_node(tree_node)
+signal contents_updated() # emitted when a child is added or removed
 
 var tree_item:TreeItem # owner of this metadata
 var label
 var allowed_tags:Dictionary
 var tags:Dictionary = {}
-var owner_lock_id = null
+# Unique ID for this node which can be checked against other nodes - if a node has an 'allowed_owner_lock_id'
+# then it can only be contained by a node with the same 'owner_lock_id'
+var owner_lock_id = null 
 var allowed_owner_lock_id = null
 
 func _init(label):
@@ -26,6 +29,9 @@ func get_allowed_owner_lock_id():
 func get_tags() -> Dictionary:
 	return tags
 
+func get_parent_tree_node() -> TreeNode:
+	return tree_item.get_parent().get_metadata(0)
+
 func delete(keep_children):
 	if keep_children:
 		for child in tree_item.get_children():
@@ -37,6 +43,7 @@ func delete(keep_children):
 			child.free()
 	emit_signal('deleting_node', self)
 	tree_item.free()
+	get_parent_tree_node().emit_signal('contents_updated')
 	self.queue_free()
 
 # Text to display on the TreeItem this metadata is associated with
@@ -74,9 +81,9 @@ func get_drop_preview():
 	return drag_preview
 
 func can_contain_tags(tag_set):
-	if allowed_tags == null or tag_set == null:
+	if get_allowed_tags() == null or tag_set == null:
 		return false
 	for tag in tag_set:
-		if allowed_tags.has(tag):
+		if get_allowed_tags().has(tag):
 			return true
 	return false

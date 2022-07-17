@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://br80cicaojk7"]
+
+[ext_resource type="Script" path="res://Game.gd" id="1_7hih4"]
+[ext_resource type="PackedScene" uid="uid://ow6a1lrkuggv" path="res://ui/GameUI.tscn" id="1_81cwc"]
+
+[node name="Game" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_7hih4")
+
+[node name="GameUI" parent="." instance=ExtResource("1_81cwc")]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1024.0
+offset_bottom = 600.0

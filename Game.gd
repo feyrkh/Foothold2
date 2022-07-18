@@ -13,6 +13,7 @@ func add_game_item(new_item, parent_item, select_item=false):
 	else:
 		parent_tree_item = parent_item.tree_item
 	ui.ItemTree.add_item(new_item, parent_tree_item)
+	IdManager.add_child(new_item)
 	if select_item:
 		ui.ItemTree.scroll_to_item(new_item.tree_item)
 		new_item.tree_item.select(0)

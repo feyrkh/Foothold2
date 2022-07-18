@@ -7,12 +7,6 @@ func _ready():
 func _contents_updated():
 	get_closest_nonfolder_parent().emit_signal('contents_updated')
 
-func get_closest_nonfolder_parent():
-	var cur_tree_item = tree_item.get_parent()
-	while cur_tree_item.get_metadata(0) is FolderItem:
-		cur_tree_item = cur_tree_item.get_parent()
-	return cur_tree_item.get_metadata(0)
-
 func can_accept_drop(dropped_item:TreeNode):
 	var closest_parent = get_closest_nonfolder_parent()
 	if dropped_item.get_allowed_owner_lock_id() != null:

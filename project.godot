@@ -44,7 +44,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/LocationItem.gd"
 }, {
-"base": "GameItem",
+"base": "WorkAwareItem",
 "class": &"PcItem",
 "language": &"GDScript",
 "path": "res://items/PcItem.gd"
@@ -69,6 +69,16 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://reorder_tree/TreeNode.gd"
 }, {
+"base": "RefCounted",
+"class": &"WorkAmount",
+"language": &"GDScript",
+"path": "res://items/WorkAmount.gd"
+}, {
+"base": "GameItem",
+"class": &"WorkAwareItem",
+"language": &"GDScript",
+"path": "res://items/WorkAwareItem.gd"
+}, {
 "base": "GameItem",
 "class": &"WorkPartyItem",
 "language": &"GDScript",
@@ -92,6 +102,8 @@ _global_script_class_icons={
 "Section": "",
 "Tags": "",
 "TreeNode": "",
+"WorkAmount": "",
+"WorkAwareItem": "",
 "WorkPartyItem": "",
 "WorkTypes": ""
 }

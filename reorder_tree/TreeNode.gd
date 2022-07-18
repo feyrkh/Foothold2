@@ -4,9 +4,10 @@ class_name TreeNode
 signal label_updated(new_label)
 signal deleting_node(tree_node)
 signal contents_updated() # emitted when a child is added or removed
+signal parent_updated(old_parent, new_parent) # Moved from one parent to another
 
 var tree_item:TreeItem # owner of this metadata
-var label
+var label=''
 var allowed_tags:Dictionary
 var tags:Dictionary = {}
 # Unique ID for this node which can be checked against other nodes - if a node has an 'allowed_owner_lock_id'
@@ -31,6 +32,12 @@ func get_tags() -> Dictionary:
 
 func get_parent_tree_node() -> TreeNode:
 	return tree_item.get_parent().get_metadata(0)
+
+func get_closest_nonfolder_parent():
+	var cur_tree_item = tree_item.get_parent()
+	while cur_tree_item.get_metadata(0).get_tags().has(Tags.TAG_FOLDER):
+		cur_tree_item = cur_tree_item.get_parent()
+	return cur_tree_item.get_metadata(0)
 
 func delete(keep_children):
 	if keep_children:

@@ -30,6 +30,7 @@ func add_item(tree_node:TreeNode, parent_item:TreeItem=null):
 	tree_node.tree_item = new_item
 	if parent_item:
 		parent_item.get_metadata(0).emit_signal('contents_updated')
+	new_item.emit_signal('parent_updated', null, parent_item)
 	return new_item
 	
 func on_multi_selected(item:TreeItem, column:int, selected:bool):
@@ -167,6 +168,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offse
 					previous_parent.emit_signal('contents_updated')
 				if new_parent:
 					new_parent.emit_signal('contents_updated')
+				item.emit_signal('parent_updated', previous_parent, new_parent)
 				last_child = item
 	elif offset == 1:
 		placeholder = target_item.get_parent().create_child()
@@ -180,6 +182,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offse
 					previous_parent.emit_signal('contents_updated')
 				if new_parent:
 					new_parent.emit_signal('contents_updated')
+				item.emit_signal('parent_updated', previous_parent, new_parent)
 	elif offset == -1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_before(target_item)
@@ -192,6 +195,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list:Array[TreeItem], offse
 					previous_parent.emit_signal('contents_updated')
 				if new_parent:
 					new_parent.emit_signal('contents_updated')
+				item.emit_signal('parent_updated', previous_parent, new_parent)
 	if placeholder:
 		placeholder.free()
 

@@ -18,6 +18,9 @@ var allowed_owner_lock_id = null
 func _init(label):
 	self.label = label
 
+func _ready():
+	pass
+	
 func get_allowed_tags() -> Dictionary:
 	return allowed_tags
 

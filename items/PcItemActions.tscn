@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtauf82afmu2v"]
+[gd_scene load_steps=5 format=3 uid="uid://4ujbl5426l1w"]
 
 [ext_resource type="Script" path="res://items/PcItemActions.gd" id="1_qumod"]
-[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_a8yhr"]
-[ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_251d2"]
-[ext_resource type="PackedScene" uid="uid://c3g2xgmedmccn" path="res://ui/sections/WorkTypeSection.tscn" id="4_2lpdr"]
+[ext_resource type="PackedScene" path="res://ui/ItemManageDropdown.tscn" id="2_a8yhr"]
+[ext_resource type="PackedScene" path="res://ui/sections/DescriptionSection.tscn" id="3_251d2"]
+[ext_resource type="PackedScene" path="res://ui/sections/WorkProvidedSection.tscn" id="4_2lpdr"]
 
 [node name="PcItemActions" type="VBoxContainer"]
 anchor_right = 1.0
@@ -31,6 +31,8 @@ offset_right = 1024.0
 offset_bottom = 50.0
 
 [node name="WorkTypeSection" parent="." instance=ExtResource("4_2lpdr")]
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_top = 54.0
 offset_right = 1024.0
-offset_bottom = 89.0
+offset_bottom = 600.0

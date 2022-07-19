@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://bvtftlnbrehbb"]
+[gd_scene load_steps=5 format=3 uid="uid://bvtftlnbrehbb"]
 
 [ext_resource type="Script" path="res://items/WorkPartyItemActions.gd" id="1_fri60"]
 [ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_084tu"]
 [ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_rw3au"]
+[ext_resource type="PackedScene" uid="uid://cf1k1xcgqja5g" path="res://ui/sections/WorkNeededSection.tscn" id="4_vjmts"]
 
-[node name="WorkItemActions" type="VBoxContainer"]
+[node name="WorkPartyItemActions" type="VBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_fri60")
@@ -28,3 +29,10 @@ offset_bottom = 23.0
 offset_top = 27.0
 offset_right = 1024.0
 offset_bottom = 50.0
+
+[node name="WorkNeededSection" parent="." instance=ExtResource("4_vjmts")]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 54.0
+offset_right = 1024.0
+offset_bottom = 600.0

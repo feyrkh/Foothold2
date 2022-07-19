@@ -55,5 +55,5 @@ func get_work_amount_from_helpers(work_type:String, helpers:Array[GameItem]) -> 
 func _added_effort(effort_modifiers:Array[String], work_type:String, added_effort:float, multiplied_effort:float) -> void:
 	if added_effort != 0:
 		effort_modifiers.append("%s: +%.1f" % [WorkTypes.name(work_type), added_effort])
-	if multiplied_effort != 1.0:
+	if multiplied_effort != 0:
 		effort_modifiers.append("%s: *%.2f" % [WorkTypes.name(work_type+WorkTypes.BONUS_SUFFIX), multiplied_effort*100])

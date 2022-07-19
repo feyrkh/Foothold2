@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://ui/sections/WorkProvidedSection.gd" id="1_pwiku"]
+[ext_resource type="Script" path="res://ui/sections/WorkProvidedSectionEntries.gd" id="2_847nt"]
+[ext_resource type="PackedScene" uid="uid://bkb4bhb6bhoh1" path="res://ui/CollapseSection.tscn" id="2_pljtd"]
+
+[node name="WorkTypeSection" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_pwiku")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 1024.0
+offset_bottom = 600.0
+
+[node name="CollapseSection" parent="VBoxContainer" instance=ExtResource("2_pljtd")]
+offset_right = 1024.0
+offset_bottom = 26.0
+label = "Effort Provided"
+
+[node name="Items" type="Tree" parent="VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+offset_top = 30.0
+offset_right = 1024.0
+offset_bottom = 30.0
+columns = 2
+column_titles_visible = true
+script = ExtResource("2_847nt")

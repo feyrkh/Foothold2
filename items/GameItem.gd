@@ -3,6 +3,9 @@ class_name GameItem
 
 var _item_id
 
+func _ready():
+	pass
+
 func get_id():
 	if _item_id == null:
 		_item_id = IdManager.get_next_id()
@@ -41,6 +44,10 @@ func find_child_items(filter_func:Callable, deep=false):
 	var tree_items = tree_item.get_children()
 	for tree_item in tree_items:
 		var game_item = tree_item.get_metadata(0)
+		if game_item == null or !is_instance_valid(game_item):
+			#push_error('game_item unexpectedly null in tree_item with text(0)=', tree_item.get_text(0))
+			# can be null when there's a placeholder for dropping items
+			continue
 		if filter_func.call(game_item):
 			results.append(game_item)
 		if deep or game_item.get_tags().has(Tags.TAG_FOLDER):

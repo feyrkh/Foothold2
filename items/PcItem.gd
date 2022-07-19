@@ -3,7 +3,7 @@ class_name PcItem
 
 func _init(label):
 	super._init(label)
-	inherent_work_types = {WorkTypes.EXPLORE: 1.0, 'prestidigitation': 2.5, 'b': 20, 'c': 3, 'd': 4, 'f': 5, 'g': 6, 'h': 6, 'w': 6, 'q': 6, 'z': 6, 'x': 6, }
+	inherent_work_types = {WorkTypes.EXPLORE: 1.0}
 
 func get_action_panel_scene_path()->String:
 	return "res://items/PcItemActions.tscn"

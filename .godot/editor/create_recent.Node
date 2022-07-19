@@ -1,10 +1,11 @@
+Label
+TextureButton
+HBoxContainer
+VBoxContainer
 Tree
 MarginContainer
 ItemList
 Button
-Label
-HBoxContainer
-VBoxContainer
 CenterContainer
 ColorRect
 Control
@@ -12,6 +13,5 @@ PanelContainer
 LineEdit
 PopupPanel
 PopupMenu
-TextureButton
 HFlowContainer
 HSplitContainer

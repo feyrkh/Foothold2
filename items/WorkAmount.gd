@@ -17,7 +17,7 @@ func _init(work_type:String, effort:float, bonus:float, effort_modifiers:Array[S
 func get_effort():
 	return effort * (1+bonus)
 
-func sort(a:WorkAmount, b:WorkAmount):
+static func sort(a:WorkAmount, b:WorkAmount):
 	return a.label < b.label
 	
 func add(amt:WorkAmount):

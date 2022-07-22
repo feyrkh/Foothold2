@@ -1,24 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://i8v7smc3fn3"]
 
 [ext_resource type="Script" path="res://items/GameItemActions.gd" id="1_hcsep"]
-[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_4tvoc"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_ujcxw"]
 
 [node name="GameItemActions" type="VBoxContainer"]
 offset_right = 1010.0
 offset_bottom = 23.0
 script = ExtResource("1_hcsep")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="ItemActionHeader" parent="." instance=ExtResource("2_ujcxw")]
 offset_right = 1010.0
-offset_bottom = 23.0
-
-[node name="ItemManageDropdown" parent="HBoxContainer" instance=ExtResource("2_4tvoc")]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 20.0
-offset_bottom = 23.0
-
-[node name="GameItemLabel" type="Label" parent="HBoxContainer"]
-offset_left = 24.0
-offset_right = 25.0
-offset_bottom = 23.0

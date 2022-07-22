@@ -30,3 +30,6 @@ func add(amt:WorkAmount):
 		effort_modifiers.append("%s: +%.1f" % [WorkTypes.name(work_type), amt.effort])
 	if amt.bonus != 0:
 		effort_modifiers.append("%s: *%.2f" % [WorkTypes.name(work_type+WorkTypes.BONUS_SUFFIX), amt.bonus*100])
+
+func apply_effort(amt:int):
+	effort -= amt/(1+bonus)

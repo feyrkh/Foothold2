@@ -20,9 +20,11 @@ func add_game_item(new_item, parent_item, select_item=false):
 		ui.ItemTree.emit_signal('multi_selected', new_item.tree_item, 0, true)
 
 func new_game():
-	var wizardTower:AreaItem = load('res://entities/wizard_tower/WizardTower.gd').new("Ancient tower")
+	var goals = Factory.item('Goals', 'res://entities/GoalsFolder.gd')
+	Factory.place_item(goals, null)
+	var wizardTower:AreaItem = Factory.area("Ancient tower", 'res://entities/wizard_tower/WizardTower.gd')
 	wizardTower.owner_lock_id = 'wiztower'
 	wizardTower.explore_difficulty = 15
 	ui.ItemTree.add_item(wizardTower)
-	var pc:PcItem = PcItem.new('A wanderer')
-	Events.emit_signal('add_game_item', pc, null, false)
+	var pc:PcItem = Factory.pc('A wanderer')
+	Factory.place_item(pc, null)

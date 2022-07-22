@@ -2,14 +2,31 @@ extends TreeNode
 class_name GameItem
 
 var _item_id
+var action_panel
+var callbacks = null
 
 func _ready():
 	pass
 
 func get_id():
 	if _item_id == null:
-		_item_id = IdManager.get_next_id()
+		_item_id = IdManager.get_next_id(self)
 	return _item_id
+
+func set_callback(callback_id:String, callback_owner_item_id:int, callback_function_name:String):
+	if callbacks == null:
+		callbacks = {}
+	callbacks[callback_id] = [callback_owner_item_id, callback_function_name]
+
+func execute_callback(callback_id:String):
+	if callbacks == null:
+		return
+	var callback_data = callbacks.get(callback_id)
+	if callback_data == null or !(callback_data is Array) or callback_data.size() < 2:
+		return
+	var owner_item = IdManager.get_item_by_id(callback_data[0])
+	if owner_item != null and owner_item.has_method(callback_data[1]):
+		owner_item.call(callback_data[1], self)
 
 func can_rename():
 	return true
@@ -20,12 +37,24 @@ func can_delete():
 func can_create_subfolder():
 	return !(get_allowed_tags().is_empty())
 
+func get_action_panel():
+	if action_panel and is_instance_valid(action_panel):
+		return action_panel
+	else:
+		action_panel = null
+		return null
+
+func refresh_action_panel():
+	if action_panel and is_instance_valid(action_panel) and action_panel.has_method('refresh_action_panel'):
+		action_panel.call_deferred('refresh_action_panel')
+
 func build_action_panel(game_ui):
 	var path = get_action_panel_scene_path()
 	if path == null:
 		return "res://items/GameItemActions.tscn"
 	var panel = load(path).instantiate()
 	panel.setup_action_panel(game_ui, self)
+	action_panel = panel
 	return panel
 
 func get_action_panel_scene_path()->String:

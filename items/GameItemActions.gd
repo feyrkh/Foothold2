@@ -3,6 +3,12 @@ class_name GameItemActions
 
 var game_item:GameItem
 
+func _ready():
+	pass
+
+func get_game_item():
+	return game_item
+
 func setup_action_panel(game_ui:GameUI, game_item:GameItem):
 	self.game_item = game_item
 	var label = find_child('GameItemLabel')

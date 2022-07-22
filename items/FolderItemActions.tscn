@@ -1,24 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://wbkkqpp8ef06"]
 
 [ext_resource type="Script" path="res://items/FolderItemActions.gd" id="1_14j55"]
-[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_a8yhr"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_s7i43"]
 
 [node name="FolderItemActions" type="VBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_14j55")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_right = 1024.0
-offset_bottom = 23.0
-
-[node name="ItemManageDropdown" parent="HBoxContainer" instance=ExtResource("2_a8yhr")]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 20.0
-offset_bottom = 23.0
-
-[node name="GameItemLabel" type="Label" parent="HBoxContainer"]
-offset_left = 24.0
-offset_right = 25.0
-offset_bottom = 23.0
+[node name="ItemActionHeader" parent="." instance=ExtResource("2_s7i43")]

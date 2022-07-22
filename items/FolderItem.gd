@@ -12,7 +12,7 @@ func can_accept_drop(dropped_item:TreeNode):
 	if dropped_item.get_allowed_owner_lock_id() != null:
 		# an item that's locked to this owner can always be moved onto its owner, and never moved onto a non-owner
 		return dropped_item.get_allowed_owner_lock_id() == closest_parent.get_owner_lock_id()
-	# if the dropped item is already in the owning parent, or in a folder owned by the owning parent, allow the drop
+	
 	var dropped_item_parent = dropped_item.get_parent()
 	while dropped_item_parent != null:
 		if dropped_item_parent == closest_parent:

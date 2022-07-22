@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bvtftlnbrehbb"]
 
 [ext_resource type="Script" path="res://items/WorkPartyItemActions.gd" id="1_fri60"]
-[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="2_084tu"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_ek6tt"]
 [ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_rw3au"]
 [ext_resource type="PackedScene" uid="uid://cf1k1xcgqja5g" path="res://ui/sections/WorkNeededSection.tscn" id="4_vjmts"]
 
@@ -10,20 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_fri60")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_right = 1024.0
-offset_bottom = 23.0
-
-[node name="ItemManageDropdown" parent="HBoxContainer" instance=ExtResource("2_084tu")]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 20.0
-offset_bottom = 23.0
-
-[node name="GameItemLabel" type="Label" parent="HBoxContainer"]
-offset_left = 24.0
-offset_right = 25.0
-offset_bottom = 23.0
+[node name="ItemActionHeader" parent="." instance=ExtResource("2_ek6tt")]
 
 [node name="DescriptionSection" parent="." instance=ExtResource("3_rw3au")]
 offset_top = 27.0
@@ -35,4 +22,10 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 offset_top = 54.0
 offset_right = 1024.0
+offset_bottom = 565.0
+
+[node name="WorkCompleteButton" type="Button" parent="."]
+offset_top = 569.0
+offset_right = 1024.0
 offset_bottom = 600.0
+text = "Task Complete"

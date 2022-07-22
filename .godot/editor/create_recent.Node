@@ -1,11 +1,12 @@
-Label
+Button
 TextureButton
+Timer
+Label
 HBoxContainer
 VBoxContainer
 Tree
 MarginContainer
 ItemList
-Button
 CenterContainer
 ColorRect
 Control

@@ -15,8 +15,9 @@ var tags:Dictionary = {}
 var owner_lock_id = null 
 var allowed_owner_lock_id = null
 
-func _init(label):
+func init(label):
 	self.label = label
+	return self
 
 func _ready():
 	pass

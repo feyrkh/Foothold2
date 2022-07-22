@@ -1,8 +1,8 @@
 extends WorkAwareItem
 class_name PcItem
 
-func _init(label):
-	super._init(label)
+func _init():
+	super._init()
 	inherent_work_types = {WorkTypes.EXPLORE: 1.0}
 
 func get_action_panel_scene_path()->String:

@@ -1,7 +1,5 @@
 extends Section
 
-const EXPLORE_WORK_PARTY = 'explore'
-
 # Requirements:
 # Contained by a GameItem with these functions:
 # 	has_more_explore_locations(): returns true if more exploration is possible
@@ -23,14 +21,12 @@ func start_explore_party():
 	var existing_explore_party = game_item.find_child_items(is_explore_work_party)
 	if existing_explore_party:
 		return
-	var explore_effort_needed = 999999
-	if game_item.has_method('get_explore_effort_needed'):
-		explore_effort_needed = game_item.get_explore_effort_needed()
-	var work_party:WorkPartyItem = WorkPartyItem.new("Exploration Party", EXPLORE_WORK_PARTY, {WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, explore_effort_needed, 0, [])})
-	work_party.valid_work_target_types = WorkPartyItem.WORK_TARGET_PARENT_ONLY
-	if game_item.has_method('get_explore_description'):
-		work_party.description = game_item.get_explore_description()
-	Events.emit_signal('add_game_item', work_party, game_item, true)
+	var work_party:WorkPartyItem = game_item.get_explore_work_party()
+	if !work_party:
+		game_item.description = "There is nothing left to find!"
+		game_item.refresh_action_panel()
+	else:
+		Factory.place_item(work_party, game_item, true)
 
 func is_explore_work_party(game_item:GameItem)->bool:
-	return game_item.has_method('get_work_party_type') and game_item.get_work_party_type() == EXPLORE_WORK_PARTY
+	return game_item.has_method('get_work_party_type') and game_item.get_work_party_type() == Tags.WORK_PARTY_EXPLORE

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://br80cicaojk7"]
+[gd_scene load_steps=4 format=3 uid="uid://br80cicaojk7"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_7hih4"]
 [ext_resource type="PackedScene" uid="uid://ow6a1lrkuggv" path="res://ui/GameUI.tscn" id="1_81cwc"]
+[ext_resource type="Script" path="res://GameTickTimer.gd" id="3_sjius"]
 
 [node name="Game" type="MarginContainer"]
 anchor_right = 1.0
@@ -15,3 +16,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 offset_right = 1024.0
 offset_bottom = 600.0
+
+[node name="GameTickTimer" type="Timer" parent="."]
+autostart = true
+script = ExtResource("3_sjius")

@@ -1,14 +1,17 @@
 extends Tree
 class_name ReorderTree
 
-signal selected_nodes_changed(selected_nodes:Array[TreeNode])
+signal selected_nodes_changed(selected_nodes:Array[TreeNode], pinned_nodes:Array[TreeNode])
 
 const DRAG_COLOR = Color(1.0, 1.0, 1.0, 0.5)
+
+var pinned_nodes:Array[TreeNode] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	connect('multi_selected', on_multi_selected)
-	var root = add_item(TreeNode.new('root'), null)
+	Events.connect('pin_action_panel', set_panel_pinned)
+	var root = add_item(TreeNode.new().init('root'), null)
 #	if get_parent() == get_tree().root:
 #		var item1 = add_item(GameItem.new('Wizard Tower'), root)
 #		var item2 = add_item(GameItem.new('Stone chamber'), item1)
@@ -22,6 +25,15 @@ func _ready():
 #		item6.get_metadata(0).allowed_owner_lock_id = 'chamber'
 #		for i in range(100):
 #			var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
+
+func set_panel_pinned(tree_node:TreeNode, is_pinned:bool):
+	if !tree_node or !is_instance_valid(tree_node):
+		return
+	if is_pinned and !pinned_nodes.has(tree_node):
+		pinned_nodes.append(tree_node)
+	elif !is_pinned and pinned_nodes.has(tree_node):
+		pinned_nodes.erase(tree_node)
+	emit_signal('selected_nodes_changed', get_selected_nodes(), pinned_nodes)
 
 func add_item(tree_node:TreeNode, parent_item:TreeItem=null):
 	var new_item = create_item(parent_item)
@@ -44,7 +56,7 @@ func on_multi_selected(item:TreeItem, column:int, selected:bool):
 		#	cur_selected = get_next_selected(cur_selected)
 	elif !selected:
 		item.deselect(column)
-	emit_signal('selected_nodes_changed', get_selected_nodes())
+	emit_signal('selected_nodes_changed', get_selected_nodes(), pinned_nodes)
 
 func get_selected_items()->Array[TreeItem]:
 	var result:Array[TreeItem] = []

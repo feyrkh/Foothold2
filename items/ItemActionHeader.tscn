@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://b04xuqmeddq78"]
+
+[ext_resource type="Texture2D" uid="uid://dro6gv1ehkumc" path="res://assets/icon/pin-0.png" id="1_qpuiw"]
+[ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="1_r83oy"]
+[ext_resource type="Texture2D" uid="uid://dps4opj3en18f" path="res://assets/icon/pin-1.png" id="2_6r4k8"]
+[ext_resource type="Script" path="res://items/PinActionPanelButton.gd" id="3_xo7a6"]
+
+[node name="ItemActionHeader" type="HBoxContainer"]
+offset_right = 1024.0
+offset_bottom = 23.0
+
+[node name="PinActionPanelButton" type="TextureButton" parent="."]
+offset_right = 20.0
+offset_bottom = 23.0
+toggle_mode = true
+texture_normal = ExtResource("1_qpuiw")
+texture_pressed = ExtResource("2_6r4k8")
+script = ExtResource("3_xo7a6")
+
+[node name="ItemManageDropdown" parent="." instance=ExtResource("1_r83oy")]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 24.0
+offset_right = 44.0
+offset_bottom = 23.0
+
+[node name="GameItemLabel" type="Label" parent="."]
+offset_left = 48.0
+offset_right = 49.0
+offset_bottom = 23.0

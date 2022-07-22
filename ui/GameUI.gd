@@ -6,13 +6,16 @@ class_name GameUI
 
 var action_panels = {}
 
-func _on_item_tree_selected_nodes_changed(selected_nodes):
+func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	for node in action_panels:
-		if !(selected_nodes.has(node)):
+		if !selected_nodes.has(node) and !pinned_nodes.has(node):
 			if is_instance_valid(action_panels[node]): 
 				action_panels[node].queue_free()
 			action_panels.erase(node)
-	for node in selected_nodes:
+	var all_nodes = []
+	all_nodes.append_array(selected_nodes)
+	all_nodes.append_array(pinned_nodes)
+	for node in all_nodes:
 		if !action_panels.has(node):
 			if node.has_method('build_action_panel'):
 				var panel = node.build_action_panel(self)
@@ -26,4 +29,4 @@ func _can_drop_data(at_position, data):
 	return true
 
 func new_folder(new_name, tree_node):
-	ItemTree.add_item(FolderItem.new(new_name), tree_node.tree_item)
+	Factory.place_item(Factory.folder(new_name), tree_node.tree_item)

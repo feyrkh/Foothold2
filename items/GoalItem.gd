@@ -1,6 +1,5 @@
 extends GameItem
-
-var description:String
+class_name GoalItem
 
 func _ready():
 	super._ready()

@@ -8,6 +8,9 @@ var callbacks = null
 func _ready():
 	pass
 
+func get_default_label():
+	return 'Unknown item'
+
 func get_id():
 	if _item_id == null:
 		_item_id = IdManager.get_next_id(self)
@@ -49,10 +52,20 @@ func refresh_action_panel():
 		action_panel.call_deferred('refresh_action_panel')
 
 func build_action_panel(game_ui):
+	var existing_panel = get_action_panel()
+	if existing_panel:
+		return existing_panel
 	var path = get_action_panel_scene_path()
 	if path == null:
-		return "res://items/GameItemActions.tscn"
-	var panel = load(path).instantiate()
+		path = "res://items/GameItemActions.tscn"
+	var packed_scene
+	var panel
+	if !ResourceLoader.exists(path, "PackedScene"):
+		packed_scene = load("res://items/ErroredItemActions.tscn")
+		panel = packed_scene.instantiate()
+		panel.init_error(path)
+	else:
+		panel = load(path).instantiate()
 	panel.setup_action_panel(game_ui, self)
 	action_panel = panel
 	return panel
@@ -82,3 +95,6 @@ func find_child_items(filter_func:Callable, deep=false):
 		if deep or game_item.get_tags().has(Tags.TAG_FOLDER):
 			results.append_array(game_item.find_child_items(filter_func, deep))
 	return results
+
+func on_delete_tree_node():
+	Events.emit_signal('deleting_game_item', self)

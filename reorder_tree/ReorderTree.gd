@@ -42,9 +42,13 @@ func add_item(tree_node:TreeNode, parent_item:TreeItem=null):
 	tree_node.tree_item = new_item
 	if parent_item:
 		parent_item.get_metadata(0).emit_signal('contents_updated')
+	tree_node.connect('deleting_node', on_deleting_node)
 	new_item.emit_signal('parent_updated', null, parent_item)
 	return new_item
-	
+
+func on_deleting_node(node):
+	pinned_nodes.erase(node)
+
 func on_multi_selected(item:TreeItem, column:int, selected:bool):
 	if selected and (Input.is_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_CTRL)):
 		var item_parent = item.get_parent()

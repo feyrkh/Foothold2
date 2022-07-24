@@ -3,6 +3,9 @@
 [ext_resource type="Script" path="res://ui/sections/ExploreSection.gd" id="1_jw0pj"]
 
 [node name="ExploreSection" type="HBoxContainer"]
+offset_right = 314.0
+offset_bottom = 31.0
+theme_override_constants/separation = 20
 script = ExtResource("1_jw0pj")
 
 [node name="Button" type="Button" parent="."]
@@ -11,9 +14,11 @@ offset_bottom = 31.0
 text = "Explore"
 
 [node name="Label" type="Label" parent="."]
-offset_left = 71.0
-offset_right = 314.0
+offset_left = 87.0
+offset_right = 330.0
 offset_bottom = 31.0
 size_flags_vertical = 1
+size_flags_stretch_ratio = 2.0
 text = "Start an exploration work party"
+horizontal_alignment = 1
 vertical_alignment = 1

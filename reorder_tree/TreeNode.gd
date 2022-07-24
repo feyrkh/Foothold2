@@ -53,6 +53,8 @@ func delete(keep_children):
 			node.delete(false)
 			child.free()
 	emit_signal('deleting_node', self)
+	if self.has_method('on_delete_tree_node'):
+		self.on_delete_tree_node()
 	var parent_tree_node = get_parent_tree_node()
 	tree_item.free()
 	parent_tree_node.emit_signal('contents_updated')

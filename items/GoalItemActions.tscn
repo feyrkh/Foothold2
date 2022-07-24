@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://crrorjsat5yh2"]
+
+[ext_resource type="Script" path="res://items/LocationItemActions.gd" id="1_uevim"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_qfwyn"]
+[ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_251d2"]
+
+[node name="GoalItemActions" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_uevim")
+
+[node name="ItemActionHeader" parent="." instance=ExtResource("2_qfwyn")]
+
+[node name="DescriptionSection" parent="." instance=ExtResource("3_251d2")]
+offset_top = 27.0
+offset_right = 1024.0
+offset_bottom = 50.0

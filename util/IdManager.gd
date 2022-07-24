@@ -3,9 +3,17 @@ extends Node
 var next_id = 0
 var id_map = {}
 
-func get_next_id(item):
+func _ready():
+	Events.connect('add_game_item', on_add_game_item)
+
+func on_add_game_item(game_item, game_item_parent, selected=false):
+	if game_item and is_instance_valid(game_item):
+		register_id(game_item.get_id(), game_item)
+
+func get_next_id(item=null):
 	next_id = next_id + 1
-	register_id(next_id, item)
+	if item:
+		register_id(next_id, item)
 	return next_id
 
 func register_id(id, item):

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://rffhn5seoqn"]
+
+[ext_resource type="Script" path="res://items/ErroredItemActions.gd" id="1_fno8e"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_ujcxw"]
+
+[node name="ErroredItemActions" type="VBoxContainer"]
+offset_right = 1010.0
+offset_bottom = 23.0
+script = ExtResource("1_fno8e")
+
+[node name="ItemActionHeader" parent="." instance=ExtResource("2_ujcxw")]
+offset_right = 1010.0
+
+[node name="ErrorMsg" type="Label" parent="."]
+offset_top = 27.0
+offset_right = 1010.0
+offset_bottom = 50.0

@@ -8,6 +8,9 @@ var action_panels = {}
 
 func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	for node in action_panels:
+		if !node or !is_instance_valid(node):
+			action_panels.erase(node)
+			continue
 		if !selected_nodes.has(node) and !pinned_nodes.has(node):
 			if is_instance_valid(action_panels[node]): 
 				action_panels[node].queue_free()
@@ -15,7 +18,11 @@ func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	var all_nodes = []
 	all_nodes.append_array(selected_nodes)
 	all_nodes.append_array(pinned_nodes)
+	var processed = {}
 	for node in all_nodes:
+		if processed.get(node):
+			continue
+		processed[node] = true
 		if !action_panels.has(node):
 			if node.has_method('build_action_panel'):
 				var panel = node.build_action_panel(self)

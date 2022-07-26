@@ -14,4 +14,4 @@ script = ExtResource("1_uevim")
 [node name="DescriptionSection" parent="." instance=ExtResource("3_251d2")]
 offset_top = 27.0
 offset_right = 1024.0
-offset_bottom = 50.0
+offset_bottom = 27.0

@@ -23,7 +23,7 @@ func new_game():
 	var goals = Factory.item('Goals', 'res://entities/GoalsFolder.gd')
 	Factory.place_item(goals, null)
 	var tutorial = Factory.goal('res://goals/PortalTutorial.gd')
-	Factory.place_item(tutorial, goals)
+	#Factory.place_item(tutorial, goals)
 	var wizardTower:AreaItem = Factory.area("Ancient tower", 'res://entities/wizard_tower/WizardTower.gd')
 	wizardTower.owner_lock_id = 'wiztower'
 	wizardTower.explore_difficulty = 15

@@ -3,7 +3,10 @@ class_name PcItem
 
 func _init():
 	super._init()
-	inherent_work_types = {WorkTypes.EXPLORE: 1.0}
+	inherent_work_types = {
+		WorkTypes.EXPLORE: 1.0,
+		WorkTypes.MANUAL_LABOR: 1.0,
+	}
 
 func get_action_panel_scene_path()->String:
 	return "res://items/PcItemActions.tscn"

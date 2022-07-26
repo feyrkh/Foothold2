@@ -73,8 +73,8 @@ func build_action_panel(game_ui):
 func get_action_panel_scene_path()->String:
 	return "res://items/GameItemActions.tscn"
 
-func find_sibling_items(filter_func:Callable, deep=false)->Array[GameItem]:
-	var parent_item = tree_item.get_parent().get_metadata(0)
+func find_sibling_items(filter_func:Callable, deep=false)->Array:
+	var parent_item = get_closest_nonfolder_parent()
 	if !parent_item:
 		return []
 	return parent_item.find_child_items(filter_func, false)

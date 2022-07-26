@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/sections/DescriptionSection.gd" id="1_5vmt3"]
 
-[node name="DescriptionSection" type="Label"]
+[node name="DescriptionSection" type="RichTextLabel"]
+fit_content_height = true
+scroll_active = false
 script = ExtResource("1_5vmt3")

@@ -37,7 +37,7 @@ func get_tags() -> Dictionary:
 func get_parent_tree_node() -> TreeNode:
 	return tree_item.get_parent().get_metadata(0)
 
-func get_closest_nonfolder_parent():
+func get_closest_nonfolder_parent() -> TreeNode:
 	var cur_tree_item = tree_item.get_parent()
 	while cur_tree_item.get_metadata(0).get_tags().has(Tags.TAG_FOLDER):
 		cur_tree_item = cur_tree_item.get_parent()
@@ -51,12 +51,12 @@ func delete(keep_children):
 		for child in tree_item.get_children():
 			var node = child.get_metadata(0)
 			node.delete(false)
-			child.free()
+			child.call_deferred('free')
 	emit_signal('deleting_node', self)
 	if self.has_method('on_delete_tree_node'):
 		self.on_delete_tree_node()
 	var parent_tree_node = get_parent_tree_node()
-	tree_item.free()
+	tree_item.call_deferred('free')
 	parent_tree_node.emit_signal('contents_updated')
 	self.queue_free()
 

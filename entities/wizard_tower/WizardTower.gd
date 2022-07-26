@@ -13,12 +13,12 @@ func get_explore_work_party():
 			result.pre_complete_desc = "Step into the forbidding edifice, and begin to clear it."
 			result.post_complete_desc = "Shove the creaking door open..."
 			var chamber_id = IdManager.get_next_id(null)
-			var debris_id = IdManager.get_next_id(null)
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.EXPLORE_PARTY_ID, work.get_id())
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, chamber_id)
-			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.DEBRIS_ID, debris_id)
 			result.new_item_result("Portal Chamber", "res://entities/wizard_tower/PortalChamber.gd", get_id(), {'_item_id': chamber_id})
-			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'_item_id': debris_id})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 10})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 20})
 			work.set_work_result(result)
 			#work.set_callback(WorkPartyItem.WORK_COMPLETE_CALLBACK, get_id(), 'complete_explore')
 			work.set_callback(WorkPartyItem.RESOLVE_WORK_CALLBACK, get_id(), 'resolve_explore')
@@ -36,9 +36,7 @@ func get_explore_effort_needed():
 	return 30 * (2 ** explore_rooms_found)
 	
 func get_description():
-	return """
-	This ancient tower is falling apart. Debris litters its corridors, the steps of the staircase
-	that winds around the outside edge are wobbly, broken, or entirely missing, and doors are 
-	locked or blocked from the inside by falling masonry. Just exploring the interior will take
-	time, to say nothing of the effort that any repairs will require.
-	"""
+	return "This ancient tower is falling apart. Debris litters its corridors, the steps of the staircase "+\
+		"that winds around the outside edge are wobbly, broken, or entirely missing, and doors are "+\
+		"locked or blocked from the inside by falling masonry. Just exploring the interior will take "+\
+		"time, to say nothing of the effort that any repairs will require."

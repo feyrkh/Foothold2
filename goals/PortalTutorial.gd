@@ -11,10 +11,10 @@ const GOAL_PORTAL_ACTIVATED = 4
 
 const EXPLORE_PARTY_ID = 'eid'
 const PORTAL_CHAMBER_ID = 'cid'
-const DEBRIS_ID = 'did'
 const PORTAL_ID = 'pid'
 
 var goal_state = GOAL_STARTED
+var debris_left = 3
 
 func get_default_label():
 	return 'Explore the tower'
@@ -29,8 +29,7 @@ func on_important_item_create(item_key, game_item):
 		PORTAL_ID: Events.emit_signal('goal_progress', get_goal_id(), GOAL_PORTAL_ACTIVATED)
 	
 func on_important_item_delete(item_key, game_item):
-	match item_key:
-		DEBRIS_ID: Events.emit_signal('goal_progress', get_goal_id(), GOAL_DEBRIS_CLEARED)
+	pass
 
 func on_goal_progress(new_progress):
 	goal_state = new_progress
@@ -39,8 +38,8 @@ func on_goal_progress(new_progress):
 		portal_chamber.tutorial_goal_state = new_progress
 		portal_chamber.refresh_action_panel()
 	match goal_state:
-		GOAL_CHAMBER_EXPLORED: print("Time to create the portal object")
-
+		GOAL_PORTAL_ACTIVATED: print("Time to create the portal object")
+		
 func get_description():
 	match goal_state:
-		GOAL_STARTED: return "As the first scout to pass through the portal into a new world, you arrive disoriented and weak in a dilapidated tower.\nTo get started, prepare to explore your surroundings by selecting the ancient tower's entry and preparing an exploration work crew."
+		GOAL_STARTED: return "As the first scout to pass through the portal into a new world, you arrive disoriented and weak in a dilapidated tower. To get started, prepare to explore your surroundings by selecting the ancient tower's entry and preparing an exploration work crew."

@@ -12,3 +12,4 @@ const TAG_PC = 'p'
 const TAG_WORK = 'w'
 
 const WORK_PARTY_EXPLORE = 'we'
+const WORK_PARTY_MANUAL_LABOR = 'wl'

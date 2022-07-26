@@ -14,3 +14,6 @@ signal goal_progress(goal_id, progress_data)
 func safe_connect(signal_name, callable):
 	if !is_connected(signal_name, callable):
 		connect(signal_name, callable)
+
+static func emit_goal_progress(goal_id, progress_data):
+	Events.emit_signal('goal_progress', goal_id, progress_data)

@@ -15,7 +15,7 @@ func _ready():
 	Events.connect('add_goal', on_add_goal)
 
 func on_add_goal(goal):
-	emit_signal('add_game_item', goal, self)
+	Events.emit_signal('add_game_item', goal, self)
 
 func _contents_updated():
 	pass

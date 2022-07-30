@@ -4,7 +4,7 @@ class_name TreeNode
 signal label_updated(new_label)
 signal deleting_node(tree_node)
 signal contents_updated() # emitted when a child is added or removed
-signal parent_updated(old_parent, new_parent) # Moved from one parent to another
+signal parent_updated(old_parent, new_parent) # Moved from one parent to another; either may be null
 
 var tree_item:TreeItem # owner of this metadata
 var label=''

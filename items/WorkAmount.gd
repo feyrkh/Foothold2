@@ -24,12 +24,12 @@ func add(amt:WorkAmount):
 	if work_type != amt.work_type:
 		push_error('Tried to add ', amt.work_type, ' WorkAmount to an existing WorkAmount of type ', work_type)
 		return
-	effort = amt.effort
-	bonus = amt.bonus
+	effort += amt.get_effort()
 	if amt.effort != 0:
 		effort_modifiers.append("%s: +%.1f" % [WorkTypes.name(work_type), amt.effort])
-	if amt.bonus != 0:
-		effort_modifiers.append("%s: *%.2f" % [WorkTypes.name(work_type+WorkTypes.BONUS_SUFFIX), amt.bonus*100])
 
 func apply_effort(amt:int):
 	effort -= amt/(1+bonus)
+
+static func copy(other:WorkAmount) -> WorkAmount:
+	return WorkAmount.new(other.work_type, other.effort, other.bonus, other.effort_modifiers.duplicate())

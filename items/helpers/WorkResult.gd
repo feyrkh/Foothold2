@@ -21,6 +21,8 @@ var post_complete_desc = "Work complete!"
 var results = []
 
 func new_item_result(item_name:String, item_script:String, target_owner_id, setup_args=null):
+	if target_owner_id is TreeNode:
+		target_owner_id = target_owner_id.get_id()
 	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: item_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_owner_id, KEY_SETUP_ARGS: setup_args})
 
 func goal_progress(goal_id, progress_val):

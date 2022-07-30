@@ -16,6 +16,14 @@ const PORTAL_ID = 'pid'
 var goal_state = GOAL_STARTED
 var debris_left = 3
 
+func setup():
+	var wizardTower:AreaItem = Factory.area("Ancient tower", 'res://entities/wizard_tower/WizardTower.gd')
+	wizardTower.owner_lock_id = 'wiztower'
+	wizardTower.explore_difficulty = 15
+	Events.emit_signal('add_game_item', wizardTower, null, false)
+	var pc:PcItem = Factory.pc('A wanderer')
+	Factory.place_item(pc, null)
+
 func get_default_label():
 	return 'Explore the tower'
 

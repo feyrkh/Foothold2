@@ -3,9 +3,9 @@ class_name PcItem
 
 func _init():
 	super._init()
-	inherent_work_types = {
-		WorkTypes.EXPLORE: 1.0,
-		WorkTypes.MANUAL_LABOR: 1.0,
+	inherent_work_amounts = {
+		WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, 1.0, 0, []),
+		WorkTypes.MANUAL_LABOR: WorkAmount.new(WorkTypes.MANUAL_LABOR, 1.0, 0, []),
 	}
 
 func get_action_panel_scene_path()->String:
@@ -18,14 +18,7 @@ func get_tags()->Dictionary:
 
 func get_allowed_tags()->Dictionary:
 	return ALLOWED_TAGS
-
-func get_work_amount(work_type:String) -> WorkAmount:
-	var helpers_in_inventory = find_child_items(_is_work_helper)
-	return super.get_work_amount_from_helpers(work_type, helpers_in_inventory)
-
-func _is_work_helper(game_item) -> bool:
-	return game_item.has_method('get_work_amount')
-
+	
 func get_description():
 	return "A cool guy."
 

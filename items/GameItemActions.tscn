@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://i8v7smc3fn3"]
+[gd_scene load_steps=3 format=3 uid="uid://bbunmlopiwmi0"]
 
 [ext_resource type="Script" path="res://items/GameItemActions.gd" id="1_hcsep"]
-[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://items/ItemActionHeader.tscn" id="2_ujcxw"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://ui/sections/ItemActionHeader.tscn" id="2_ujcxw"]
 
 [node name="GameItemActions" type="VBoxContainer"]
 offset_right = 1010.0

@@ -2,6 +2,8 @@ extends Object
 class_name Factory
 
 static func place_item(item:GameItem, owner_or_id, highlight:bool=false, deferred:bool=false):
+	if (owner_or_id is TreeItem):
+		owner_or_id = owner_or_id.get_metadata(0)
 	if !(owner_or_id is TreeNode):
 		owner_or_id = IdManager.get_item_by_id(owner_or_id)
 	if deferred:

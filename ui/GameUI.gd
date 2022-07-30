@@ -6,6 +6,9 @@ class_name GameUI
 
 var action_panels = {}
 
+func _ready():
+	Global.main_tree = ItemTree
+
 func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	for node in action_panels:
 		if !node or !is_instance_valid(node):

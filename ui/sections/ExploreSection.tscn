@@ -19,6 +19,7 @@ offset_right = 330.0
 offset_bottom = 31.0
 size_flags_vertical = 1
 size_flags_stretch_ratio = 2.0
+mouse_filter = 1
 text = "Start an exploration work party"
 horizontal_alignment = 1
 vertical_alignment = 1

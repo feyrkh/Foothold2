@@ -16,7 +16,7 @@ func get_explore_work_party():
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.EXPLORE_PARTY_ID, work.get_id())
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, chamber_id)
 			result.new_item_result("Portal Chamber", "res://entities/wizard_tower/PortalChamber.gd", get_id(), {'_item_id': chamber_id})
-			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5, 'shovel': true})
 			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 10})
 			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 20})
 			work.set_work_result(result)

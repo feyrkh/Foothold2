@@ -22,7 +22,7 @@ func setup():
 	wizardTower.explore_difficulty = 15
 	Events.emit_signal('add_game_item', wizardTower, null, false)
 	var pc:PcItem = Factory.pc('A wanderer')
-	Factory.place_item(pc, null)
+	Factory.place_item(pc, wizardTower)
 
 func get_default_label():
 	return 'Explore the tower'
@@ -32,9 +32,12 @@ func get_goal_id():
 
 func on_important_item_create(item_key, game_item):
 	match item_key:
-		EXPLORE_PARTY_ID: Events.emit_signal('goal_progress', get_goal_id(), GOAL_EXPLORE_PARTY_CREATED)
-		PORTAL_CHAMBER_ID: Events.emit_signal('goal_progress', get_goal_id(), GOAL_CHAMBER_EXPLORED)
-		PORTAL_ID: Events.emit_signal('goal_progress', get_goal_id(), GOAL_PORTAL_ACTIVATED)
+		EXPLORE_PARTY_ID: 
+			Events.emit_signal('goal_progress', get_goal_id(), GOAL_EXPLORE_PARTY_CREATED)
+		PORTAL_CHAMBER_ID: 
+			Events.emit_signal('goal_progress', get_goal_id(), GOAL_CHAMBER_EXPLORED)
+		PORTAL_ID: 
+			Events.emit_signal('goal_progress', get_goal_id(), GOAL_PORTAL_ACTIVATED)
 	
 func on_important_item_delete(item_key, game_item):
 	pass
@@ -47,7 +50,10 @@ func on_goal_progress(new_progress):
 		portal_chamber.refresh_action_panel()
 	match goal_state:
 		GOAL_PORTAL_ACTIVATED: print("Time to create the portal object")
+	refresh_action_panel()
 		
 func get_description():
 	match goal_state:
-		GOAL_STARTED: return "As the first scout to pass through the portal into a new world, you arrive disoriented and weak in a dilapidated tower. To get started, prepare to explore your surroundings by selecting the ancient tower's entry and preparing an exploration work crew."
+		GOAL_STARTED: return "As the first scout to pass through a portal into a new world, the scout arrives disoriented and weak in a dilapidated tower.\nThey take a moment to gather their thoughts, and make a plan to explore their new surroundings.\n\n- Form an exploration work party"
+		GOAL_EXPLORE_PARTY_CREATED: return "With the exploration plan firmly in mind, all that remains is to execute it.\n\n- Assign the scout to an exploration party\n- Wait until exploration is complete"
+		GOAL_CHAMBER_EXPLORED: return "The room is choked with debris, but you see what looks like a return portal behind a particularly large pile of rubble.\n\n- Clear all the debris"

@@ -79,3 +79,5 @@ func on_important_item_create(item_key, game_item):
 func on_important_item_delete(item_key, game_item):
 	pass
 
+func can_rename()->bool:
+	return false

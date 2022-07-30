@@ -1,7 +1,7 @@
 extends TreeNode
 class_name GameItem
 
-var _item_id
+var _item_id:int
 var action_panel
 var callbacks = null
 
@@ -11,8 +11,8 @@ func _ready():
 func get_default_label():
 	return 'Unknown item'
 
-func get_id():
-	if _item_id == null:
+func get_id()->int:
+	if _item_id == 0 or _item_id == null:
 		_item_id = IdManager.get_next_id(self)
 	return _item_id
 
@@ -31,10 +31,10 @@ func execute_callback(callback_id:String):
 	if owner_item != null and owner_item.has_method(callback_data[1]):
 		owner_item.call(callback_data[1], self)
 
-func can_rename():
+func can_rename()->bool:
 	return true
 
-func can_delete():
+func can_delete()->bool:
 	return false
 
 func can_create_subfolder():

@@ -32,3 +32,9 @@ res://items/ItemActionHeader.tscn
 res://ui/sections/ExploreSection.tscn
 res://ui/sections/ItemActionHeader.tscn
 res://Factory.gd
+res://goals/Goal.gd
+res://util/IdManager.gd
+res://entities/wizard_tower/PortalChamber.gd
+res://ui/popup/GetStringPopup.tscn
+res://ui/sections/AttunementSection.tscn
+res://ui/sections/AttunementSection.gd

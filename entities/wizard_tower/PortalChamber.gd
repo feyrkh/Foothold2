@@ -3,9 +3,6 @@ class_name PortalChamber
 
 var tutorial_goal_state
 
-func _ready():
-	Events.emit_signal('goal_data', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, get_id())
-
 func get_description()->String:
 	match tutorial_goal_state:
 		PortalTutorialGoal.GOAL_CHAMBER_EXPLORED: return "A nondescript stone chamber. The room is choked with debris, making it difficult to move around. An arch is carved into one wall, but it leads nowhere - seamless stone fills it."

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bemjtng7me4sk"]
+
+[ext_resource type="Script" path="res://ui/sections/AttunementSection.gd" id="1_kus1q"]
+
+[node name="AttunementSection" type="Label"]
+script = ExtResource("1_kus1q")

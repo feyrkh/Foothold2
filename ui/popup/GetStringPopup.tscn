@@ -51,7 +51,6 @@ func _on_folder_text_submitted(new_text):
 
 [node name="GetStringPopup" type="PopupPanel"]
 size = Vector2i(220, 152)
-visible = true
 script = SubResource("GDScript_gj4lc")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

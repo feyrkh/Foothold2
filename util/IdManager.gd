@@ -10,7 +10,7 @@ func on_add_game_item(game_item, game_item_parent, selected=false):
 	if game_item and is_instance_valid(game_item):
 		register_id(game_item.get_id(), game_item)
 
-func get_next_id(item=null):
+func get_next_id(item=null)->int:
 	next_id = next_id + 1
 	if item:
 		register_id(next_id, item)

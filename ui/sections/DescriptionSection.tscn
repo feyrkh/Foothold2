@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://ui/sections/DescriptionSection.gd" id="1_5vmt3"]
 
 [node name="DescriptionSection" type="RichTextLabel"]
+custom_minimum_size = Vector2(300, 0)
 mouse_filter = 1
 fit_content_height = true
 scroll_active = false

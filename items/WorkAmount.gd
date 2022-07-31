@@ -5,14 +5,14 @@ var work_type:String
 var label:String
 var effort:float
 var bonus:float
-var effort_modifiers:Array[String]
+var helper_ids_used:Dictionary
 
-func _init(work_type:String, effort:float, bonus:float, effort_modifiers:Array[String]):
+func _init(work_type:String, effort:float, bonus:float, helper_ids_used:Dictionary):
 	self.work_type = work_type
 	self.label = WorkTypes.name(work_type)
 	self.effort = effort
 	self.bonus = bonus
-	self.effort_modifiers = effort_modifiers
+	self.helper_ids_used = helper_ids_used
 
 func get_effort():
 	return effort * (1+bonus)
@@ -26,10 +26,26 @@ func add(amt:WorkAmount):
 		return
 	effort += amt.get_effort()
 	if amt.effort != 0:
-		effort_modifiers.append("%s: +%.1f" % [WorkTypes.name(work_type), amt.effort])
+		helper_ids_used.merge(amt.helper_ids_used)
 
-func apply_effort(amt:int):
+func apply_effort(amt:float):
 	effort -= amt/(1+bonus)
 
+func get_helpers_description() -> String:
+	if helper_ids_used.is_empty():
+		return ''
+	var names = PackedStringArray(helper_ids_used.keys().map(func(helper_id): 
+		var helper = IdManager.get_item_by_id(helper_id)
+		if helper:
+			return helper.label
+	))
+	return "Affected by: "+", ".join(names)
+
+func on_effort_applied():
+	for helper_id in helper_ids_used:
+		var helper = IdManager.get_item_by_id(helper_id)
+		if helper and helper.has_method('on_effort_applied'):
+			helper.on_effort_applied()
+
 static func copy(other:WorkAmount) -> WorkAmount:
-	return WorkAmount.new(other.work_type, other.effort, other.bonus, other.effort_modifiers.duplicate())
+	return WorkAmount.new(other.work_type, other.effort, other.bonus, other.helper_ids_used.duplicate())

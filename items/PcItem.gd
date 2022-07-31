@@ -4,8 +4,8 @@ class_name PcItem
 func _init():
 	super._init()
 	inherent_work_amounts = {
-		WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, 1.0, 0, []),
-		WorkTypes.MANUAL_LABOR: WorkAmount.new(WorkTypes.MANUAL_LABOR, 1.0, 0, []),
+		WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, 1.0, 0, {}),
+		WorkTypes.MANUAL_LABOR: WorkAmount.new(WorkTypes.MANUAL_LABOR, 1.0, 0, {}),
 	}
 
 func get_action_panel_scene_path()->String:

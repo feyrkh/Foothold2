@@ -38,3 +38,8 @@ res://entities/wizard_tower/PortalChamber.gd
 res://ui/popup/GetStringPopup.tscn
 res://ui/sections/AttunementSection.tscn
 res://ui/sections/AttunementSection.gd
+res://ui/sections/Section.gd
+res://ui/sections/WorkProvidedSectionEntries.gd
+res://items/WorkPartyItem.gd
+res://ui/sections/WorkNeededSectionEntries.gd
+res://ui/sections/WorkNeededSection.gd

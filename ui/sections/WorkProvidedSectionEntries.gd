@@ -24,6 +24,8 @@ func add_work_amount(work_amount:WorkAmount):
 	item.set_selectable(1, false)
 	item.set_text(0, work_amount.label)
 	item.set_text(1, "%.1f"%[work_amount.get_effort()])
+	var helpers = work_amount.get_helpers_description()
+	item.set_tooltip(1, helpers)
 	custom_minimum_size.y = min(BASE_PIXEL_HEIGHT + (PIXELS_PER_ROW * (root.get_child_count()+1)), MAX_PIXELS)
 	visible = false
 	call_deferred("set_visible", true)

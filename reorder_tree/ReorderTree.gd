@@ -189,7 +189,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list, offset):
 						previous_parent.emit_signal('contents_updated')
 					if new_parent:
 						new_parent.emit_signal('contents_updated')
-					item.emit_signal('parent_updated', previous_parent, new_parent)
+					item.get_metadata(0).emit_signal('parent_updated', previous_parent, new_parent)
 				last_child = item
 	elif offset == 1:
 		placeholder = target_item.get_parent().create_child()
@@ -203,7 +203,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list, offset):
 					previous_parent.emit_signal('contents_updated')
 				if new_parent:
 					new_parent.emit_signal('contents_updated')
-				item.emit_signal('parent_updated', previous_parent, new_parent)
+				item.get_metadata(0).emit_signal('parent_updated', previous_parent, new_parent)
 	elif offset == -1:
 		placeholder = target_item.get_parent().create_child()
 		placeholder.move_before(target_item)
@@ -216,7 +216,7 @@ func perform_drop(target_item:TreeItem, dropped_item_list, offset):
 					previous_parent.emit_signal('contents_updated')
 				if new_parent:
 					new_parent.emit_signal('contents_updated')
-				item.emit_signal('parent_updated', previous_parent, new_parent)
+				item.get_metadata(0).emit_signal('parent_updated', previous_parent, new_parent)
 	if placeholder:
 		placeholder.free()
 

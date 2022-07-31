@@ -16,7 +16,7 @@ func get_next_id(item=null)->int:
 		register_id(next_id, item)
 	return next_id
 
-func register_id(id, item):
+func register_id(id, item:GameItem):
 	id_map[id] = item
 
 func cleanup_dead_items():
@@ -24,7 +24,7 @@ func cleanup_dead_items():
 		if !id_map[k] or !is_instance_valid(id_map[k]):
 			id_map.erase(k)
 
-func get_item_by_id(id):
+func get_item_by_id(id) -> GameItem:
 	var result = id_map.get(id)
 	if result and !is_instance_valid(result):
 		id_map.erase(id)

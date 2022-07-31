@@ -3,6 +3,11 @@ class_name Section
 
 var _game_item:GameItem
 
+
+func _ready():
+	if self.has_method('refresh'):
+		self.refresh()
+
 func get_game_item() -> GameItem:
 	if !_game_item:
 		var actions = get_parent()

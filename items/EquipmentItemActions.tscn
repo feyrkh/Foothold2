@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dovp1iwjtddo1"]
+[gd_scene load_steps=6 format=3 uid="uid://dovp1iwjtddo1"]
 
 [ext_resource type="Script" path="res://items/PcItemActions.gd" id="1_qumod"]
 [ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://ui/sections/ItemActionHeader.tscn" id="2_q7278"]
 [ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_251d2"]
 [ext_resource type="PackedScene" path="res://ui/sections/WorkProvidedSection.tscn" id="4_2lpdr"]
+[ext_resource type="PackedScene" uid="uid://bemjtng7me4sk" path="res://ui/sections/AttunementSection.tscn" id="4_b8x4q"]
 
 [node name="EquipmentItemActions" type="VBoxContainer"]
 anchor_right = 1.0
@@ -17,9 +18,14 @@ offset_top = 27.0
 offset_right = 1024.0
 offset_bottom = 27.0
 
+[node name="AttunementSection" parent="." instance=ExtResource("4_b8x4q")]
+offset_top = 31.0
+offset_right = 1024.0
+offset_bottom = 54.0
+
 [node name="WorkTypeSection" parent="." instance=ExtResource("4_2lpdr")]
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_top = 31.0
+offset_top = 58.0
 offset_right = 1024.0
 offset_bottom = 600.0

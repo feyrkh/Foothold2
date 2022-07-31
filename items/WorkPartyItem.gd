@@ -35,7 +35,7 @@ func init_work_party(label:String, work_party_type:String, work_needed:Dictionar
 	for work_type in work_needed.keys():
 		var amt = work_needed[work_type]
 		if !(amt is WorkAmount):
-			amt = WorkAmount.new(work_type, amt, 0, [])
+			amt = WorkAmount.new(work_type, amt, 0, {})
 			work_needed[work_type] = amt
 		total_work_needed += amt.get_effort()
 	update_percentage_label()
@@ -72,7 +72,7 @@ func get_action_panel_scene_path()->String:
 func _ready():
 	super._ready()
 	Events.connect('game_tick', game_tick)
-	connect('contents_updated', update_work_amount)
+	connect('contents_updated', update_work_amounts)
 
 func get_work_amounts():
 	return work_amounts
@@ -80,6 +80,7 @@ func get_work_amounts():
 func game_tick():
 	var updated = false
 	if is_work_complete():
+		Events.disconnect('game_tick', game_tick)
 		return
 	for work_type in work_amounts:
 		var needed:WorkAmount = work_needed.get(work_type)
@@ -92,6 +93,7 @@ func game_tick():
 			total_work_applied += applied
 			update_percentage_label()
 			needed.apply_effort(applied)
+			provided.on_effort_applied()
 			if needed.get_effort() < 0.000001:
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)
@@ -104,10 +106,11 @@ func game_tick():
 		tree_item.set_icon(0, load("res://assets/icon/arrow-right.png"))
 		refresh_action_panel()
 	else:
+		Events.disconnect('game_tick', game_tick)
 		tree_item.set_icon(0, null)
 		
 # Look for PCs 
-func update_work_amount():
+func update_work_amounts():
 	var workers:Array[GameItem] = super.find_child_items(_is_worker)
 	for work_type in work_needed:
 		var amt:WorkAmount = null
@@ -119,6 +122,7 @@ func update_work_amount():
 				amt.add(found_amt)
 		work_amounts[work_type] = amt
 	refresh_action_panel()
+	Events.safe_connect('game_tick', game_tick)
 
 func _is_worker(game_item:GameItem) -> bool:
 	return game_item.has_method('get_work_amount')

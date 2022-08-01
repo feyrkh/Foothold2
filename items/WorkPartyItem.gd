@@ -12,8 +12,8 @@ const WORK_TARGET_PARENT_ONLY = 1 << 2
 const WORK_TARGET_SPECIFIC_ITEM = 1 << 3
 
 var work_party_type:String = 'unknown'
-var work_needed:Dictionary = {}
-var work_amounts:Dictionary = {}
+var work_needed:Dictionary = {} # WorkTypes -> WorkAmount
+var work_amounts:Dictionary = {} # WorkTypes -> WorkAmount
 var max_workers:int = 1
 var valid_work_target_types:int = WORK_TARGET_ALL_SERIAL | WORK_TARGET_ALL_SIMULTANEOUS | WORK_TARGET_PARENT_ONLY | WORK_TARGET_SPECIFIC_ITEM
 var work_target_type:int = WORK_TARGET_ALL_SERIAL
@@ -25,6 +25,17 @@ var total_work_applied
 var work_result:WorkResult
  
 var auto_resolve = false # if true, the resolve_completion_effects call occurs automatically. Otherwise a button is added to the panel that must be clicked to resolve. 
+
+func post_config(config:Dictionary):
+	if work_needed != null:
+		for k in work_needed:
+			var entry_conf = work_needed[k]
+			work_needed[k] = WorkAmount.build_from_config(entry_conf)
+	if work_amounts != null:
+		for k in work_amounts:
+			var entry_conf = work_amounts[k]
+			work_amounts[k] = WorkAmount.build_from_config(entry_conf)
+	work_result = WorkResult.build_from_config(config.get('work_result', null))
 
 func init_work_party(label:String, work_party_type:String, work_needed:Dictionary):
 	super.init(label)

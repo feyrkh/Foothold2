@@ -7,6 +7,9 @@ var effort:float
 var bonus:float
 var helper_ids_used:Dictionary
 
+static func build_from_config(entry_conf:Dictionary) -> WorkAmount:
+	return WorkAmount.new(entry_conf.get('work_type'), entry_conf.get('effort', 99999), entry_conf.get('bonus', 0), entry_conf.get('helper_ids_used', {}))
+	
 func _init(work_type:String, effort:float, bonus:float, helper_ids_used:Dictionary):
 	self.work_type = work_type
 	self.label = WorkTypes.name(work_type)
@@ -19,7 +22,8 @@ func get_effort():
 
 static func sort(a:WorkAmount, b:WorkAmount):
 	return a.label < b.label
-	
+
+
 func add(amt:WorkAmount):
 	if work_type != amt.work_type:
 		push_error('Tried to add ', amt.work_type, ' WorkAmount to an existing WorkAmount of type ', work_type)

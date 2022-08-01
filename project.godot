@@ -14,6 +14,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/AreaItem.gd"
 }, {
+"base": "Object",
+"class": &"Config",
+"language": &"GDScript",
+"path": "res://util/Config.gd"
+}, {
 "base": "WorkAwareItem",
 "class": &"EquipmentItem",
 "language": &"GDScript",
@@ -89,6 +94,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://reorder_tree/ReorderTree.gd"
 }, {
+"base": "Object",
+"class": &"SaveLoad",
+"language": &"GDScript",
+"path": "res://util/SaveLoad.gd"
+}, {
 "base": "Control",
 "class": &"Section",
 "language": &"GDScript",
@@ -131,6 +141,7 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "AreaItem": "",
+"Config": "",
 "EquipmentItem": "",
 "Factory": "",
 "FolderItem": "",
@@ -146,6 +157,7 @@ _global_script_class_icons={
 "PortalChamber": "",
 "PortalTutorialGoal": "",
 "ReorderTree": "",
+"SaveLoad": "",
 "Section": "",
 "Tags": "",
 "TreeNode": "",
@@ -168,6 +180,15 @@ config/icon="res://icon.png"
 IdManager="*res://util/IdManager.gd"
 Events="*res://Events.gd"
 Global="*res://Global.gd"
+Debug="*res://util/Debug.gd"
+
+[debug]
+
+gdscript/warnings/unassigned_variable=0
+gdscript/warnings/unused_variable=0
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
+gdscript/warnings/unused_parameter=0
 
 [rendering]
 

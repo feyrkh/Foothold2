@@ -6,12 +6,14 @@ signal selected_nodes_changed(selected_nodes:Array[TreeNode], pinned_nodes:Array
 const DRAG_COLOR = Color(1.0, 1.0, 1.0, 0.5)
 
 var pinned_nodes:Array[TreeNode] = []
+var root:TreeItem
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	connect('multi_selected', on_multi_selected)
 	Events.connect('pin_action_panel', set_panel_pinned)
-	var root = add_item(TreeNode.new().init('root'), null)
+	Events.connect('pre_load_game', clear)
+	root = create_item()
 #	if get_parent() == get_tree().root:
 #		var item1 = add_item(GameItem.new('Wizard Tower'), root)
 #		var item2 = add_item(GameItem.new('Stone chamber'), item1)
@@ -26,6 +28,56 @@ func _ready():
 #		for i in range(100):
 #			var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 
+func clear():
+	super.clear()
+	root = create_item()
+
+func save_data() -> Array:
+	var data = []
+	for tree_item in get_root().get_children():
+		var save_data = save_data_for_item(tree_item)
+		if save_data and save_data.size() > 0:
+			data.append(save_data)
+	return data
+
+func load_data(data:Array, parent_tree_item:TreeItem=null):
+	for tree_item_data in data:
+		load_data_for_item(tree_item_data, parent_tree_item)
+
+func save_data_for_item(tree_item:TreeItem) -> Array:
+	var tree_node:TreeNode = tree_item.get_metadata(0)
+	if tree_node and is_instance_valid(tree_node):
+		if tree_node.has_method('skip_save') and tree_node.skip_save():
+			return []
+		if tree_item.get_child_count() > 0:
+			var child_save_data = []
+			for child_item in tree_item.get_children():
+				var item_save_data = save_data_for_item(child_item)
+				if item_save_data and item_save_data.size() > 0:
+					child_save_data.append(item_save_data)
+			return [tree_node.get_script().resource_path, Config.to_config(tree_node), child_save_data]
+		else:
+			return [tree_node.get_script().resource_path, Config.to_config(tree_node)]
+	else:
+		return []
+
+func load_data_for_item(tree_item_data:Array, parent_tree_item:TreeItem):
+	var script_path:String = tree_item_data[0]
+	var script_config:Dictionary = tree_item_data[1]
+	var tree_node = load(script_path).new()
+	Config.config(tree_node, script_config)
+	if tree_node.has_method('post_load_game'):
+		tree_node.connect('post_load_game', tree_node.post_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+	if tree_node.has_method('finalize_load_game'):
+		tree_node.connect('finalize_load_game', tree_node.finalize_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+	IdManager.register_id(tree_node.get_id(), tree_node)
+	var new_tree_item = add_item(tree_node, parent_tree_item)
+	IdManager.add_child(tree_node)
+	if tree_item_data.size() >= 3:
+		var child_save_data = tree_item_data[2]
+		for child_entry in child_save_data:
+			load_data_for_item(child_entry, new_tree_item)
+
 func set_panel_pinned(tree_node:TreeNode, is_pinned:bool):
 	if !tree_node or !is_instance_valid(tree_node):
 		return
@@ -36,14 +88,17 @@ func set_panel_pinned(tree_node:TreeNode, is_pinned:bool):
 	emit_signal('selected_nodes_changed', get_selected_nodes(), pinned_nodes)
 
 func add_item(tree_node:TreeNode, parent_item:TreeItem=null):
+	if parent_item == null:
+		parent_item = root
 	var new_item = create_item(parent_item)
 	new_item.set_metadata(0, tree_node)
 	new_item.set_text(0, tree_node.get_label())
 	tree_node.tree_item = new_item
-	if parent_item:
-		parent_item.get_metadata(0).emit_signal('contents_updated')
+	var parent_node = parent_item.get_metadata(0)
+	if parent_node:
+		parent_node.emit_signal('contents_updated')
 	tree_node.connect('deleting_node', on_deleting_node)
-	new_item.emit_signal('parent_updated', null, parent_item)
+	new_item.emit_signal('parent_updated', null, parent_node)
 	return new_item
 
 func on_deleting_node(node):

@@ -5,8 +5,14 @@ var _item_id:int
 var action_panel
 var callbacks = null
 
+func get_ignore_field_names() -> Dictionary:
+	return {'action_panel':true, 'tree_item':true}
+
 func _ready():
-	pass
+	Events.connect('pre_load_game', pre_load_game)
+
+func pre_load_game():
+	queue_free() # gotta wipe the old game state before loading a new one
 
 func get_default_label():
 	return 'Unknown item'

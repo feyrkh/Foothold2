@@ -11,6 +11,16 @@ signal goal_item(goal_id, item_key, item_id_not_game_item)
 signal goal_data(goal_id, data_key, data_val)
 signal goal_progress(goal_id, progress_data)
 
+signal global_save_data(data_id, data_config)
+signal global_load_data(data_id, data_config)
+signal trigger_save_game(save_label, save_file)
+signal trigger_load_game(save_slot)
+signal pre_save_game()
+signal post_save_game()
+signal pre_load_game()
+signal post_load_game()
+signal finalize_load_game()
+
 func safe_connect(signal_name, callable):
 	if !is_connected(signal_name, callable):
 		connect(signal_name, callable)

@@ -39,6 +39,8 @@ static func item(label:String, script=null) -> GameItem:
 		script = "res://items/GameItem.gd"
 	var item = load(script).new()
 	item.init(label)
+	if item.has_method('first_time_config'):
+		item.call_deferred('first_time_config')
 	return item
 
 static func pc(label:String) -> PcItem:

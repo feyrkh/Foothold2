@@ -20,6 +20,13 @@ var pre_complete_desc = "Working..."
 var post_complete_desc = "Work complete!"
 var results = []
 
+static func build_from_config(config) -> WorkResult:
+	if config == null:
+		return null
+	var work_result = WorkResult.new()
+	Config.config(work_result, config)
+	return work_result
+
 func new_item_result(item_name:String, item_script:String, target_owner_id, setup_args=null):
 	if target_owner_id is TreeNode:
 		target_owner_id = target_owner_id.get_id()

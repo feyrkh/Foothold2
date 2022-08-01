@@ -7,6 +7,17 @@ class_name WorkAwareItem
 var inherent_work_amounts:Dictionary = {}
 var work_amounts:Dictionary = {}
 
+func post_config(config:Dictionary):
+	if inherent_work_amounts != null:
+		for k in inherent_work_amounts:
+			var entry_conf = inherent_work_amounts[k]
+			inherent_work_amounts[k] = WorkAmount.build_from_config(entry_conf)
+	if work_amounts != null:
+		for k in work_amounts:
+			var entry_conf = work_amounts[k]
+			work_amounts[k] = WorkAmount.build_from_config(entry_conf)
+	
+			
 func _ready():
 	connect('contents_updated', update_work_amounts)
 	connect('parent_updated', _parent_updated)

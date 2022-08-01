@@ -9,6 +9,21 @@ var action_panels = {}
 func _ready():
 	Global.main_tree = ItemTree
 
+func save_data() -> Dictionary:
+	var data = {
+		'it': ItemTree.save_data()
+	}
+	return data
+
+func load_data(data:Dictionary):
+	clear_action_panels()
+	ItemTree.load_data(data['it'])
+
+func clear_action_panels():
+	for child in ActionContainer.get_children():
+		child.queue_free()
+	action_panels = {}
+
 func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	for node in action_panels:
 		if !node or !is_instance_valid(node):

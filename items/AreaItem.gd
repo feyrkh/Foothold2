@@ -12,6 +12,9 @@ func get_tags()->Dictionary:
 func get_allowed_tags()->Dictionary:
 	return ALLOWED_TAGS
 
+func get_action_panel_scene_path()->String:
+	return "res://items/AreaItemActions.tscn"
+	
 func get_description():
 	pass
 
@@ -20,6 +23,3 @@ func has_more_explore_locations():
 
 func get_next_explore_location():
 	return null
-
-func get_action_panel_scene_path()->String:
-	return "res://items/AreaItemActions.tscn"

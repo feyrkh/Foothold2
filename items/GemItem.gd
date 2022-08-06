@@ -1,6 +1,8 @@
 extends GameItem
 class_name GemItem
 
+signal vis_updated(gem_item)
+
 const size_desc:Dictionary = {
 	1: 'shard of',
 	2: 'pebble of',
@@ -83,6 +85,8 @@ var gem_type:int = 0 :
 		
 var vis:float = 0:
 	set(val):
+		if val != vis:
+			vis_updated.emit(self)
 		if vis <= 0 and val > 0:
 			Events.safe_connect('game_tick', on_game_tick)
 		vis = min(val, get_max_vis())
@@ -92,7 +96,7 @@ var vis_target
 var last_sent_vis = 0:
 	set(val):
 		if last_sent_vis != val:
-			refresh_action_panel()
+			vis_updated.emit(self)
 
 var cached_max_vis
 
@@ -165,6 +169,9 @@ func get_vis_output_speed() -> float:
 func get_vis() -> float:
 	return vis
 
+func get_vis_type() -> int:
+	return vis_type
+
 func get_luxury() -> float:
 	return pow(2, int((size+1)/2.0)) * (0.5 * (size % 2)) 
 
@@ -182,12 +189,17 @@ func get_description():
 	return "A %s %s. %s" % [get_size_desc(), get_gem_type_desc(), get_vis_power_draw_desc()]
 
 func get_action_panel_scene_path()->String:
-	return "res://items/GemItemActions.tscn"
+	return "res://items/FlexibleItemActions.tscn"
 
-const SELF_TAGS = {Tags.TAG_EQUIPMENT:true, Tags.TAG_FURNITURE:true}
+const ACTION_SECTIONS = ['Description', 'VisContainer']
+func get_action_sections()->Array:
+	return ACTION_SECTIONS
+	
+const SELF_TAGS = {Tags.TAG_EQUIPMENT:true, Tags.TAG_FURNITURE:true, Tags.TAG_VIS_SUPPLIER:true}
 const ALLOWED_TAGS = {}
 func get_tags()->Dictionary:
 	return SELF_TAGS
 
 func get_allowed_tags()->Dictionary:
 	return ALLOWED_TAGS
+

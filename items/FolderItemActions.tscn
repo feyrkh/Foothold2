@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://d04ee7t8v616p"]
 
 [ext_resource type="Script" path="res://items/FolderItemActions.gd" id="1_14j55"]
-[ext_resource type="PackedScene" path="res://ui/sections/ItemActionHeader.tscn" id="2_s7i43"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://ui/sections/ItemActionHeader.tscn" id="2_s7i43"]
 
 [node name="FolderItemActions" type="VBoxContainer"]
 anchor_right = 1.0

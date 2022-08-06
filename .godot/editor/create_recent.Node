@@ -1,10 +1,10 @@
+VBoxContainer
 Label
 RichTextLabel
 Button
 TextureButton
 Timer
 HBoxContainer
-VBoxContainer
 Tree
 MarginContainer
 ItemList

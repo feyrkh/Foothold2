@@ -13,7 +13,11 @@ func get_allowed_tags()->Dictionary:
 	return ALLOWED_TAGS
 
 func get_action_panel_scene_path()->String:
-	return "res://items/AreaItemActions.tscn"
+	return "res://items/FlexibleItemActions.tscn"
+
+const ACTION_SECTIONS = ['Description', 'Explore']
+func get_action_sections()->Array:
+	return ACTION_SECTIONS
 	
 func get_description():
 	pass

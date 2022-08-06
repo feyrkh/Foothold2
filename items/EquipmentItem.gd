@@ -30,9 +30,6 @@ func finish_resolve_item_result(args):
 func on_effort_applied():
 	add_attunement_progress(1)
 
-func get_action_panel_scene_path()->String:
-	return "res://items/EquipmentItemActions.tscn"
-	
 func update_work_amounts():
 	next_attunement_progress = get_attunement_progress_needed()
 	var attunement = get_attunement_multiplier()
@@ -99,6 +96,13 @@ func get_attunement_progress_needed()->float:
 func get_attunement_multiplier()->float:
 	var val =  (get_attunement_level() * get_attunement_multiplier_per_level())
 	return val if val > 0 else 0.0
+
+func get_action_panel_scene_path()->String:
+	return "res://items/FlexibleItemActions.tscn"
+
+const ACTION_SECTIONS = ['Description', 'Attunement', 'WorkProvided']
+func get_action_sections()->Array:
+	return ACTION_SECTIONS
 
 const SELF_TAGS = {Tags.TAG_EQUIPMENT:true}
 const ALLOWED_TAGS = {}

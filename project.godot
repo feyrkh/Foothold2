@@ -29,6 +29,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://Factory.gd"
 }, {
+"base": "GameItemActions",
+"class": &"FlexibleItemActions",
+"language": &"GDScript",
+"path": "res://items/FlexibleItemActions.gd"
+}, {
 "base": "GameItem",
 "class": &"FolderItem",
 "language": &"GDScript",
@@ -63,11 +68,6 @@ _global_script_classes=[{
 "class": &"Goal",
 "language": &"GDScript",
 "path": "res://goals/Goal.gd"
-}, {
-"base": "GameItem",
-"class": &"GoalItem",
-"language": &"GDScript",
-"path": "res://items/GoalItem.gd"
 }, {
 "base": "GameItem",
 "class": &"GoalsFolder",
@@ -154,6 +154,7 @@ _global_script_class_icons={
 "Config": "",
 "EquipmentItem": "",
 "Factory": "",
+"FlexibleItemActions": "",
 "FolderItem": "",
 "GameItem": "",
 "GameItemActions": "",
@@ -161,7 +162,6 @@ _global_script_class_icons={
 "GameUI": "",
 "GemItem": "",
 "Goal": "",
-"GoalItem": "",
 "GoalsFolder": "",
 "LocationItem": "",
 "PcItem": "",

@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://nerlc5nxwuqn"]
 
 [ext_resource type="Script" path="res://items/WorkPartyItemActions.gd" id="1_fri60"]
-[ext_resource type="PackedScene" path="res://ui/sections/ItemActionHeader.tscn" id="2_ek6tt"]
+[ext_resource type="PackedScene" uid="uid://b04xuqmeddq78" path="res://ui/sections/ItemActionHeader.tscn" id="2_ek6tt"]
 [ext_resource type="PackedScene" uid="uid://bpksxa2m8ulri" path="res://ui/sections/DescriptionSection.tscn" id="3_rw3au"]
 [ext_resource type="PackedScene" uid="uid://cf1k1xcgqja5g" path="res://ui/sections/WorkNeededSection.tscn" id="4_vjmts"]
 
@@ -15,12 +15,12 @@ script = ExtResource("1_fri60")
 [node name="DescriptionSection" parent="." instance=ExtResource("3_rw3au")]
 offset_top = 27.0
 offset_right = 1024.0
-offset_bottom = 50.0
+offset_bottom = 27.0
 
 [node name="WorkNeededSection" parent="." instance=ExtResource("4_vjmts")]
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_top = 54.0
+offset_top = 31.0
 offset_right = 1024.0
 offset_bottom = 565.0
 

@@ -38,7 +38,11 @@ func _on_goal_progress(goal_id, progress_info):
 		on_goal_progress(progress_info)
 
 func get_action_panel_scene_path()->String:
-	return "res://items/GoalItemActions.tscn"
+	return "res://items/FlexibleItemActions.tscn"
+
+const ACTION_SECTIONS = ['Description']
+func get_action_sections()->Array:
+	return ACTION_SECTIONS
 
 func get_goal_id()->String:
 	push_error("Unspecified goal ID, must be set by the goal subclass")

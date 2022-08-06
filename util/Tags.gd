@@ -9,6 +9,7 @@ const TAG_FURNITURE = 'f'
 const TAG_GOAL = 'g'
 const TAG_LOCATION = 'l'
 const TAG_PC = 'p'
+const TAG_VIS_SUPPLIER = 'v'
 const TAG_WORK = 'w'
 
 const WORK_PARTY_EXPLORE = 'we'

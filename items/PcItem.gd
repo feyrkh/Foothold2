@@ -9,7 +9,11 @@ func _init():
 	}
 
 func get_action_panel_scene_path()->String:
-	return "res://items/PcItemActions.tscn"
+	return "res://items/FlexibleItemActions.tscn"
+
+const ACTION_SECTIONS = ['Description', 'WorkProvided']
+func get_action_sections()->Array:
+	return ACTION_SECTIONS
 
 const SELF_TAGS = {Tags.TAG_PC:true}
 const ALLOWED_TAGS = {Tags.TAG_EQUIPMENT:true}

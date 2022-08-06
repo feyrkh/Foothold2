@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bilo6xfpmwpdy"]
+
+[ext_resource type="Script" path="res://ui/sections/VisContainerSection.gd" id="1_1ekrb"]
+
+[node name="VisContainerSection" type="Label"]
+script = ExtResource("1_1ekrb")

@@ -98,7 +98,7 @@ func get_attunement_progress_needed()->float:
 
 func get_attunement_multiplier()->float:
 	var val =  (get_attunement_level() * get_attunement_multiplier_per_level())
-	return val if val > 0 else 0
+	return val if val > 0 else 0.0
 
 const SELF_TAGS = {Tags.TAG_EQUIPMENT:true}
 const ALLOWED_TAGS = {}

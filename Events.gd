@@ -10,6 +10,7 @@ signal quest_progress(quest_name, progress_arg)
 signal goal_item(goal_id, item_key, item_id_not_game_item) 
 signal goal_data(goal_id, data_key, data_val)
 signal goal_progress(goal_id, progress_data)
+signal goal_callback(goal_id, callback_fn_name, callback_arg)
 
 signal global_save_data(data_id, data_config)
 signal global_load_data(data_id, data_config)

@@ -1,6 +1,10 @@
 extends TreeNode
 class_name GameItem
 
+# Possible callbacks:
+# finish_resolve_item_result(args): Called from WorkResult when some work is completed and this item has been created as a result.
+#		Used to configure a new item based on the args that are passed.
+
 var _item_id:int
 var action_panel
 var callbacks = null
@@ -9,8 +13,9 @@ func get_ignore_field_names() -> Dictionary:
 	return {'action_panel':true, 'tree_item':true}
 
 func _ready():
+	super._ready()
 	Events.connect('pre_load_game', pre_load_game)
-
+	
 func pre_load_game():
 	queue_free() # gotta wipe the old game state before loading a new one
 

@@ -3,6 +3,7 @@ extends GameItemActions
 @onready var SaveLoadContainer = find_child('SaveLoadContainer')
 
 func _ready():
+	super._ready()
 	find_child('NewSaveButton').connect('pressed', new_save)
 	find_child('SaveLoadContainer').save_games_modified.connect(refresh_action_panel)
 	refresh_action_panel()

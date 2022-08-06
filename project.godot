@@ -55,6 +55,11 @@ _global_script_classes=[{
 "path": "res://ui/GameUI.gd"
 }, {
 "base": "GameItem",
+"class": &"GemItem",
+"language": &"GDScript",
+"path": "res://items/GemItem.gd"
+}, {
+"base": "GameItem",
 "class": &"Goal",
 "language": &"GDScript",
 "path": "res://goals/Goal.gd"
@@ -114,6 +119,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://reorder_tree/TreeNode.gd"
 }, {
+"base": "Object",
+"class": &"Vis",
+"language": &"GDScript",
+"path": "res://util/Vis.gd"
+}, {
 "base": "RefCounted",
 "class": &"WorkAmount",
 "language": &"GDScript",
@@ -149,6 +159,7 @@ _global_script_class_icons={
 "GameItemActions": "",
 "GameItemAware": "",
 "GameUI": "",
+"GemItem": "",
 "Goal": "",
 "GoalItem": "",
 "GoalsFolder": "",
@@ -161,6 +172,7 @@ _global_script_class_icons={
 "Section": "",
 "Tags": "",
 "TreeNode": "",
+"Vis": "",
 "WorkAmount": "",
 "WorkAwareItem": "",
 "WorkPartyItem": "",
@@ -189,6 +201,14 @@ gdscript/warnings/unused_variable=0
 gdscript/warnings/shadowed_variable=0
 gdscript/warnings/shadowed_variable_base_class=0
 gdscript/warnings/unused_parameter=0
+
+[input]
+
+doubleclick={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"button_mask":1,"position":Vector2(229, 177),"global_position":Vector2(229, 177),"factor":1.0,"button_index":1,"pressed":true,"double_click":true,"script":null)
+]
+}
 
 [rendering]
 

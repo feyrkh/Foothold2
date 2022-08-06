@@ -19,6 +19,7 @@ func post_config(config:Dictionary):
 	
 			
 func _ready():
+	super._ready()
 	connect('contents_updated', update_work_amounts)
 	connect('parent_updated', _parent_updated)
 	update_work_amounts()

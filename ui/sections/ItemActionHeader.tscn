@@ -1,13 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://b04xuqmeddq78"]
+[gd_scene load_steps=6 format=3 uid="uid://b04xuqmeddq78"]
 
 [ext_resource type="Texture2D" uid="uid://dro6gv1ehkumc" path="res://assets/icon/pin-0.png" id="1_qpuiw"]
 [ext_resource type="PackedScene" uid="uid://bncs0wdryttnb" path="res://ui/ItemManageDropdown.tscn" id="1_r83oy"]
+[ext_resource type="Script" path="res://ui/sections/ItemActionHeader.gd" id="1_vngcq"]
 [ext_resource type="Texture2D" uid="uid://dps4opj3en18f" path="res://assets/icon/pin-1.png" id="2_6r4k8"]
 [ext_resource type="Script" path="res://items/PinActionPanelButton.gd" id="3_xo7a6"]
 
 [node name="ItemActionHeader" type="HBoxContainer"]
 offset_right = 1024.0
 offset_bottom = 23.0
+script = ExtResource("1_vngcq")
 
 [node name="PinActionPanelButton" type="TextureButton" parent="."]
 offset_right = 20.0

@@ -14,6 +14,7 @@ func get_allowed_tags()->Dictionary:
 	return ALLOWED_TAGS
 
 func _ready():
+	super._ready()
 	Events.connect('goal_data', _on_goal_data)
 	Events.connect('goal_progress', _on_goal_progress)
 	Events.connect('goal_item', register_important_item)

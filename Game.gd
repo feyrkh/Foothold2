@@ -52,6 +52,13 @@ func save_game(save_label:String, save_file_path:String):
 func load_game(save_file_path:String):
 	Debug.orphans('start of load_game')
 	get_tree().paused = false
+	await get_tree().process_frame
+	ui.queue_free()
+	await get_tree().process_frame
+	ui = load('res://ui/GameUI.tscn').instantiate()
+	add_child(ui)
+	ui.name = 'GameUI'
+	await get_tree().process_frame
 	Events.emit_signal("pre_load_game")
 	Debug.orphans('after pre_load_game')
 	var save_info:Dictionary = SaveLoad.open_load_file(save_file_path)
@@ -71,7 +78,7 @@ func load_game(save_file_path:String):
 	await get_tree().process_frame
 	Events.emit_signal("post_load_game")
 	Debug.orphans('after post_load_game')
-	await get_tree().process_frame
+	#await get_tree().process_frame
 	Events.emit_signal("finalize_load_game")
 	
 	Debug.orphans('end of load_game')

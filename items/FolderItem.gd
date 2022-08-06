@@ -2,6 +2,7 @@ extends GameItem
 class_name FolderItem
 
 func _ready():
+	super._ready()
 	connect('contents_updated', _contents_updated)
 
 func _contents_updated():

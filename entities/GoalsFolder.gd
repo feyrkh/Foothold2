@@ -11,6 +11,7 @@ static func get_goal(goal_id):
 	return null
 
 func _ready():
+	super._ready()
 	add_to_group('goals_folder', true)
 	Events.connect('add_goal', on_add_goal)
 

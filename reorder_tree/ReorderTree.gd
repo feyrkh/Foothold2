@@ -13,6 +13,7 @@ func _ready():
 	connect('multi_selected', on_multi_selected)
 	Events.connect('pin_action_panel', set_panel_pinned)
 	Events.connect('pre_load_game', clear)
+	connect('item_collapsed', on_item_collapsed)
 	root = create_item()
 #	if get_parent() == get_tree().root:
 #		var item1 = add_item(GameItem.new('Wizard Tower'), root)
@@ -28,24 +29,38 @@ func _ready():
 #		for i in range(100):
 #			var padding_item = add_item(FolderItem.new('padding #'+str(i)), root)
 
+func on_item_collapsed(item:TreeItem):
+	var tree_node = item.get_metadata(0)
+	if tree_node:
+		tree_node.collapsed = item.collapsed
+
 func clear():
 	super.clear()
 	root = create_item()
+	selected_nodes_changed.emit([], [])
 
-func save_data() -> Array:
-	var data = []
+func save_data() -> Dictionary:
+	var tree_items = []
 	for tree_item in get_root().get_children():
 		var save_data = save_data_for_item(tree_item)
 		if save_data and save_data.size() > 0:
-			data.append(save_data)
-	return data
+			tree_items.append(save_data)
+	var pinned = pinned_nodes.map(func(tree_node): 
+		if !tree_node: return null
+		return tree_node.get_id())
+	return {'tree_items':tree_items, 'pinned':pinned}
 
-func load_data(data:Array, parent_tree_item:TreeItem=null):
-	for tree_item_data in data:
+func load_data(data:Dictionary, parent_tree_item:TreeItem=null):
+	for tree_item_data in data['tree_items']:
 		load_data_for_item(tree_item_data, parent_tree_item)
-
+	for id in data['pinned']:
+		set_panel_pinned(IdManager.get_item_by_id(id), true)
+	
 func save_data_for_item(tree_item:TreeItem) -> Array:
 	var tree_node:TreeNode = tree_item.get_metadata(0)
+	var tree_node_config:Dictionary = Config.to_config(tree_node)
+	if tree_item.collapsed:
+		tree_node_config['collapsed'] = tree_item.collapsed
 	if tree_node and is_instance_valid(tree_node):
 		if tree_node.has_method('skip_save') and tree_node.skip_save():
 			return []
@@ -55,9 +70,9 @@ func save_data_for_item(tree_item:TreeItem) -> Array:
 				var item_save_data = save_data_for_item(child_item)
 				if item_save_data and item_save_data.size() > 0:
 					child_save_data.append(item_save_data)
-			return [tree_node.get_script().resource_path, Config.to_config(tree_node), child_save_data]
+			return [tree_node.get_script().resource_path, tree_node_config, child_save_data]
 		else:
-			return [tree_node.get_script().resource_path, Config.to_config(tree_node)]
+			return [tree_node.get_script().resource_path, tree_node_config]
 	else:
 		return []
 
@@ -67,9 +82,9 @@ func load_data_for_item(tree_item_data:Array, parent_tree_item:TreeItem):
 	var tree_node = load(script_path).new()
 	Config.config(tree_node, script_config)
 	if tree_node.has_method('post_load_game'):
-		tree_node.connect('post_load_game', tree_node.post_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+		Events.connect('post_load_game', tree_node.post_load_game, [], ConnectFlags.CONNECT_ONESHOT)
 	if tree_node.has_method('finalize_load_game'):
-		tree_node.connect('finalize_load_game', tree_node.finalize_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+		Events.connect('finalize_load_game', tree_node.finalize_load_game, [], ConnectFlags.CONNECT_ONESHOT)
 	IdManager.register_id(tree_node.get_id(), tree_node)
 	var new_tree_item = add_item(tree_node, parent_tree_item)
 	IdManager.add_child(tree_node)
@@ -81,6 +96,7 @@ func load_data_for_item(tree_item_data:Array, parent_tree_item:TreeItem):
 func set_panel_pinned(tree_node:TreeNode, is_pinned:bool):
 	if !tree_node or !is_instance_valid(tree_node):
 		return
+	tree_node.call_deferred('emit_signal', 'pin_status_changed', is_pinned)
 	if is_pinned and !pinned_nodes.has(tree_node):
 		pinned_nodes.append(tree_node)
 	elif !is_pinned and pinned_nodes.has(tree_node):

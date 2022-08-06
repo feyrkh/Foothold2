@@ -5,6 +5,7 @@ signal label_updated(new_label)
 signal deleting_node(tree_node)
 signal contents_updated() # emitted when a child is added or removed
 signal parent_updated(old_parent, new_parent) # Moved from one parent to another; either may be null
+signal pin_status_changed(new_pin_status) # emitted when the node becomes pinned or unpinned
 
 var tree_item:TreeItem # owner of this metadata
 var label=''
@@ -14,10 +15,18 @@ var tags:Dictionary = {}
 # then it can only be contained by a node with the same 'owner_lock_id'
 var owner_lock_id = null 
 var allowed_owner_lock_id = null
+var collapsed
 
 func init(label):
 	self.label = label
 	return self
+
+func finalize_load_game():
+	if tree_item:
+		if collapsed:
+			tree_item.collapsed = true
+		else:
+			tree_item.collapsed = false
 
 func _ready():
 	pass
@@ -68,7 +77,8 @@ func get_label():
 
 func set_label(new_val):
 	label = new_val
-	tree_item.set_text(0, label)
+	if tree_item:
+		tree_item.set_text(0, label)
 	emit_signal("label_updated", label)
 
 func can_accept_drop(dropped_item:TreeNode):

@@ -3,7 +3,9 @@ class_name WorkPartyItem
 
 signal work_complete()
 
+# Called when work is complete, but before the player clicks the 'complete' button (or before the task auto-resolves, if it does)
 const WORK_COMPLETE_CALLBACK = 'wpWC'
+# Called after the player clicks the 'complete' button (or after the task auto-resolves, if it does)
 const RESOLVE_WORK_CALLBACK = 'wpRW'
 
 const WORK_TARGET_ALL_SIMULTANEOUS = 1 << 0

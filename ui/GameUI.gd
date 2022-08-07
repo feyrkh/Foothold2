@@ -38,6 +38,10 @@ func _on_item_tree_selected_nodes_changed(selected_nodes, pinned_nodes):
 	all_nodes.append_array(pinned_nodes)
 	var processed = {}
 	for node in all_nodes:
+		if node == null or !is_instance_valid(node):
+			continue
+		if !(node is Node):
+			continue
 		if processed.get(node):
 			continue
 		processed[node] = true

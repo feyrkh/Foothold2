@@ -2,6 +2,9 @@ extends WorkPartyItem
 
 # When all debris in the room is cleared, a portal will open
 
+func get_furniture_size():
+	return 3
+
 func finish_resolve_item_result(args):
 	init_work_party("Scattered debris", Tags.WORK_PARTY_MANUAL_LABOR, {WorkTypes.MANUAL_LABOR: args.get('work', 0)})
 	var has_prybar = args.get('prybar', false)
@@ -18,6 +21,9 @@ func finish_resolve_item_result(args):
 	elif has_crystal:
 		work_result.post_complete_desc = "A shimmering crystal is found in the debris pile. It radiates a sense of power, but you're not sure what use it might be."
 		work_result.new_item_result("impure vis crystal", "res://items/GemItem.gd", self, GemItem.get_resolve_item_args(0, 0, 1, Vis.TYPE_IMPURE))
+	elif has_portal:
+		work_result.post_complete_desc = "The debris covering the portal is cleared - the room must have collapsed as you made your way through. The portal is dead and silent, but perhaps providing it with an energy source from this side might reopen it."
+		work_result.new_item_result("dimensional portal", "res://entities/wizard_tower/TowerPortal.gd", self, {'_item_id': has_portal})
 	else:
 		work_result.post_complete_desc = "A thankless job, completed."
 	set_work_result(work_result)
@@ -26,5 +32,5 @@ func resolve_completion_effects():
 	var other_debris = find_sibling_items(func(item): 
 		return item != self and item.get_script() == self.get_script())
 	if other_debris.size() <= 0:
-		Events.emit_goal_progress(PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.GOAL_PORTAL_ACTIVATED)
+		Events.emit_goal_progress(PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.GOAL_PORTAL_FOUND)
 	super.resolve_completion_effects()

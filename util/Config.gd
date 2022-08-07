@@ -5,6 +5,10 @@ const IGNORE_FIELD_NAMES = {
 	"Reference":true, "script":true, "Script Variables":true, "owner":true, "Node":true, "_import_path":true, "name":true, "unique_name_in_owner":true,
 	"scene_file_path":true, "multiplayer": true, "Process": true, "process_mode":true, "process_priority":true, "Editor Description":true, "editor_description":true,
 }
+const IGNORE_CLASS_NAMES = {
+	"TreeItem":true
+}
+
 var prop_cache = {}
 
 static func config(obj, c):
@@ -14,10 +18,15 @@ static func config(obj, c):
 	var propNames = {}
 	var propTypes = {}
 	# TODO: find a way to reduce the wasted cycles here
+	var object_ignore_field_names:Dictionary
+	if obj.has_method('get_ignore_field_names'):
+		object_ignore_field_names = obj.get_ignore_field_names()
 	for prop in props:
 		propNames[prop.name] = true
 		propTypes[prop.name] = prop.type
 	for fieldName in c.keys():
+		if object_ignore_field_names != null and object_ignore_field_names.has(fieldName):
+			continue
 		if propNames.has(fieldName):
 			if propTypes[fieldName] == TYPE_OBJECT:
 				var existing_obj = obj.get(fieldName)
@@ -43,12 +52,14 @@ static func to_config(obj):
 	if obj.has_method('get_ignore_field_names'):
 		object_ignore_field_names = obj.get_ignore_field_names()
 	for prop in props:
+		if IGNORE_CLASS_NAMES.has(prop['class_name']):
+			continue
 		if IGNORE_FIELD_NAMES.has(prop.name):
 			continue
 		if object_ignore_field_names != null and object_ignore_field_names.has(prop.name):
 			continue
 		var config_value = to_config_field(obj, prop)
-		if config_value != null:
+		if config_value != null and !(config_value is RefCounted) and !(config_value is Node):
 			result[prop.name] = config_value
 	return result
 

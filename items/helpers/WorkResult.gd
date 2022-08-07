@@ -32,6 +32,10 @@ func new_item_result(item_name:String, item_script:String, target_owner_id, setu
 		target_owner_id = target_owner_id.get_id()
 	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: item_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_owner_id, KEY_SETUP_ARGS: setup_args})
 
+func new_location_result(location_name:String, target_owner_id, room_size=1, setup_args={}, item_script="res://items/LocationItem.gd"):
+	setup_args[LocationItem.KEY_ROOM_SIZE] = room_size
+	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: location_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_owner_id, KEY_SETUP_ARGS: setup_args})
+
 func goal_progress(goal_id, progress_val):
 	results.append({KEY_RESULT_TYPE: GOAL_PROGRESS_RESULT, KEY_GOAL_PROGRESS_VAL: progress_val, KEY_GOAL_ID: goal_id})
 
@@ -46,13 +50,27 @@ func resolve_results():
 			GOAL_DATA_RESULT: Events.emit_signal('goal_data', result[KEY_GOAL_ID], result[KEY_GOAL_DATA_KEY], result[KEY_GOAL_DATA_VAL])
 			_: push_error("Tried to resolve unexpected result type: ", result)
 
+func get_result_description() -> String:
+	if results == null or results.size() == 0:
+		return 'none'
+	var msg = PackedStringArray()
+	for result in results:
+		match result.get('t'):
+			ITEM_RESULT: msg.append(result.get(KEY_ITEM_NAME))
+	return ', '.join(msg)
+
 static func resolve_item_result(result:Dictionary):
-	var item:GameItem = load(result[KEY_ITEM_SCRIPT]).new()
+	var item:GameItem
+	if !Directory.new().file_exists(result[KEY_ITEM_SCRIPT]):
+		item = load("res://items/ErroredItem.gd").new()
+		item.set_error_data(result)
+	else:
+		item = load(result[KEY_ITEM_SCRIPT]).new()
 	item.init(result.get(KEY_ITEM_NAME, 'Unknown item'))
 	var setup_args = result.get(KEY_SETUP_ARGS)
 	if setup_args is Dictionary and setup_args.has('_item_id'):
 		item._item_id = setup_args['_item_id']
 	if item.has_method('finish_resolve_item_result'):
 		item.finish_resolve_item_result(result.get(KEY_SETUP_ARGS))
-	Events.emit_signal('add_game_item', item, IdManager.get_item_by_id(result['o']))
+	Events.emit_signal('add_game_item', item, IdManager.get_item_by_id(result['o']), true)
 	

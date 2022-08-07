@@ -5,8 +5,10 @@ class_name GameItem
 # finish_resolve_item_result(args): Called from WorkResult when some work is completed and this item has been created as a result.
 #		Used to configure a new item based on the args that are passed.
 
+signal description_updated(game_item)
+
 var _item_id:int
-var action_panel
+var action_panel:GameItemActions
 var callbacks = null
 
 func get_ignore_field_names() -> Dictionary:

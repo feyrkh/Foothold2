@@ -28,9 +28,15 @@ offset_bottom = 600.0
 size_flags_vertical = 3
 mouse_filter = 1
 
-[node name="ActionContainer" type="HFlowContainer" parent="SplitPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SplitPanel"]
 offset_left = 367.0
 offset_right = 1024.0
 offset_bottom = 600.0
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="ActionContainer" type="HFlowContainer" parent="SplitPanel/ScrollContainer"]
+offset_right = 657.0
+size_flags_horizontal = 3
 
 [connection signal="selected_nodes_changed" from="SplitPanel/ItemTree" to="." method="_on_item_tree_selected_nodes_changed"]

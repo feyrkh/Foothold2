@@ -17,7 +17,6 @@ class_name FlexibleItemActions
 # 		'SomethingSection' -> 'res://ui/sections/SomethingSection.tscn'
 # 		'res://otherpath/SomethingSection' -> 'res://otherpath/SomethingSection.tscn' 
 func set_action_sections(action_section_script_names:Array):
-	add_action_section('res://ui/sections/ItemActionHeader.tscn')
 	for script_name in action_section_script_names:
 		add_action_section(script_name)
 	
@@ -30,6 +29,10 @@ func add_action_section(script_name):
 		script_name = script_name + '.tscn'
 	var section = load(script_name).instantiate()
 	add_child(section)
+
+func setup_action_panel(game_ui:GameUI, game_item:GameItem):
+	add_action_section('res://ui/sections/ItemActionHeader.tscn')
+	super.setup_action_panel(game_ui, game_item)
 
 func _ready():
 	super._ready()

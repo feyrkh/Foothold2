@@ -1,10 +1,12 @@
-VBoxContainer
+HFlowContainer
+ScrollContainer
 Label
-RichTextLabel
 Button
+HBoxContainer
+VBoxContainer
+RichTextLabel
 TextureButton
 Timer
-HBoxContainer
 Tree
 MarginContainer
 ItemList
@@ -15,5 +17,4 @@ PanelContainer
 LineEdit
 PopupPanel
 PopupMenu
-HFlowContainer
 HSplitContainer

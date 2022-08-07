@@ -2,6 +2,7 @@ extends Section
 
 func _ready():
 	refresh()
+	get_game_item().connect('description_updated', description_updated)
 
 func refresh():
 	var game_item = get_game_item()
@@ -13,3 +14,5 @@ func refresh():
 		else:
 			visible = false
 	
+func description_updated(game_item):
+	refresh()

@@ -15,7 +15,7 @@ func setup_action_panel(game_ui:GameUI, game_item:GameItem):
 	if label:
 		label.set_text(game_item.get_label())
 		game_item.connect("label_updated", update_label, [label]) 
-	var manage_dropdown = find_child('ItemManageDropdown')
+	var manage_dropdown = find_child('ItemManageDropdown', true, false)
 	if manage_dropdown:
 		manage_dropdown.setup_dropdown(game_ui, game_item)
 

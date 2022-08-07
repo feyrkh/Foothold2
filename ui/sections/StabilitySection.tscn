@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxopuesdqg880"]
+
+[ext_resource type="Script" path="res://ui/sections/StabilitySection.gd" id="1_7mjh1"]
+
+[node name="StabilitySection" type="Label"]
+script = ExtResource("1_7mjh1")

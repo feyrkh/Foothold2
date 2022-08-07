@@ -3,7 +3,6 @@ class_name Section
 
 var _game_item:GameItem
 
-
 func _ready():
 	if self.has_method('refresh'):
 		self.refresh()

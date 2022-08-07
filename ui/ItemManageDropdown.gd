@@ -48,5 +48,12 @@ func _on_popup_menu_id_pressed(id):
 			
 
 func _on_item_manage_button_pressed():
-	find_child('PopupMenu').popup()
-	find_child('PopupMenu').position = self.global_position + Vector2(0, size.y)
+	var popup_menu:PopupMenu = find_child('PopupMenu')
+	popup_menu.popup()
+	var viewport_size = get_viewport().get_visible_rect().size
+	popup_menu.position = self.global_position + Vector2(0, size.y)
+	var right_side = popup_menu.position.x + popup_menu.size.x
+	var bottom_side = popup_menu.position.y + popup_menu.size.y
+	var right_overhang = max(0, right_side - viewport_size.x)
+	var bottom_overhang = max(0, bottom_side - viewport_size.y)
+	popup_menu.position -= Vector2i(right_overhang, bottom_overhang)

@@ -86,10 +86,8 @@ var gem_type:int = 0 :
 var vis:float = 0:
 	set(val):
 		if val != vis:
+			vis = min(val, get_max_vis())
 			vis_updated.emit(self)
-		if vis <= 0 and val > 0:
-			Events.safe_connect('game_tick', on_game_tick)
-		vis = min(val, get_max_vis())
 
 var vis_type:int = Vis.TYPE_IMPURE
 var vis_target
@@ -107,8 +105,6 @@ func get_ignore_field_names() -> Dictionary:
 
 func _ready():
 	super._ready()
-	connect('parent_updated', on_parent_updated)
-	Events.safe_connect('game_tick', on_game_tick)
 
 static func get_resolve_item_args(gem_size:int, gem_type:int, vis_amt:float, vis_type:int) -> Dictionary:
 	var result = {}
@@ -131,23 +127,6 @@ func finish_resolve_item_result(args:Dictionary):
 	vis = args.get(RESOLVE_KEY_GEM_VIS_AMT, 0)
 	vis_type = args.get(RESOLVE_KEY_GEM_VIS_TYPE, Vis.TYPE_IMPURE)
 	set_label("%s of %s" % [get_size_desc(), get_gem_type_desc()])
-
-func on_game_tick():
-	if !vis_target:
-		vis_target = get_closest_nonfolder_parent()
-	if vis_target and vis_target.has_method('accept_vis_input') and vis > 0:
-		var want_to_send_amt = min(get_vis_output_speed(), vis)
-		var actually_sent_amt = min(want_to_send_amt, vis_target.accept_vis_input(vis_type, want_to_send_amt))
-		last_sent_vis = actually_sent_amt
-		vis -= actually_sent_amt
-		if vis < 0.0001:
-			vis = 0
-	else:
-		last_sent_vis = 0
-		Events.disconnect('game_tick', on_game_tick)
-
-func on_parent_updated(old_parent, new_parent):
-	Events.safe_connect('game_tick', on_game_tick)
 
 func get_size_desc() -> String:
 	return size_desc.get(size, 'pebble')
@@ -174,6 +153,13 @@ func get_vis_type() -> int:
 
 func get_luxury() -> float:
 	return pow(2, int((size+1)/2.0)) * (0.5 * (size % 2)) 
+
+func drain_vis(requested_amt:float) -> float:
+	if requested_amt <= 0:
+		return 0.0
+	var provided_amt = min(requested_amt, get_vis())
+	if provided_amt != 0: vis -= provided_amt
+	return provided_amt
 
 func get_vis_power_draw_desc():
 	if last_sent_vis <= 0: return ""

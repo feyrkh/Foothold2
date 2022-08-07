@@ -7,7 +7,8 @@ const GOAL_STARTED = 0
 const GOAL_EXPLORE_PARTY_CREATED = 1
 const GOAL_CHAMBER_EXPLORED = 2
 const GOAL_DEBRIS_CLEARED = 3
-const GOAL_PORTAL_ACTIVATED = 4
+const GOAL_PORTAL_FOUND = 4
+const GOAL_PORTAL_ACTIVATED = 5
 
 const EXPLORE_PARTY_ID = 'eid'
 const PORTAL_CHAMBER_ID = 'cid'
@@ -16,6 +17,10 @@ const PORTAL_ID = 'pid'
 var goal_state = GOAL_STARTED
 var debris_left = 3
 
+func _ready():
+	super._ready()
+	Events.game_tick.connect(on_game_tick)
+
 func setup():
 	var wizardTower:AreaItem = Factory.area("Ancient tower", 'res://entities/wizard_tower/WizardTower.gd')
 	wizardTower.owner_lock_id = 'wiztower'
@@ -23,6 +28,14 @@ func setup():
 	Events.emit_signal('add_game_item', wizardTower, null, false)
 	var pc:PcItem = Factory.pc('A wanderer')
 	Factory.place_item(pc, wizardTower)
+
+func on_game_tick():
+	match goal_state:
+		GOAL_PORTAL_FOUND:
+			var portal = get_important_item(PORTAL_ID)
+			if portal and portal.get_stability() > 0:
+				print('Portal is powered')
+				Events.goal_progress.emit(GOAL_ID, GOAL_PORTAL_ACTIVATED)
 
 func get_default_label():
 	return 'Explore the tower'
@@ -37,7 +50,7 @@ func on_important_item_create(item_key, game_item):
 		PORTAL_CHAMBER_ID: 
 			Events.emit_signal('goal_progress', get_goal_id(), GOAL_CHAMBER_EXPLORED)
 		PORTAL_ID: 
-			Events.emit_signal('goal_progress', get_goal_id(), GOAL_PORTAL_ACTIVATED)
+			Events.emit_signal('goal_progress', get_goal_id(), GOAL_PORTAL_FOUND)
 	
 func on_important_item_delete(item_key, game_item):
 	pass
@@ -48,12 +61,23 @@ func on_goal_progress(new_progress):
 	if portal_chamber:
 		portal_chamber.tutorial_goal_state = new_progress
 		portal_chamber.refresh_action_panel()
-	match goal_state:
-		GOAL_PORTAL_ACTIVATED: print("Time to create the portal object")
+	if new_progress == GOAL_PORTAL_ACTIVATED:
+		completed = true
 	refresh_action_panel()
-		
+
 func get_description():
 	match goal_state:
 		GOAL_STARTED: return "As the first scout to pass through a portal into a new world, the scout arrives disoriented and weak in a dilapidated tower.\nThey take a moment to gather their thoughts, and make a plan to explore their new surroundings.\n\n- Form an exploration work party"
 		GOAL_EXPLORE_PARTY_CREATED: return "With the exploration plan firmly in mind, all that remains is to execute it.\n\n- Assign the scout to an exploration party\n- Wait until exploration is complete"
 		GOAL_CHAMBER_EXPLORED: return "The room is choked with debris, but you see what looks like a return portal behind a particularly large pile of rubble.\n\n- Clear all the debris"
+		GOAL_PORTAL_FOUND: return "You've cleared the portal you came through. It seems undamaged, but it appears the instability caused by your transfer was so high that the tower was severely damaged, and the portal has been completely drained of power.\n\n- Find a power source and place it into the portal to stabilize it."
+		GOAL_PORTAL_ACTIVATED: return "The portal is stabilized, at least a bit. You can send supplies back home easily enough, but objects sent through the portal in the other direction require more energy, as they are traveling from a low-energy plane to a high-energy plane."
+
+func get_goal_reward() -> WorkResult:
+	match goal_state:
+		GOAL_PORTAL_ACTIVATED: 
+			var reward := WorkResult.new()
+			reward.new_item_result("combat manual", "res://entities/wizard_tower/HandToHandCombatManual.gd", get_important_item(PORTAL_ID))
+			reward.new_item_result("research notes: vis", "res://entities/wizard_tower/VisResearchNotes.gd", get_important_item(PORTAL_ID))
+			return reward
+		_: return null

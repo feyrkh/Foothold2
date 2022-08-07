@@ -26,3 +26,5 @@ func get_allowed_tags()->Dictionary:
 func get_description():
 	return "A cool guy."
 
+func get_furniture_size():
+	return 1

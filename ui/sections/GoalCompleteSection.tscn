@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://buv7yk2qw8i3a"]
+
+[ext_resource type="Script" path="res://ui/sections/GoalCompleteSection.gd" id="1_v03x7"]
+
+[node name="GoalCompleteSection" type="HBoxContainer"]
+script = ExtResource("1_v03x7")
+
+[node name="Button" type="Button" parent="."]
+offset_right = 83.0
+offset_bottom = 31.0
+text = "Complete"
+
+[node name="Label" type="Label" parent="."]
+offset_left = 87.0
+offset_top = 4.0
+offset_right = 88.0
+offset_bottom = 27.0
+vertical_alignment = 1

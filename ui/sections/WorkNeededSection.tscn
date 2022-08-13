@@ -22,11 +22,19 @@ offset_right = 1024.0
 offset_bottom = 26.0
 label = "Effort Needed"
 
-[node name="Items" type="Tree" parent="VBoxContainer"]
-custom_minimum_size = Vector2(320, 0)
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 offset_top = 30.0
 offset_right = 1024.0
-offset_bottom = 30.0
+offset_bottom = 42.0
+
+[node name="Items" type="Tree" parent="VBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+offset_right = 1024.0
 columns = 3
 column_titles_visible = true
 script = ExtResource("3_hllmk")
+
+[node name="PauseButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+offset_top = 4.0
+offset_right = 1024.0
+offset_bottom = 12.0

@@ -45,11 +45,11 @@ func get_helpers_description() -> String:
 	))
 	return "Affected by: "+", ".join(names)
 
-func on_effort_applied():
+func on_effort_applied(work_type, applied):
 	for helper_id in helper_ids_used:
 		var helper = IdManager.get_item_by_id(helper_id)
 		if helper and helper.has_method('on_effort_applied'):
-			helper.on_effort_applied()
+			helper.on_effort_applied(work_type, applied)
 
 static func copy(other:WorkAmount) -> WorkAmount:
 	return WorkAmount.new(other.work_type, other.effort, other.bonus, other.helper_ids_used.duplicate())

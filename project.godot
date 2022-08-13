@@ -19,7 +19,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://util/Combat.gd"
 }, {
-"base": "GameItem",
+"base": "WorkHeldItem",
 "class": &"CombatManual",
 "language": &"GDScript",
 "path": "res://items/CombatManual.gd"
@@ -28,6 +28,11 @@ _global_script_classes=[{
 "class": &"CombatStance",
 "language": &"GDScript",
 "path": "res://items/helpers/CombatStance.gd"
+}, {
+"base": "GameItem",
+"class": &"CombatStyle",
+"language": &"GDScript",
+"path": "res://items/CombatStyle.gd"
 }, {
 "base": "Object",
 "class": &"Config",
@@ -179,6 +184,7 @@ _global_script_class_icons={
 "Combat": "",
 "CombatManual": "",
 "CombatStance": "",
+"CombatStyle": "",
 "Config": "",
 "EquipmentItem": "",
 "Factory": "",

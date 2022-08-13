@@ -27,7 +27,7 @@ func finish_resolve_item_result(args):
 	attunement_multiplier = args.get(KEY_ATTUNE_MULTIPLIER, 0.1)
 	next_attunement_progress_multiplier = args.get(KEY_ATTUNE_PROGRESS_MULTIPLIER, 1.0)
 
-func on_effort_applied():
+func on_effort_applied(work_type, applied):
 	add_attunement_progress(1)
 
 func update_work_amounts():

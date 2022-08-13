@@ -1,6 +1,17 @@
 extends WorkAwareItem
 class_name PcItem
 
+# How much concentration regenerates per second, as well as how much can be applied per second
+var focus := 1.0
+
+var concentration := 1.0:
+	set(val):
+		var prev_concentration = inherent_work_amounts.get(WorkTypes.CONCENTRATION, 0)
+		var new_concentration = max(0, min(concentration, focus))
+		if prev_concentration != new_concentration:
+			inherent_work_amounts[WorkTypes.CONCENTRATION] = new_concentration
+			update_specific_work_amount(WorkTypes.CONCENTRATION)
+
 func _init():
 	super._init()
 	inherent_work_amounts = {

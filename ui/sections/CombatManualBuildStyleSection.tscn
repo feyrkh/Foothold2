@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bok25e34yyvex"]
+
+[ext_resource type="Script" path="res://ui/sections/CombatManualBuildStyleSection.gd" id="1_51cd3"]
+
+[node name="CombatManualBuildStyleSection" type="HBoxContainer"]
+script = ExtResource("1_51cd3")
+
+[node name="Button" type="Button" parent="."]
+offset_right = 167.0
+offset_bottom = 31.0
+text = "Design Combat Style"
+
+[node name="Label" type="Label" parent="."]
+offset_left = 171.0
+offset_top = 4.0
+offset_right = 172.0
+offset_bottom = 27.0
+vertical_alignment = 1

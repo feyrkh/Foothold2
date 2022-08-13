@@ -4,6 +4,7 @@ class_name Tags
 const TAG_FOLDER := '/'
 const TAG_AREA := 'a'
 const TAG_COMBAT_MANUAL := 'cm'
+const TAG_COMBAT_STYLE := 'cs'
 const TAG_EQUIPMENT := 'e'
 const TAG_ENEMY := 'E'
 const TAG_FURNITURE := 'f'

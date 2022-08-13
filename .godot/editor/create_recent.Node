@@ -1,9 +1,9 @@
+Button
+VBoxContainer
 HFlowContainer
 ScrollContainer
 Label
-Button
 HBoxContainer
-VBoxContainer
 RichTextLabel
 TextureButton
 Timer

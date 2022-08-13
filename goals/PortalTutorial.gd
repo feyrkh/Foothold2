@@ -77,7 +77,17 @@ func get_goal_reward() -> WorkResult:
 	match goal_state:
 		GOAL_PORTAL_ACTIVATED: 
 			var reward := WorkResult.new()
-			reward.new_item_result("unarmed combat manual", "res://entities/items/CombatManual.gd", get_important_item(PORTAL_ID), {})
+			reward.new_item_result("unarmed combat manual", "res://items/CombatManual.gd", get_important_item(PORTAL_ID), {
+				CombatManual.KEY_STANCE_COUNT: 4,
+				CombatManual.KEY_STANCE_COUNT_VARIANCE: 0.7,
+				CombatManual.KEY_EQUIPMENT_TYPE: Combat.EQUIP_HAND_TO_HAND,
+				CombatManual.KEY_BASE_POWER: 10,
+				CombatManual.KEY_DAMAGE_TYPES: [Combat.PHYSICAL_ATTACK, Combat.PHYSICAL_DEFEND, {Combat.PHYSICAL_ATTACK:5, Combat.PHYSICAL_DEFEND:2}, {Combat.PHYSICAL_ATTACK:2, Combat.PHYSICAL_DEFEND:5}, {Combat.PHYSICAL_ATTACK:5, Combat.PHYSICAL_DEFEND:5}, Combat.PHYSICAL_ATTACK, Combat.PHYSICAL_ATTACK],
+				CombatManual.KEY_STANCE_VARIANCE: 0,
+				CombatManual.KEY_SCALING_STATS: [Stats.STRENGTH, Stats.STRENGTH, Stats.STRENGTH, Stats.STRENGTH, Stats.STRENGTH, Stats.AGILITY, Stats.AGILITY, Stats.AGILITY, Stats.CONSTITUTION, Stats.WILLPOWER],
+				CombatManual.KEY_STAT_MIN: 100,
+				CombatManual.KEY_SCALING_MULTIPLIER: 0.1,
+			})
 			reward.new_item_result("research notes: vis", "res://entities/wizard_tower/VisResearchNotes.gd", get_important_item(PORTAL_ID))
 			return reward
 		_: return null

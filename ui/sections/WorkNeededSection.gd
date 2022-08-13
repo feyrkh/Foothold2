@@ -5,13 +5,22 @@ extends Section
 # 	get_work_amounts(): Returns map of work_type_string -> WorkAmount, shows how much work the workers are providing
 
 @onready var list:Tree = find_child("Items") 
+@onready var pause_button:Button = find_child("PauseButton")
 
 func _ready():
+	pause_button.pressed.connect(func(): 
+		get_game_item().work_paused = !get_game_item().work_paused
+		refresh())
 	refresh()
 
 func refresh():
 	var game_item = get_game_item()
 	if game_item and game_item.has_method('get_work_needed'):
+		var work_paused = game_item.work_paused
+		if work_paused:
+			pause_button.text = '(resume work)'
+		else:
+			pause_button.text = '(pause work)'
 		var work_needed:Array = game_item.get_work_needed().values()
 		var work_provided = game_item.get_work_amounts()
 		work_needed.sort_custom(Callable(WorkAmount, 'sort'))

@@ -35,6 +35,26 @@ func finish_resolve_item_result(args):
 func _parent_updated(old_parent, new_parent):
 	update_work_amounts()
 
+func update_specific_work_amount(work_type):
+	var work_providing_items = get_work_helpers()
+	var work_amount = inherent_work_amounts.get(work_type, null)
+	if work_amount != null:
+		work_amount = WorkAmount.copy(work_amount)
+	for equip in work_providing_items:
+		var equip_work_amounts = equip.get_work_amounts()
+		var added_work_amount = equip_work_amounts.get(work_type)
+		if added_work_amount:
+			if !work_amount:
+				work_amount = added_work_amount
+			else:
+				work_amount.add(added_work_amount)
+	if work_amount == null:
+		work_amounts.erase(work_type)
+	else:
+		work_amounts[work_type] = work_amount
+	update_parent_work_amounts()
+	refresh_action_panel()
+	
 func update_work_amounts():
 	var work_providing_items = get_work_helpers()
 	var found_work_amounts = {}

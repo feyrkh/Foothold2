@@ -1,5 +1,2 @@
-res://ui/sections/AttunementSection.tscn
-res://items/CombatManual.gd
-res://items/helpers/CombatStance.gd
-res://items/WorkPartyItem.gd
-res://items/WorkHeldItem.gd
+res://items/WorkPartyItemActions.tscn
+res://ui/sections/WorkNeededSection.tscn

@@ -27,6 +27,16 @@ var total_work_applied
 var work_result:WorkResult
  
 var auto_resolve = false # if true, the resolve_completion_effects call occurs automatically. Otherwise a button is added to the panel that must be clicked to resolve. 
+var delete_on_resolve = true # if true, the resolve_completion_effects call will delete the work party item.
+
+var work_paused:bool = false:
+	get: return work_paused
+	set(val):
+		work_paused = val
+		if work_paused:
+			Events.disconnect('game_tick', game_tick)
+		else:
+			Events.safe_connect('game_tick', game_tick)
 
 func post_config(config:Dictionary):
 	if work_needed != null:
@@ -71,7 +81,8 @@ func resolve_completion_effects():
 	if work_result:
 		work_result.resolve_results()
 	execute_callback(RESOLVE_WORK_CALLBACK)
-	delete(true)
+	if delete_on_resolve:
+		delete(true)
 
 func update_percentage_label():
 	if !tree_item or !is_instance_valid(tree_item):
@@ -92,6 +103,9 @@ func get_work_amounts():
 
 func game_tick():
 	var updated = false
+	if work_paused:
+		Events.disconnect('game_tick', game_tick)
+		return
 	if is_work_complete():
 		Events.disconnect('game_tick', game_tick)
 		return
@@ -106,7 +120,7 @@ func game_tick():
 			total_work_applied += applied
 			update_percentage_label()
 			needed.apply_effort(applied)
-			provided.on_effort_applied()
+			provided.on_effort_applied(work_type, applied)
 			if needed.get_effort() < 0.000001:
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)

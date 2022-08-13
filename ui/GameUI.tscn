@@ -36,7 +36,7 @@ size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
 [node name="ActionContainer" type="HFlowContainer" parent="SplitPanel/ScrollContainer"]
-offset_right = 657.0
+offset_right = 649.0
 size_flags_horizontal = 3
 
 [connection signal="selected_nodes_changed" from="SplitPanel/ItemTree" to="." method="_on_item_tree_selected_nodes_changed"]

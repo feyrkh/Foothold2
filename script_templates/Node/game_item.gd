@@ -1,5 +1,9 @@
 extends GameItem
 
+# Called when creating object from WorkResult
+func finish_resolve_item_result(args):
+	pass # delete if not needed
+
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 

@@ -3,4 +3,9 @@
 [ext_resource type="Script" path="res://ui/sections/AttunementSection.gd" id="1_kus1q"]
 
 [node name="AttunementSection" type="Label"]
+hint_tooltip = "The more a person uses a piece of equipment, the
+higher its attunement level grows, giving bonuses
+to its stats. Attunement is lost if the equipment
+is removed from the person, however!"
+mouse_filter = 1
 script = ExtResource("1_kus1q")

@@ -125,6 +125,9 @@ func game_tick():
 # Look for PCs 
 func update_work_amounts():
 	var workers:Array[GameItem] = super.find_child_items(_is_worker)
+	update_work_amounts_from_worker_list(workers)
+
+func update_work_amounts_from_worker_list(workers:Array[GameItem]):
 	for work_type in work_needed:
 		var amt:WorkAmount = null
 		for worker in workers:
@@ -136,6 +139,7 @@ func update_work_amounts():
 		work_amounts[work_type] = amt
 	refresh_action_panel()
 	Events.safe_connect('game_tick', game_tick)
+	
 
 func _is_worker(game_item:GameItem) -> bool:
 	return game_item.has_method('get_work_amount')

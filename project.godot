@@ -15,6 +15,21 @@ _global_script_classes=[{
 "path": "res://items/AreaItem.gd"
 }, {
 "base": "Object",
+"class": &"Combat",
+"language": &"GDScript",
+"path": "res://util/Combat.gd"
+}, {
+"base": "GameItem",
+"class": &"CombatManual",
+"language": &"GDScript",
+"path": "res://items/CombatManual.gd"
+}, {
+"base": "RefCounted",
+"class": &"CombatStance",
+"language": &"GDScript",
+"path": "res://items/helpers/CombatStance.gd"
+}, {
+"base": "Object",
 "class": &"Config",
 "language": &"GDScript",
 "path": "res://util/Config.gd"
@@ -110,6 +125,11 @@ _global_script_classes=[{
 "path": "res://ui/sections/Section.gd"
 }, {
 "base": "Object",
+"class": &"Stats",
+"language": &"GDScript",
+"path": "res://util/Stats.gd"
+}, {
+"base": "Object",
 "class": &"Tags",
 "language": &"GDScript",
 "path": "res://util/Tags.gd"
@@ -134,6 +154,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/WorkAwareItem.gd"
 }, {
+"base": "WorkPartyItem",
+"class": &"WorkHeldItem",
+"language": &"GDScript",
+"path": "res://items/WorkHeldItem.gd"
+}, {
 "base": "GameItem",
 "class": &"WorkPartyItem",
 "language": &"GDScript",
@@ -151,6 +176,9 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "AreaItem": "",
+"Combat": "",
+"CombatManual": "",
+"CombatStance": "",
 "Config": "",
 "EquipmentItem": "",
 "Factory": "",
@@ -170,11 +198,13 @@ _global_script_class_icons={
 "ReorderTree": "",
 "SaveLoad": "",
 "Section": "",
+"Stats": "",
 "Tags": "",
 "TreeNode": "",
 "Vis": "",
 "WorkAmount": "",
 "WorkAwareItem": "",
+"WorkHeldItem": "",
 "WorkPartyItem": "",
 "WorkResult": "",
 "WorkTypes": ""

@@ -1,11 +1,5 @@
-res://ui/ItemManageDropdown.tscn
-res://ui/ItemManageDropdown.gd
-res://ui/sections/ExploreSection.tscn
-res://ui/sections/StabilitySection.tscn
-res://items/settings/SaveLoadButtons.tscn
-res://ui/sections/ItemActionHeader.tscn
-res://items/GameItemActions.tscn
-res://ui/GameUI.tscn
-res://ui/sections/DescriptionSection.tscn
-res://ui/sections/DescriptionWideSection.tscn
-res://items/FlexibleItemActions.tscn
+res://ui/sections/AttunementSection.tscn
+res://items/CombatManual.gd
+res://items/helpers/CombatStance.gd
+res://items/WorkPartyItem.gd
+res://items/WorkHeldItem.gd

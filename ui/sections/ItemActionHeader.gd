@@ -25,4 +25,4 @@ func on_room_size_updated(room_size, occupied_room_size):
 
 func render_furniture_desc():
 		$RoomSizeLabel.visible = true
-		$RoomSizeLabel.text = 'Size: %d/%d' % [get_game_item().get_furniture_size()]
+		$RoomSizeLabel.text = 'Size: %d' % [get_game_item().get_furniture_size()]

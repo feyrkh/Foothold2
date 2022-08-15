@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6h6uut6ihaw3"]
+
+[ext_resource type="Script" path="res://ui/sections/FlexibleButtonSection.gd" id="1_4yjb3"]
+
+[node name="FlexibleButtonSection" type="VBoxContainer"]
+script = ExtResource("1_4yjb3")
+
+[node name="Button" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="Label" type="Label" parent="."]
+offset_top = 12.0
+offset_right = 8.0
+offset_bottom = 35.0

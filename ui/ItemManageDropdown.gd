@@ -14,13 +14,13 @@ func _ready():
 
 func setup_dropdown(game_ui, game_item):
 	if game_item.can_create_subfolder():
-		connect('new_folder', game_ui.new_folder, [game_item])
+		connect('new_folder', game_ui.new_folder.bind(game_item))
 		find_child('PopupMenu').add_item('New folder', CMD_NEW)
 	if game_item.can_rename():
 		connect('rename_item', game_item.set_label)
 		find_child('PopupMenu').add_item('Rename', CMD_RENAME)
 	if game_item.can_delete():
-		connect('delete_item', game_item.delete, [true])
+		connect('delete_item', game_item.delete.bind(true))
 		find_child('PopupMenu').add_item('Delete', CMD_DELETE)
 	if find_child('PopupMenu').item_count == 0:
 		queue_free()

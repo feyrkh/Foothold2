@@ -82,9 +82,9 @@ func load_data_for_item(tree_item_data:Array, parent_tree_item:TreeItem):
 	var tree_node = load(script_path).new()
 	Config.config(tree_node, script_config)
 	if tree_node.has_method('post_load_game'):
-		Events.connect('post_load_game', tree_node.post_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+		Events.post_load_game.connect(tree_node.post_load_game, ConnectFlags.CONNECT_ONESHOT)
 	if tree_node.has_method('finalize_load_game'):
-		Events.connect('finalize_load_game', tree_node.finalize_load_game, [], ConnectFlags.CONNECT_ONESHOT)
+		Events.finalize_load_game.connect(tree_node.finalize_load_game, ConnectFlags.CONNECT_ONESHOT)
 	IdManager.register_id(tree_node.get_id(), tree_node)
 	var new_tree_item = add_item(tree_node, parent_tree_item)
 	IdManager.add_child(tree_node)

@@ -70,11 +70,11 @@ func load_game(save_file_path:String):
 	global_data = f.get_var()
 	f.close()
 	Debug.orphans('after file read')
-	ui.load_data(ui_save_data)
-	Debug.orphans('after ui.load_data')
 	for k in global_data:
 		Events.global_load_data.emit(k, global_data[k])
 	Debug.orphans('after global_load_data')
+	ui.load_data(ui_save_data)
+	Debug.orphans('after ui.load_data')
 	await get_tree().process_frame
 	Events.emit_signal("post_load_game")
 	Debug.orphans('after post_load_game')

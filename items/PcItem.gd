@@ -1,28 +1,43 @@
 extends WorkAwareItem
 class_name PcItem
 
-# How much concentration regenerates per second, as well as how much can be applied per second
-var focus := 1.0
+var stats:Array = []
 
-var concentration := 1.0:
+var hp=1000:
+	get:
+		return max(0, min(hp, get_max_hp()))
 	set(val):
-		var prev_concentration = inherent_work_amounts.get(WorkTypes.CONCENTRATION, 0)
-		var new_concentration = max(0, min(concentration, focus))
-		if prev_concentration != new_concentration:
-			inherent_work_amounts[WorkTypes.CONCENTRATION] = new_concentration
-			update_specific_work_amount(WorkTypes.CONCENTRATION)
+		focus = max(0, min(hp, get_max_hp()))
+var focus=1000:
+	get:
+		return max(0, min(focus, get_max_focus()))
+	set(val):
+		focus = max(0, min(focus, get_max_focus()))
 
 func _init():
 	super._init()
 	inherent_work_amounts = {
-		WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, 1.0, 0, {}),
-		WorkTypes.MANUAL_LABOR: WorkAmount.new(WorkTypes.MANUAL_LABOR, 1.0, 0, {}),
+		WorkTypes.EXPLORE: WorkAmount.new(WorkTypes.EXPLORE, 1.0, 0, {}, null, null),
+		WorkTypes.MANUAL_LABOR: WorkAmount.new(WorkTypes.MANUAL_LABOR, 0.0, 0, {}, self.get_id(), 'derive_manual_labor_work'),
+		WorkTypes.CONCENTRATION: WorkAmount.new(WorkTypes.CONCENTRATION, 0.0, 0, {}, self.get_id(), 'derive_concentration_work'),
 	}
+	stats = []
+	for i in range(Stats.STAT_COUNT):
+		stats.append(StatEntry.new_stat(i, 80 + (randi() % 41)))
+	focus = get_max_focus()
+
+func post_config(c):
+	super.post_config(c)
+	for i in range(stats.size()):
+		stats[i] = StatEntry.from_config(stats[i])
+
+func _ready():
+	super._ready()
 
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description', 'WorkProvided']
+const ACTION_SECTIONS = ['Description', 'PcStatus', 'Stats', 'WorkProvided']
 func get_action_sections()->Array:
 	return ACTION_SECTIONS
 
@@ -39,3 +54,20 @@ func get_description():
 
 func get_furniture_size():
 	return 1
+
+func get_max_focus():
+	return stats[Stats.WILLPOWER].get_stat_value() * 0.075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.025
+
+func get_max_hp():
+	return stats[Stats.CONSTITUTION].get_stat_value() * 0.5
+
+func get_stats():
+	return stats
+
+func derive_manual_labor_work(effort:float, bonus:float)->float:
+	# manual labor is 
+	return bonus * (effort + stats[Stats.CONSTITUTION].get_stat_value() * 0.0075 + stats[Stats.STRENGTH].get_stat_value() * 0.0025)
+
+func derive_concentration_work(effort:float, bonus:float)->float:
+	# manual labor is 
+	return min(focus, bonus * (effort + stats[Stats.WILLPOWER].get_stat_value() * 0.0075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.0025))

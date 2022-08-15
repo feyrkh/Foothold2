@@ -49,6 +49,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://Factory.gd"
 }, {
+"base": "Tree",
+"class": &"FancyTree",
+"language": &"GDScript",
+"path": "res://ui/FancyTree.gd"
+}, {
 "base": "GameItemActions",
 "class": &"FlexibleItemActions",
 "language": &"GDScript",
@@ -129,6 +134,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://ui/sections/Section.gd"
 }, {
+"base": "RefCounted",
+"class": &"StatEntry",
+"language": &"GDScript",
+"path": "res://items/helpers/StatEntry.gd"
+}, {
 "base": "Object",
 "class": &"Stats",
 "language": &"GDScript",
@@ -188,6 +198,7 @@ _global_script_class_icons={
 "Config": "",
 "EquipmentItem": "",
 "Factory": "",
+"FancyTree": "",
 "FlexibleItemActions": "",
 "FolderItem": "",
 "GameItem": "",
@@ -204,6 +215,7 @@ _global_script_class_icons={
 "ReorderTree": "",
 "SaveLoad": "",
 "Section": "",
+"StatEntry": "",
 "Stats": "",
 "Tags": "",
 "TreeNode": "",
@@ -226,6 +238,7 @@ config/icon="res://icon.png"
 [autoload]
 
 IdManager="*res://util/IdManager.gd"
+CollapseManager="*res://util/CollapseManager.gd"
 Events="*res://Events.gd"
 Global="*res://Global.gd"
 Debug="*res://util/Debug.gd"

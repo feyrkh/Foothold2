@@ -90,9 +90,8 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description', 'CombatManualBuildStyle']
 func get_action_sections()->Array:
-	return ACTION_SECTIONS
+	return ['Description', ['FlexibleButton', {'button':'Create Combat Style', 'click':'start_create_combat_style', 'visible':'create_combat_style_visible'}]]
 
 const SELF_TAGS3 = {Tags.TAG_EQUIPMENT:true, Tags.TAG_COMBAT_MANUAL:true}
 const ALLOWED_TAGS3 = {}

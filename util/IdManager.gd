@@ -10,6 +10,7 @@ func _ready():
 	Events.global_load_data.connect(global_load_data)
 
 func pre_save_game():
+	cleanup_dead_items()
 	Events.global_save_data.emit('IdManager', Config.to_config(self))
 
 func global_load_data(data_id, config):

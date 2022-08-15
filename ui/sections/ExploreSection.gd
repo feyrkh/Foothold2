@@ -22,7 +22,7 @@ func start_explore_party():
 	if existing_explore_party:
 		return
 	var work_party:WorkPartyItem = game_item.get_explore_work_party()
-	if !work_party:
+	if work_party == null:
 		game_item.description = "There is nothing left to find!"
 		game_item.refresh_action_panel()
 	else:

@@ -1,2 +1,17 @@
+res://ui/sections/FlexibleButtonSection.tscn
+res://items/CombatManual.gd
 res://items/WorkPartyItemActions.tscn
 res://ui/sections/WorkNeededSection.tscn
+res://ui/sections/StatsSection.tscn
+res://ui/CollapseSection.tscn
+res://ui/sections/WorkProvidedSection.tscn
+res://ui/ActionContainer.tscn
+res://ui/sections/CombatManualBuildStyleSection.tscn
+res://items/PcItem.gd
+res://ui/sections/PcStatusSection.tscn
+res://ui/sections/PcStatusSection.gd
+res://ui/sections/PcStatusItems.gd
+res://ui/FancyTree.gd
+res://ui/sections/WorkNeededSectionEntries.gd
+res://ui/sections/WorkProvidedSectionEntries.gd
+res://ui/sections/StatsSectionEntries.gd

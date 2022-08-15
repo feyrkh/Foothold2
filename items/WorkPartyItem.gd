@@ -46,6 +46,7 @@ func post_config(config:Dictionary):
 	if work_amounts != null:
 		for k in work_amounts:
 			var entry_conf = work_amounts[k]
+			if entry_conf == null: continue
 			work_amounts[k] = WorkAmount.build_from_config(entry_conf)
 	work_result = WorkResult.build_from_config(config.get('work_result', null))
 
@@ -60,7 +61,7 @@ func init_work_party(label:String, work_party_type:String, work_needed:Dictionar
 		if !(amt is WorkAmount):
 			amt = WorkAmount.new(work_type, amt, 0, {})
 			work_needed[work_type] = amt
-		total_work_needed += amt.get_effort()
+		total_work_needed += amt.get_total_effort()
 	update_percentage_label()
 	connect('work_complete', on_work_complete)
 	return self
@@ -95,7 +96,7 @@ func get_action_panel_scene_path()->String:
 
 func _ready():
 	super._ready()
-	Events.connect('game_tick', game_tick)
+	Events.safe_connect('game_tick', game_tick)
 	connect('contents_updated', update_work_amounts)
 
 func get_work_amounts():
@@ -114,14 +115,14 @@ func game_tick():
 		var provided:WorkAmount = work_amounts.get(work_type)
 		if !needed or !provided:
 			continue
-		var applied = min(needed.get_effort(), provided.get_effort())
+		var applied = min(needed.get_total_effort(), provided.get_total_effort())
 		if applied > 0:
 			updated = true
 			total_work_applied += applied
 			update_percentage_label()
 			needed.apply_effort(applied)
 			provided.on_effort_applied(work_type, applied)
-			if needed.get_effort() < 0.000001:
+			if needed.get_total_effort() < 0.000001:
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)
 	if is_work_complete():
@@ -150,7 +151,10 @@ func update_work_amounts_from_worker_list(workers:Array[GameItem]):
 				amt = found_amt
 			else:
 				amt.add(found_amt)
-		work_amounts[work_type] = amt
+		if amt != null:
+			work_amounts[work_type] = amt
+		else:
+			work_amounts.erase(work_type)
 	refresh_action_panel()
 	Events.safe_connect('game_tick', game_tick)
 	

@@ -17,10 +17,24 @@ class_name FlexibleItemActions
 # 		'SomethingSection' -> 'res://ui/sections/SomethingSection.tscn'
 # 		'res://otherpath/SomethingSection' -> 'res://otherpath/SomethingSection.tscn' 
 func set_action_sections(action_section_script_names:Array):
-	for script_name in action_section_script_names:
-		add_action_section(script_name)
+	for section in action_section_script_names:
+		var script_name:String
+		var script_args
+		if section is String:
+			script_name = section
+		elif section is Array:
+			if section.size() == 2:
+				script_name = section[0]
+				script_args = section[1]
+			else:
+				push_error('Invalid flexible section definition: ', section)
+				return
+		else:
+			push_error('Invalid flexible section definition: ', section)
+			return
+		add_action_section(script_name, script_args)
 	
-func add_action_section(script_name):
+func add_action_section(script_name, script_args=null):
 	if !script_name.begins_with('res://'):
 		script_name = 'res://ui/sections/'+script_name
 	if !script_name.ends_with('.tscn') and !script_name.ends_with('Section') and !script_name.ends_with('Section.tscn'):
@@ -28,6 +42,8 @@ func add_action_section(script_name):
 	if !script_name.ends_with('.tscn'):
 		script_name = script_name + '.tscn'
 	var section = load(script_name).instantiate()
+	if section.has_method('setup_section'):
+		section.setup_section(script_args)
 	add_child(section)
 
 func setup_action_panel(game_ui:GameUI, game_item:GameItem):

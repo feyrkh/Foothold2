@@ -29,7 +29,7 @@ func finish_resolve_item_result(args):
 	for k in amts:
 		var amt = amts.get(k)
 		if amt != null:
-			inherent_work_amounts[k] = WorkAmount.new(k, amt, 0.0, {get_id():1})
+			inherent_work_amounts[k] = WorkAmount.new(k, amt, 0.0, {get_id():1}, null, null)
 	update_work_amounts()
 
 func _parent_updated(old_parent, new_parent):
@@ -39,7 +39,11 @@ func update_specific_work_amount(work_type):
 	var work_providing_items = get_work_helpers()
 	var work_amount = inherent_work_amounts.get(work_type, null)
 	if work_amount != null:
-		work_amount = WorkAmount.copy(work_amount)
+		if work_amount is WorkAmount:
+			work_amount = WorkAmount.copy(work_amount)
+		else:
+			# hopefully it's an integer
+			work_amount = WorkAmount.new(work_type, work_amount, 0.0, {get_id():1}, null, null)
 	for equip in work_providing_items:
 		var equip_work_amounts = equip.get_work_amounts()
 		var added_work_amount = equip_work_amounts.get(work_type)

@@ -3,7 +3,7 @@ extends AreaItem
 var explore_rooms_found = 0
 
 func has_more_explore_locations():
-	return true
+	return explore_rooms_found < 1
 
 func get_explore_work_party():
 	match explore_rooms_found:
@@ -26,10 +26,7 @@ func get_explore_work_party():
 			work.set_callback(WorkPartyItem.RESOLVE_WORK_CALLBACK, get_id(), 'resolve_explore')
 			return work
 		_:
-			var work = Factory.work_party("Explore", Tags.WORK_PARTY_EXPLORE, {WorkTypes.EXPLORE: 30})
-			work.pre_complete_desc = "Nothing else remains to be found." 
-			work.auto_resolve = true
-			return work
+			return null
 
 func resolve_explore(work_item):
 	explore_rooms_found += 1

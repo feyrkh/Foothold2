@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctxx4pbne2xx2"]
+[gd_scene load_steps=4 format=3 uid="uid://be3om1b0ui3b0"]
 
-[ext_resource type="Script" path="res://ui/sections/WorkProvidedSection.gd" id="1_pwiku"]
-[ext_resource type="Script" path="res://ui/sections/WorkProvidedSectionEntries.gd" id="2_847nt"]
+[ext_resource type="Script" path="res://ui/sections/PcStatusSection.gd" id="1_b1kes"]
 [ext_resource type="PackedScene" uid="uid://bkb4bhb6bhoh1" path="res://ui/CollapseSection.tscn" id="2_pljtd"]
+[ext_resource type="Script" path="res://ui/sections/PcStatusItems.gd" id="3_fdv5q"]
 
-[node name="WorkTypeSection" type="MarginContainer"]
+[node name="PcStatusSection" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_pwiku")
+script = ExtResource("1_b1kes")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_right = 1024.0
@@ -21,13 +21,12 @@ offset_bottom = 600.0
 offset_right = 1024.0
 offset_bottom = 26.0
 label = "Effort Provided"
-collapse_id = "WP"
+collapse_id = "PCStatus"
 
 [node name="Items" type="Tree" parent="VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 offset_top = 30.0
 offset_right = 1024.0
 offset_bottom = 30.0
-columns = 2
-column_titles_visible = true
-script = ExtResource("2_847nt")
+columns = 3
+script = ExtResource("3_fdv5q")

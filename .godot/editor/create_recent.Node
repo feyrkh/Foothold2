@@ -1,8 +1,9 @@
+FancyTree (FancyTree.gd)
+Label
 Button
 VBoxContainer
 HFlowContainer
 ScrollContainer
-Label
 HBoxContainer
 RichTextLabel
 TextureButton

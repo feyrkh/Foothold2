@@ -1,9 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://bok25e34yyvex"]
+[gd_scene load_steps=2 format=3 uid="uid://dgid0salmld1a"]
 
-[ext_resource type="Script" path="res://ui/sections/CombatManualBuildStyleSection.gd" id="1_51cd3"]
+[sub_resource type="GDScript" id="GDScript_w252g"]
+script/source = "extends Section
+
+func _ready():
+	refresh()
+	$Button.connect('pressed', on_complete_pressed)
+
+func refresh():
+	pass
+
+func on_complete_pressed():
+		var work_result:WorkResult = get_game_item().get_goal_reward()
+		if work_result:
+			work_result.resolve_results()
+		get_game_item().delete(true)
+"
 
 [node name="CombatManualBuildStyleSection" type="HBoxContainer"]
-script = ExtResource("1_51cd3")
+script = SubResource("GDScript_w252g")
 
 [node name="Button" type="Button" parent="."]
 offset_right = 167.0

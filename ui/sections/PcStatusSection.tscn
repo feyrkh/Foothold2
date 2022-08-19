@@ -20,7 +20,7 @@ offset_bottom = 600.0
 [node name="CollapseSection" parent="VBoxContainer" instance=ExtResource("2_pljtd")]
 offset_right = 1024.0
 offset_bottom = 26.0
-label = "Effort Provided"
+label = "Status"
 collapse_id = "PCStatus"
 
 [node name="Items" type="Tree" parent="VBoxContainer"]

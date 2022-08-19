@@ -30,8 +30,6 @@ const KEY_SCALING_STATS = 's'
 const KEY_STAT_MIN = 'sn'
 const KEY_SCALING_MULTIPLIER = 'sm'
 
-var stances:Array
-
 var equipment_type = Combat.EQUIP_HAND_TO_HAND
 var stance_count:int = 4 # number of stances in styles created by this manual, plus or minus stance_count_variance
 var stance_count_variance:int = 1 
@@ -41,6 +39,9 @@ var damage_type_options:Array = [Combat.PHYSICAL_ATTACK]
 var scaling_stat_options:Array = [Stats.STRENGTH]
 var stat_min:float = 100.0
 var scale_multiplier:float = 0.1
+
+var study_owner_id # ID of the PC studying this manual; if it changes then we reset any progress they've made and set this to null
+var previous_studiers = {} # ID -> number of times they've created a combat style with this book
 
 # Called when creating object from WorkResult
 func finish_resolve_item_result(args:Dictionary):
@@ -58,12 +59,13 @@ func build_combat_style():
 	var stances = []
 	var stance_power = []
 	var stance_power_total = 0
+	var style_power_adjustment = (1 + randf() * 0.5) * base_power
 	var cur_stance_count = int(round(stance_count + randf()*stance_count_variance - randf()*stance_count_variance))
 	for i in range(stance_count):
 		stance_power.append(randf() + power_variance)
 		stance_power_total += stance_power[i]
 	for i in range(stance_count):
-		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * base_power, scaling_stat_options, stat_min, scale_multiplier))
+		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier))
 	var result = CombatStyle.build(stances, equipment_type)
 	return result
 
@@ -91,7 +93,12 @@ func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
 func get_action_sections()->Array:
-	return ['Description', ['FlexibleButton', {'button':'Create Combat Style', 'click':'start_create_combat_style', 'visible':'create_combat_style_visible'}]]
+	return ['Description', ['FlexibleButton', {
+		'button':'Create Combat Style', 
+		'click':'start_create_combat_style', 
+		'visible':'create_combat_style_visible'}],
+		'WorkNeeded'
+	]
 
 const SELF_TAGS3 = {Tags.TAG_EQUIPMENT:true, Tags.TAG_COMBAT_MANUAL:true}
 const ALLOWED_TAGS3 = {}
@@ -103,6 +110,34 @@ func get_allowed_tags()->Dictionary:
 	
 func get_description():
 	return "A collection of notes on various %s combat techniques. A dedicated student could develop one or more fighting styles from this." % [Combat.get_equipment_description(equipment_type)]
+
+func moved_parents(old_parent, new_parent):
+	super(old_parent, new_parent)
+	var holder = get_closest_nonfolder_parent()
+	if holder.get_id() != study_owner_id:
+		study_owner_id = null
+		clear_work()
+
+func clear_work():
+	total_work_needed = 0
+	total_work_applied = 0
+	work_needed = {}
+	work_amounts = {}
+	work_result = WorkResult.new()
+	work_result.new_item_result()
+	update_percentage_label()
+	tree_item.set_icon(0, null)
+	work_paused = true
+
+func create_combat_style_visible():
+	return total_work_needed == 0 and get_closest_nonfolder_parent() is PcItem
+
+func start_create_combat_style():
+	var concentration_needed = pow(5, previous_studiers.get(get_closest_nonfolder_parent().get_id(), 0)) * 60
+	init_work_party(get_label(), Tags.WORK_PARTY_DESIGN_COMBAT_STYLE, {WorkTypes.CONCENTRATION: concentration_needed})
+	work_paused = true
+	update_work_amounts()
+	refresh_action_panel()
 
 # takes an array of POSITIVE numbers (negatives will cause weird stuff)
 # adds variance to each - 0 means that given [0, 1] we'll end up with [0, 1] as output; variance=1 means it becomes [0+1, 1+1] => [1, 2] => [0.333, 0.667]

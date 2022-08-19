@@ -42,9 +42,9 @@ func add_action_section(script_name, script_args=null):
 	if !script_name.ends_with('.tscn'):
 		script_name = script_name + '.tscn'
 	var section = load(script_name).instantiate()
+	add_child(section)
 	if section.has_method('setup_section'):
 		section.setup_section(script_args)
-	add_child(section)
 
 func setup_action_panel(game_ui:GameUI, game_item:GameItem):
 	add_action_section('res://ui/sections/ItemActionHeader.tscn')

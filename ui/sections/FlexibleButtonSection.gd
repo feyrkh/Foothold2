@@ -35,5 +35,5 @@ func refresh():
 	update_visibility()
 
 func update_visibility():
-	if visible_callback != null:
+	if visible_callback != null and get_game_item() != null and get_game_item().has_method(visible_callback):
 		visible = get_game_item().call(visible_callback)

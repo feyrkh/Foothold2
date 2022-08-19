@@ -2,15 +2,15 @@ extends RefCounted
 class_name WorkResult
 
 const KEY_SETUP_ARGS = 'a' # passed to `finish_resolve_item_result` on the new item, if it has that function
-const KEY_GOAL_ID = 'g'
-const KEY_GOAL_DATA_KEY = 'k'
-const KEY_ITEM_NAME = 'n'
-const KEY_OWNER_ID = 'o'
-const KEY_GOAL_PROGRESS = 'p'
-const KEY_ITEM_SCRIPT = 's'
-const KEY_RESULT_TYPE = 't'
-const KEY_GOAL_PROGRESS_VAL = 'v'
-const KEY_GOAL_DATA_VAL = 'V'
+const KEY_GOAL_ID = 'g' # Used with GOAL_PROGRESS_RESULT and GOAL_DATA_RESULT, the ID of the goal to be updated
+const KEY_GOAL_DATA_KEY = 'k' # Used with GOAL_DATA_RESULT, the key of the data to update
+const KEY_ITEM_NAME = 'n' # Used with KEY_ITEM_RESULT, the item's label will be set to this
+const KEY_OWNER_ID = 'o' # Used with KEY_ITEM_RESULT, the item will be created under this ID
+const KEY_LOCK_TO_OWNER = 'OL' # Used with KEY_ITEM_RESULT, set truthy to set the item's lock value to the owner it is assigned to
+const KEY_ITEM_SCRIPT = 's' # Used with KEY_ITEM_RESULT, path to the script to use for the new item
+const KEY_RESULT_TYPE = 't' # Set to one of the *_RESULT consts below
+const KEY_GOAL_PROGRESS_VAL = 'v' # Used with GOAL_PROGRESS_RESULT, the new progress value for the goal
+const KEY_GOAL_DATA_VAL = 'V' # Used with GOAL_DATA_RESULT, the new value for the goal data
 
 const ITEM_RESULT = 1
 const GOAL_PROGRESS_RESULT = 2
@@ -72,5 +72,7 @@ static func resolve_item_result(result:Dictionary):
 		item._item_id = setup_args['_item_id']
 	if item.has_method('finish_resolve_item_result'):
 		item.finish_resolve_item_result(result.get(KEY_SETUP_ARGS))
-	Events.emit_signal('add_game_item', item, IdManager.get_item_by_id(result['o']), true)
+	if result.get(KEY_LOCK_TO_OWNER, false):
+		item.allowed_owner_lock_id = result[KEY_OWNER_ID]
+	Events.emit_signal('add_game_item', item, IdManager.get_item_by_id(result[KEY_OWNER_ID]), true)
 	

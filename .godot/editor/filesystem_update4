@@ -15,3 +15,10 @@ res://ui/FancyTree.gd
 res://ui/sections/WorkNeededSectionEntries.gd
 res://ui/sections/WorkProvidedSectionEntries.gd
 res://ui/sections/StatsSectionEntries.gd
+res://items/WorkHeldItem.gd
+res://util/Tags.gd
+res://items/FlexibleItemActions.gd
+res://ui/sections/FlexibleButtonSection.gd
+res://items/WorkPartyItem.gd
+res://ui/sections/WorkNeededSection.gd
+res://items/helpers/WorkResult.gd

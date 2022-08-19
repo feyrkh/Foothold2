@@ -5,7 +5,7 @@ var worker_id
 
 func _ready():
 	super._ready()
-	Events.safe_connect('parent_updated', moved_parents)
+	connect('parent_updated', moved_parents)
 
 # Called when creating object from WorkResult
 func finish_resolve_item_result(args):

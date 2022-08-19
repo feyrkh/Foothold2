@@ -16,3 +16,4 @@ const TAG_WORK := 'w'
 
 const WORK_PARTY_EXPLORE := 'we'
 const WORK_PARTY_MANUAL_LABOR := 'wl'
+const WORK_PARTY_DESIGN_COMBAT_STYLE := 'dc'

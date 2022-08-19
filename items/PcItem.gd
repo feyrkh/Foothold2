@@ -1,7 +1,13 @@
 extends WorkAwareItem
 class_name PcItem
 
-var stats:Array = []
+var stats:Array = []:
+	set(val):
+		# transform from serialized version
+		for i in range(val.size()):
+			if val[i] is Array:
+				val[i] = StatEntry.from_config(val[i])
+		stats = val
 
 var hp=1000:
 	get:
@@ -28,8 +34,8 @@ func _init():
 
 func post_config(c):
 	super.post_config(c)
-	for i in range(stats.size()):
-		stats[i] = StatEntry.from_config(stats[i])
+#	for i in range(stats.size()):
+#		stats[i] = StatEntry.from_config(stats[i])
 
 func _ready():
 	super._ready()

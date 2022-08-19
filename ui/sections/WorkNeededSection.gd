@@ -18,7 +18,10 @@ func refresh():
 	if game_item and game_item.has_method('get_work_needed'):
 		var work_paused = game_item.work_paused
 		if work_paused:
-			pause_button.text = '(resume work)'
+			if game_item.total_work_applied == 0:
+				pause_button.text = '(start work)'
+			else:
+				pause_button.text = '(resume work)'
 		else:
 			pause_button.text = '(pause work)'
 		var work_needed:Array = game_item.get_work_needed().values()

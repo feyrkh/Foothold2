@@ -88,8 +88,14 @@ func resolve_completion_effects():
 func update_percentage_label():
 	if !tree_item or !is_instance_valid(tree_item):
 		return
+	if total_work_needed == 0:
+		tree_item.set_text(0, label)
+		return
 	var pct = (total_work_applied/total_work_needed) * 100
-	tree_item.set_text(0, label+' (%.0f%%)'%[pct])
+	if pct == 0:
+		tree_item.set_text(0, label)
+	else:
+		tree_item.set_text(0, label+' (%.0f%%)'%[pct])
 
 func get_action_panel_scene_path()->String:
 	return "res://items/WorkPartyItemActions.tscn"

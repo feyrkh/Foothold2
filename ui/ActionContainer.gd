@@ -1,6 +1,7 @@
 extends MarginContainer
+class_name ActionContainer
 
-var contents
+var contents:Node
 
 func set_contents(contents):
 	find_child('InnerContainer').add_child(contents)
@@ -28,3 +29,4 @@ func _get_drag_data(at_position):
 			#print('item_region: ', get_item_area_rect(item))
 		set_drag_preview(drag_preview)
 		return [item]
+

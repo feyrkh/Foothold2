@@ -1,15 +1,15 @@
+MarginContainer
+Button
+TextureButton
 FancyTree (FancyTree.gd)
 Label
-Button
 VBoxContainer
 HFlowContainer
 ScrollContainer
 HBoxContainer
 RichTextLabel
-TextureButton
 Timer
 Tree
-MarginContainer
 ItemList
 CenterContainer
 ColorRect

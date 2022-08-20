@@ -124,7 +124,7 @@ func clear_work():
 	work_needed = {}
 	work_amounts = {}
 	work_result = WorkResult.new()
-	work_result.new_item_result()
+	#work_result.new_item_result()
 	update_percentage_label()
 	tree_item.set_icon(0, null)
 	work_paused = true

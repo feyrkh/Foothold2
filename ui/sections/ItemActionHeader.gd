@@ -3,6 +3,8 @@ extends Section
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var game_item = get_game_item()
+	$MoveLeftButton.connect('pressed', func():Events.move_action_panel.emit(get_action_panel_container(), false))
+	$MoveRightButton.connect('pressed', func():Events.move_action_panel.emit(get_action_panel_container(), true))
 	if game_item != null:
 		game_item.connect('pin_status_changed', pin_status_changed)
 		game_item.connect('label_updated', func(new_label): $GameItemLabel.text = new_label)
@@ -26,3 +28,10 @@ func on_room_size_updated(room_size, occupied_room_size):
 func render_furniture_desc():
 		$RoomSizeLabel.visible = true
 		$RoomSizeLabel.text = 'Size: %d' % [get_game_item().get_furniture_size()]
+
+func allow_move_left(allowed):
+	$MoveLeftButton.visible = allowed
+	
+func allow_move_right(allowed):
+	$MoveRightButton.visible = allowed
+

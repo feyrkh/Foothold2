@@ -9,6 +9,11 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "MarginContainer",
+"class": &"ActionContainer",
+"language": &"GDScript",
+"path": "res://ui/ActionContainer.gd"
+}, {
 "base": "GameItem",
 "class": &"AreaItem",
 "language": &"GDScript",
@@ -190,6 +195,7 @@ _global_script_classes=[{
 "path": "res://util/WorkTypes.gd"
 }]
 _global_script_class_icons={
+"ActionContainer": "",
 "AreaItem": "",
 "Combat": "",
 "CombatManual": "",

@@ -8,6 +8,7 @@ var action_panels = {}
 
 func _ready():
 	Global.main_tree = ItemTree
+	Events.move_action_panel.connect(move_action_panel)
 
 func save_data() -> Dictionary:
 	var data = {
@@ -59,3 +60,16 @@ func _can_drop_data(at_position, data):
 
 func new_folder(new_name, tree_node):
 	Factory.place_item(Factory.folder(new_name), tree_node.tree_item)
+
+func move_action_panel(action_panel:Node, move_right):
+	var idx = action_panel.get_index()
+	var next_idx = idx
+	if move_right and Input.is_key_pressed(KEY_SHIFT):
+		next_idx = ActionContainer.get_child_count()
+	elif move_right:
+		next_idx = min(ActionContainer.get_child_count(), idx+1)
+	elif !move_right and Input.is_key_pressed(KEY_SHIFT):
+		next_idx = 0
+	else:
+		next_idx = max(0, idx-1)
+	ActionContainer.move_child(action_panel, next_idx)

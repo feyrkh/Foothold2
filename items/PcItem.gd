@@ -1,6 +1,8 @@
 extends WorkAwareItem
 class_name PcItem
 
+signal status_updated()
+
 var stats:Array = []:
 	set(val):
 		# transform from serialized version
@@ -13,12 +15,16 @@ var hp=1000:
 	get:
 		return max(0, min(hp, get_max_hp()))
 	set(val):
-		focus = max(0, min(hp, get_max_hp()))
+		if hp != val:
+			hp = max(0, min(val, get_max_hp()))
+			emit_signal('status_updated')
 var focus=1000:
 	get:
 		return max(0, min(focus, get_max_focus()))
 	set(val):
-		focus = max(0, min(focus, get_max_focus()))
+		if focus != val:
+			focus = max(0, min(val, get_max_focus()))
+			emit_signal('status_updated')
 
 func _init():
 	super._init()
@@ -39,6 +45,13 @@ func post_config(c):
 
 func _ready():
 	super._ready()
+	Events.game_tick.connect(regen_status)
+
+func regen_status():
+	if focus < get_max_focus():
+		focus += get_focus_regen()
+	if hp < get_max_hp():
+		hp += get_hp_regen()
 
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
@@ -64,8 +77,14 @@ func get_furniture_size():
 func get_max_focus():
 	return stats[Stats.WILLPOWER].get_stat_value() * 0.075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.025
 
+func get_focus_regen():
+	return 1.0 / 60
+
 func get_max_hp():
 	return stats[Stats.CONSTITUTION].get_stat_value() * 0.5
+
+func get_hp_regen():
+	return 1.0 / 3600
 
 func get_stats():
 	return stats
@@ -76,4 +95,8 @@ func derive_manual_labor_work(effort:float, bonus:float)->float:
 
 func derive_concentration_work(effort:float, bonus:float)->float:
 	# manual labor is 
-	return min(focus, bonus * (effort + stats[Stats.WILLPOWER].get_stat_value() * 0.0075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.0025))
+	return max(get_focus_regen(), min(focus, bonus * (effort + stats[Stats.WILLPOWER].get_stat_value() * 0.0075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.0025)))
+
+func on_effort_applied(work_type:String, applied:float):
+	if work_type == WorkTypes.CONCENTRATION:
+		focus -= applied

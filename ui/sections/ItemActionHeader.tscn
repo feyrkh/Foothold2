@@ -53,10 +53,14 @@ horizontal_alignment = 2
 offset_left = 984.0
 offset_right = 1002.0
 offset_bottom = 31.0
+hint_tooltip = "Move panel left
+Shift+click to move to front"
 text = "<"
 
 [node name="MoveRightButton" type="Button" parent="."]
 offset_left = 1006.0
 offset_right = 1024.0
 offset_bottom = 31.0
+hint_tooltip = "Move panel right
+Shift+click to move to end"
 text = ">"

@@ -21,6 +21,7 @@ static func build(damage_types, base_power_per_damage_type:Dictionary, scaling_s
 	result.scaling_stat = scaling_stat
 	result.stat_min = stat_min
 	result.scale_multiplier = scale_multiplier
+	return result
 	
 
 func get_stat_scaling_multiplier(scaling_stat_value:float)->float:

@@ -2,13 +2,18 @@ extends GameItem
 class_name CombatStyle
 
 var equipment_type = Combat.EQUIP_HAND_TO_HAND
-var stances:Array[CombatStance]
+var stances:Array # of CombatStance, except in post_config
 
-static func build(stances, equipment_type):
+static func build(stances, equipment_type) -> CombatStyle:
 	var result = CombatStyle.new()
 	result.stances = stances
 	result.equipment_type = equipment_type
 	result.set_label(result.generate_random_name())
+	return result
+
+func post_config(c):
+	if stances != null:
+		stances = stances.map(func(c): return CombatStance.from_config(c))
 
 # Called when creating object from WorkResult
 func finish_resolve_item_result(args):
@@ -53,10 +58,11 @@ func generate_random_name()->String:
 				attack_type_opts.append(new_attack_type_opts)
 			if new_equipment_opts != null and new_equipment_opts.size() != 0:
 				equipment_opts.append(new_equipment_opts)
-
-	if equipment_opts.is_empty(): equipment_opts = [null]
+	adjective_opts.append(Combat.get_power_distribution_name_opts(total_attack_power, total_defend_power))
+	
+	if equipment_opts.is_empty(): equipment_opts = ['']
 	if adjective_opts.is_empty(): adjective_opts = [["Unknown", "Generic", "Mediocre"]]
-	if attack_type_opts.is_empty(): attack_type_opts = [["Style"]]
+	if attack_type_opts.is_empty(): attack_type_opts = [[""]]
 	
 	var adj = adjective_opts[randi() % adjective_opts.size()]
 	var att = attack_type_opts[randi() % attack_type_opts.size()]
@@ -70,9 +76,11 @@ func generate_random_name()->String:
 	var result = ""
 	if adj: result += adj
 	if att:
-		if result != "": result += " "
+		if result != "" and result[-1] != ' ': result += " "
 		result += att
 	if equ:
-		if result != "": result += " "
+		if result != "" and result[-1] != ' ': result += " "
 		result += equ
+	if result != "" and result[-1] != ' ': result += " "
+	result += "Style"
 	return result

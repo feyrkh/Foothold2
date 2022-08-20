@@ -20,10 +20,10 @@ static func get_equipment_description(equip_type:int)->String:
 		_: return "unknown"
 
 static func get_attack_type_name_opts(power_type, equipment_type, attack_power) -> Array[String]:
-	var attack_type_opts = []
+	var attack_type_opts = [] # verbs or '<noun> of'
 	match power_type:
-		Combat.PHYSICAL_ATTACK: attack_type_opts.append_array(['Striking', null, 'Smashing'])
-		Combat.PHYSICAL_DEFEND: attack_type_opts.append_array(['Wall', null, 'Guard'])
+		Combat.PHYSICAL_ATTACK: attack_type_opts.append_array(['Striking', '', 'Smashing'])
+		Combat.PHYSICAL_DEFEND: attack_type_opts.append_array(['Wall of', '', 'Guardian'])
 		Combat.IMPURE_VIS_ATTACK: 
 			attack_type_opts.append_array(['Force', 'Vis', 'Shoving'])
 		Combat.IMPURE_VIS_DEFEND:
@@ -34,7 +34,7 @@ static func get_attack_type_name_opts(power_type, equipment_type, attack_power) 
 	return attack_type_opts
 
 static func get_equipment_name_opts(power_type, equipment_type, attack_power) -> Array[String]:
-	var equipment_opts = []
+	var equipment_opts = [] # nouns
 	match power_type:
 		Combat.PHYSICAL_ATTACK: pass
 		Combat.PHYSICAL_DEFEND: pass
@@ -52,19 +52,19 @@ static func get_equipment_name_opts(power_type, equipment_type, attack_power) ->
 	return equipment_opts
 
 static func get_power_distribution_name_opts(total_attack_power, total_defend_power):
-	var adjective_opts = []
+	var adjective_opts = [] # adjectives, duh
 	total_attack_power = total_attack_power / (total_attack_power + total_defend_power)
 	total_defend_power = total_defend_power / (total_attack_power + total_defend_power)
 	if total_attack_power == 0:
-		adjective_opts.append_array(['Pure Defense', 'Stonewalling', 'Cowardly'])
+		adjective_opts.append_array(['Pure Defense', 'Impenetrable', 'Cowardly'])
 	elif total_attack_power < 0.25:
-		adjective_opts.append_array(['Defensive', 'Guarding', 'Slippery'])
+		adjective_opts.append_array(['Defensive', 'Guarded', 'Slippery'])
 	elif total_attack_power < 0.5:
 		adjective_opts.append_array(['Drunken', 'Cautious', 'Reserved'])
 	elif total_attack_power < 0.75:
-		adjective_opts.append_array(['Striking', 'Balanced', 'Opposing'])
+		adjective_opts.append_array(['Balanced', 'Opposed'])
 	elif total_attack_power < 1.0:
-		adjective_opts.append_array(['Offensive', 'Aggressive', 'Rushing'])
+		adjective_opts.append_array(['Offensive', 'Aggressive', 'Rush', 'Potent'])
 	else:
-		adjective_opts.append_array(['Brutal', 'Bestial', 'Demonic'])
+		adjective_opts.append_array(['Brutal', 'Bestial', 'Demonic', 'indomitable'])
 	return adjective_opts

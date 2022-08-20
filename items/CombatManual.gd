@@ -43,6 +43,10 @@ var scale_multiplier:float = 0.1
 var study_owner_id # ID of the PC studying this manual; if it changes then we reset any progress they've made and set this to null
 var previous_studiers = {} # ID -> number of times they've created a combat style with this book
 
+func _ready():
+	super._ready()
+	set_callback(self.WORK_COMPLETE_CALLBACK, self.get_id(), 'build_combat_style') # don't forget the callback must take 1 arg, the WorkParty object
+
 # Called when creating object from WorkResult
 func finish_resolve_item_result(args:Dictionary):
 	stance_count = args.get(KEY_STANCE_COUNT)
@@ -55,11 +59,11 @@ func finish_resolve_item_result(args:Dictionary):
 	scale_multiplier = args.get(KEY_SCALING_MULTIPLIER, 0.1)
 	equipment_type = args.get(KEY_EQUIPMENT_TYPE, Combat.EQUIP_HAND_TO_HAND)
 
-func build_combat_style():
+func build_combat_style(work_party):
 	var stances = []
 	var stance_power = []
 	var stance_power_total = 0
-	var style_power_adjustment = (1 + randf() * 0.5) * base_power
+	var style_power_adjustment = 1 * base_power * stance_count # base_power is average damage per stance
 	var cur_stance_count = int(round(stance_count + randf()*stance_count_variance - randf()*stance_count_variance))
 	for i in range(stance_count):
 		stance_power.append(randf() + power_variance)
@@ -67,7 +71,13 @@ func build_combat_style():
 	for i in range(stance_count):
 		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier))
 	var result = CombatStyle.build(stances, equipment_type)
-	return result
+	var holder = get_closest_nonfolder_parent()
+	study_owner_id = holder.get_id() # just in case...
+	result.allowed_owner_lock_id = study_owner_id
+	previous_studiers[study_owner_id] = previous_studiers.get(study_owner_id, 0) + 1
+	Events.add_game_item.emit(result, holder, true)
+	clear_work()
+	refresh_action_panel()
 
 func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier)->CombatStance:
 	var damage_type_ratio_dict = damage_type_options[randi() % damage_type_options.size()]
@@ -77,8 +87,8 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 	var damage_division = []
 	var total_damage_division = 0
 	for k in damage_types:
-		damage_division.append(randf()+damage_types[k])
-		total_damage_division = damage_division[-1]
+		damage_division.append(randf() + damage_type_ratio_dict[k])
+		total_damage_division += damage_division[-1]
 	var final_damage = {}
 	for i in range(damage_types.size()):
 		final_damage[damage_types[i]] = (damage_division[i]/total_damage_division) * base_power
@@ -123,8 +133,6 @@ func clear_work():
 	total_work_applied = 0
 	work_needed = {}
 	work_amounts = {}
-	work_result = WorkResult.new()
-	#work_result.new_item_result()
 	update_percentage_label()
 	tree_item.set_icon(0, null)
 	work_paused = true
@@ -133,7 +141,12 @@ func create_combat_style_visible():
 	return total_work_needed == 0 and get_closest_nonfolder_parent() is PcItem
 
 func start_create_combat_style():
-	var concentration_needed = pow(5, previous_studiers.get(get_closest_nonfolder_parent().get_id(), 0)) * 60
+	var study_owner = get_closest_nonfolder_parent()
+	if !study_owner is PcItem:
+		refresh_action_panel()
+		return
+	study_owner_id = study_owner.get_id()
+	var concentration_needed = pow(5, previous_studiers.get(study_owner_id, 0)) * 10
 	init_work_party(get_label(), Tags.WORK_PARTY_DESIGN_COMBAT_STYLE, {WorkTypes.CONCENTRATION: concentration_needed})
 	work_paused = true
 	update_work_amounts()

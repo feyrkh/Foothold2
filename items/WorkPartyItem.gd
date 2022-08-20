@@ -33,9 +33,7 @@ var work_paused:bool = false:
 	get: return work_paused
 	set(val):
 		work_paused = val
-		if work_paused:
-			Events.disconnect('game_tick', game_tick)
-		else:
+		if !work_paused:
 			Events.safe_connect('game_tick', game_tick)
 
 func post_config(config:Dictionary):
@@ -63,7 +61,6 @@ func init_work_party(label:String, work_party_type:String, work_needed:Dictionar
 			work_needed[work_type] = amt
 		total_work_needed += amt.get_total_effort()
 	update_percentage_label()
-	connect('work_complete', on_work_complete)
 	return self
 
 func is_work_complete()->bool:
@@ -104,6 +101,7 @@ func _ready():
 	super._ready()
 	Events.safe_connect('game_tick', game_tick)
 	connect('contents_updated', update_work_amounts)
+	connect('work_complete', on_work_complete)
 
 func get_work_amounts():
 	return work_amounts
@@ -122,9 +120,11 @@ func game_tick():
 		if !needed or !provided:
 			continue
 		var applied = min(needed.get_total_effort(), provided.get_total_effort())
-		if applied > 0:
+
+		if applied >= 0:
 			updated = true
 			total_work_applied += applied
+			refresh_action_panel()
 			update_percentage_label()
 			needed.apply_effort(applied)
 			provided.on_effort_applied(work_type, applied)
@@ -138,7 +138,6 @@ func game_tick():
 		return
 	if updated:
 		tree_item.set_icon(0, load("res://assets/icon/arrow-right.png"))
-		refresh_action_panel()
 	else:
 		Events.disconnect('game_tick', game_tick)
 		tree_item.set_icon(0, null)

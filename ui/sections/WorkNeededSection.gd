@@ -11,7 +11,7 @@ func _ready():
 	pause_button.pressed.connect(func(): 
 		get_game_item().work_paused = !get_game_item().work_paused
 		refresh())
-	refresh()
+	Events.game_tick.connect(refresh)
 
 func refresh():
 	var game_item = get_game_item()

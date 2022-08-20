@@ -4,8 +4,9 @@ extends FancyTree
 func _ready():
 	headers = ['Stat Name', 'Base', 'Total']
 	header_tooltips = [' ', 'Value before any equipment bonuses or other buffs', 'Value after all modifiers are considered']
-	formats = [null, '%.1f', '%.1f']
+	alignments = [null, HORIZONTAL_ALIGNMENT_RIGHT, HORIZONTAL_ALIGNMENT_RIGHT]
 	super._ready()
 
 func add_stat(stat:StatEntry):
-	add_row([Stats.get_stat_name(stat.stat_type), stat.base, stat.get_stat_value()], [' ', ' ', ' '])
+	add_row([Stats.get_stat_name(stat.stat_type), Numbers.format_number(stat.base), Numbers.format_number(stat.get_stat_value())], 
+		[' ', ' ', ' '])

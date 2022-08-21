@@ -1,7 +1,7 @@
 extends Tree
 class_name FancyTree
 
-const BASE_PIXEL_HEIGHT = 35
+const BASE_PIXEL_HEIGHT = 0
 const PIXELS_PER_ROW = 28
 const MAX_PIXELS = 300
 

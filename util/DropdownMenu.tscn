@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cehav2a7hgva6"]
+
+[ext_resource type="Texture2D" uid="uid://dkl7quhpa741j" path="res://assets/icon/arrow-down.png" id="1_f3pfs"]
+[ext_resource type="Script" path="res://util/DropdownMenu.gd" id="1_lyjtp"]
+[ext_resource type="Script" path="res://util/ScreenLimitedPopupMenu.gd" id="2_nmeks"]
+
+[node name="DropdownMenu" type="HBoxContainer"]
+offset_left = 62.0
+offset_top = 30.0
+offset_right = 193.0
+offset_bottom = 56.0
+size_flags_horizontal = 3
+script = ExtResource("1_lyjtp")
+
+[node name="DropdownLabel" type="Label" parent="."]
+offset_top = 1.0
+offset_right = 107.0
+offset_bottom = 24.0
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="DropdownButton" type="TextureButton" parent="."]
+offset_left = 111.0
+offset_top = 3.0
+offset_right = 131.0
+offset_bottom = 23.0
+size_flags_vertical = 4
+texture_normal = ExtResource("1_f3pfs")
+
+[node name="DropdownMenu" type="PopupMenu" parent="."]
+size = Vector2i(300, 10)
+min_size = Vector2i(300, 10)
+script = ExtResource("2_nmeks")

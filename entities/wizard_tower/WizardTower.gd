@@ -1,9 +1,17 @@
 extends AreaItem
 
+const TASK_EXPLORE_ROOM = 'explore_room'
+
 var explore_rooms_found = 0
 
+func get_work_task_options(requestor:GameItem) -> Dictionary:
+	var result = {}
+	if has_more_explore_locations():
+		result[TASK_EXPLORE_ROOM] = WorkTaskOption.build(TASK_EXPLORE_ROOM, "Explore the tower", get_id(), "Uncover additional rooms, ancient artifacts, and the like.", WorkTask.LOCATION_INSIDE)
+	return self.work_task_list.filter_task_options(result, requestor)
+
 func has_more_explore_locations():
-	return explore_rooms_found < 1
+	return explore_rooms_found < 2
 
 func get_explore_work_party():
 	match explore_rooms_found:

@@ -3,6 +3,9 @@ class_name PcItem
 
 signal status_updated()
 
+const TASK_MEDITATE = 'M'
+const TASK_REST = 'R'
+
 var stats:Array = []:
 	set(val):
 		# transform from serialized version
@@ -26,6 +29,10 @@ var focus=1000:
 			focus = max(0, min(val, get_max_focus()))
 			emit_signal('status_updated')
 
+var active_work_task_id
+var active_work_task_owner_id
+var active_work_task_paused
+
 func _init():
 	super._init()
 	inherent_work_amounts = {
@@ -47,6 +54,12 @@ func _ready():
 	super._ready()
 	Events.game_tick.connect(regen_status)
 
+func get_work_task_options(requestor:GameItem) -> Dictionary:
+	var result = {}
+	result[TASK_MEDITATE] = WorkTaskOption.build(TASK_MEDITATE, "Meditate", get_id(), "Recover your focus.", WorkTask.LOCATION_SELF)
+	result[TASK_REST] = WorkTaskOption.build(TASK_REST, "Rest", get_id(), "Recover your health and stamina.", WorkTask.LOCATION_SELF)
+	return self.work_task_list.filter_task_options(result, requestor)
+
 func regen_status():
 	if focus < get_max_focus():
 		focus += get_focus_regen()
@@ -56,7 +69,7 @@ func regen_status():
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description', 'PcStatus', 'Stats', 'WorkProvided']
+const ACTION_SECTIONS = ['Description', 'Separator', 'PcStatus', 'Stats', 'WorkProvided', 'Separator', 'WorkTask']
 func get_action_sections()->Array:
 	return ACTION_SECTIONS
 
@@ -100,3 +113,21 @@ func derive_concentration_work(effort:float, bonus:float)->float:
 func on_effort_applied(work_type:String, applied:float):
 	if work_type == WorkTypes.CONCENTRATION:
 		focus -= applied
+
+func get_active_work_task_id():
+	return active_work_task_id
+
+func set_active_work_task_id(val):
+	active_work_task_id = val
+
+func get_active_work_task_owner_id():
+	return active_work_task_owner_id
+
+func set_active_work_task_owner_id(val):
+	active_work_task_owner_id = val
+
+func get_active_work_task_paused()->bool:
+	return active_work_task_paused
+
+func set_active_work_task_paused(val:bool):
+	active_work_task_paused = val

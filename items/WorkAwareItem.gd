@@ -1,4 +1,4 @@
-extends GameItem
+extends WorkProvidingItem
 class_name WorkAwareItem
 
 # finish_resolve_item_result args:

@@ -1,0 +1,131 @@
+[gd_scene load_steps=5 format=3 uid="uid://doob36yuqamno"]
+
+[ext_resource type="Script" path="res://ui/sections/WorkTaskSection.gd" id="1_3scv6"]
+[ext_resource type="Texture2D" uid="uid://dkl7quhpa741j" path="res://assets/icon/arrow-down.png" id="2_elhrw"]
+[ext_resource type="Script" path="res://util/ScreenLimitedPopupMenu.gd" id="3_lfi5b"]
+[ext_resource type="PackedScene" uid="uid://cehav2a7hgva6" path="res://util/DropdownMenu.tscn" id="4_fbxye"]
+
+[node name="WorkTask" type="VBoxContainer"]
+script = ExtResource("1_3scv6")
+
+[node name="ActiveTaskContainer" type="MarginContainer" parent="."]
+offset_right = 193.0
+offset_bottom = 88.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ActiveTaskContainer"]
+offset_right = 193.0
+offset_bottom = 88.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ActiveTaskContainer/VBoxContainer"]
+offset_right = 193.0
+offset_bottom = 26.0
+
+[node name="Label" type="Label" parent="ActiveTaskContainer/VBoxContainer/HBoxContainer"]
+offset_right = 89.0
+offset_bottom = 26.0
+text = "Active task:"
+
+[node name="ActiveTaskLabel" type="Label" parent="ActiveTaskContainer/VBoxContainer/HBoxContainer"]
+offset_left = 93.0
+offset_top = 1.0
+offset_right = 94.0
+offset_bottom = 24.0
+
+[node name="ActiveTaskDescription" type="Label" parent="ActiveTaskContainer/VBoxContainer"]
+offset_top = 30.0
+offset_right = 193.0
+offset_bottom = 53.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ActiveTaskContainer/VBoxContainer"]
+offset_top = 57.0
+offset_right = 193.0
+offset_bottom = 88.0
+
+[node name="PauseTaskButton" type="Button" parent="ActiveTaskContainer/VBoxContainer/HBoxContainer2"]
+offset_right = 55.0
+offset_bottom = 31.0
+text = "Pause"
+
+[node name="ResumeTaskButton" type="Button" parent="ActiveTaskContainer/VBoxContainer/HBoxContainer2"]
+offset_left = 59.0
+offset_right = 129.0
+offset_bottom = 31.0
+text = "Resume"
+
+[node name="CancelTaskButton" type="Button" parent="ActiveTaskContainer/VBoxContainer/HBoxContainer2"]
+offset_left = 133.0
+offset_right = 193.0
+offset_bottom = 31.0
+text = "Cancel"
+
+[node name="NextTaskContainer" type="MarginContainer" parent="."]
+offset_top = 92.0
+offset_right = 193.0
+offset_bottom = 240.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NextTaskContainer"]
+offset_right = 193.0
+offset_bottom = 148.0
+
+[node name="Label" type="Label" parent="NextTaskContainer/VBoxContainer"]
+offset_right = 193.0
+offset_bottom = 26.0
+text = "Next task:"
+
+[node name="GridContainer" type="GridContainer" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 30.0
+offset_right = 193.0
+offset_bottom = 86.0
+columns = 2
+
+[node name="NextTaskTargetHeader" type="Label" parent="NextTaskContainer/VBoxContainer/GridContainer"]
+offset_right = 58.0
+offset_bottom = 26.0
+text = "Source:"
+
+[node name="NextTaskTargetContainer" type="HBoxContainer" parent="NextTaskContainer/VBoxContainer/GridContainer"]
+offset_left = 62.0
+offset_right = 193.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="NextTaskTargetLabel" type="Label" parent="NextTaskContainer/VBoxContainer/GridContainer/NextTaskTargetContainer"]
+offset_top = 1.0
+offset_right = 107.0
+offset_bottom = 24.0
+size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="NextTaskTargetButton" type="TextureButton" parent="NextTaskContainer/VBoxContainer/GridContainer/NextTaskTargetContainer"]
+offset_left = 111.0
+offset_top = 3.0
+offset_right = 131.0
+offset_bottom = 23.0
+size_flags_vertical = 4
+texture_normal = ExtResource("2_elhrw")
+
+[node name="NextTaskTargetDropdownMenu" type="PopupMenu" parent="NextTaskContainer/VBoxContainer/GridContainer/NextTaskTargetContainer"]
+size = Vector2i(300, 10)
+min_size = Vector2i(300, 10)
+max_size = Vector2i(0, 400)
+script = ExtResource("3_lfi5b")
+
+[node name="NextTaskOptionHeader" type="Label" parent="NextTaskContainer/VBoxContainer/GridContainer"]
+offset_top = 30.0
+offset_right = 58.0
+offset_bottom = 56.0
+text = "Task:"
+
+[node name="NextTaskOptionContainer" parent="NextTaskContainer/VBoxContainer/GridContainer" instance=ExtResource("4_fbxye")]
+
+[node name="NextTaskDescriptionLabel" type="Label" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 90.0
+offset_right = 193.0
+offset_bottom = 113.0
+autowrap_mode = 3
+
+[node name="StartTaskButton" type="Button" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 117.0
+offset_right = 193.0
+offset_bottom = 148.0
+text = "Start Task"

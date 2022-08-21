@@ -14,7 +14,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://ui/ActionContainer.gd"
 }, {
-"base": "GameItem",
+"base": "WorkProvidingItem",
 "class": &"AreaItem",
 "language": &"GDScript",
 "path": "res://items/AreaItem.gd"
@@ -43,6 +43,11 @@ _global_script_classes=[{
 "class": &"Config",
 "language": &"GDScript",
 "path": "res://util/Config.gd"
+}, {
+"base": "Control",
+"class": &"DropdownMenu",
+"language": &"GDScript",
+"path": "res://util/DropdownMenu.gd"
 }, {
 "base": "WorkAwareItem",
 "class": &"EquipmentItem",
@@ -139,6 +144,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://util/SaveLoad.gd"
 }, {
+"base": "PopupMenu",
+"class": &"ScreenLimitedPopupMenu",
+"language": &"GDScript",
+"path": "res://util/ScreenLimitedPopupMenu.gd"
+}, {
 "base": "Control",
 "class": &"Section",
 "language": &"GDScript",
@@ -174,7 +184,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/WorkAmount.gd"
 }, {
-"base": "GameItem",
+"base": "WorkProvidingItem",
 "class": &"WorkAwareItem",
 "language": &"GDScript",
 "path": "res://items/WorkAwareItem.gd"
@@ -189,10 +199,30 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/WorkPartyItem.gd"
 }, {
+"base": "GameItem",
+"class": &"WorkProvidingItem",
+"language": &"GDScript",
+"path": "res://items/helpers/work/WorkProvidingItem.gd"
+}, {
 "base": "RefCounted",
 "class": &"WorkResult",
 "language": &"GDScript",
-"path": "res://items/helpers/WorkResult.gd"
+"path": "res://items/helpers/work/WorkResult.gd"
+}, {
+"base": "RefCounted",
+"class": &"WorkTask",
+"language": &"GDScript",
+"path": "res://items/helpers/work/WorkTask.gd"
+}, {
+"base": "RefCounted",
+"class": &"WorkTaskList",
+"language": &"GDScript",
+"path": "res://items/helpers/work/WorkTaskList.gd"
+}, {
+"base": "RefCounted",
+"class": &"WorkTaskOption",
+"language": &"GDScript",
+"path": "res://items/helpers/work/WorkTaskOption.gd"
 }, {
 "base": "Object",
 "class": &"WorkTypes",
@@ -207,6 +237,7 @@ _global_script_class_icons={
 "CombatStance": "",
 "CombatStyle": "",
 "Config": "",
+"DropdownMenu": "",
 "EquipmentItem": "",
 "Factory": "",
 "FancyTree": "",
@@ -226,6 +257,7 @@ _global_script_class_icons={
 "PortalTutorialGoal": "",
 "ReorderTree": "",
 "SaveLoad": "",
+"ScreenLimitedPopupMenu": "",
 "Section": "",
 "StatEntry": "",
 "Stats": "",
@@ -236,7 +268,11 @@ _global_script_class_icons={
 "WorkAwareItem": "",
 "WorkHeldItem": "",
 "WorkPartyItem": "",
+"WorkProvidingItem": "",
 "WorkResult": "",
+"WorkTask": "",
+"WorkTaskList": "",
+"WorkTaskOption": "",
 "WorkTypes": ""
 }
 

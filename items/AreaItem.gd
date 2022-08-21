@@ -1,4 +1,4 @@
-extends GameItem
+extends WorkProvidingItem
 class_name AreaItem
 
 var explore_difficulty = 30 # seconds it takes to perform one explore action

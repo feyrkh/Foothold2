@@ -90,16 +90,16 @@ func find_sibling_items(filter_func:Callable, deep=false)->Array:
 	var parent_item = get_closest_nonfolder_parent()
 	if !parent_item:
 		return []
-	return parent_item.find_child_items(filter_func, false)
+	return parent_item.find_child_items(filter_func, false, self)
 
-func find_child_items(filter_func:Callable, deep=false):
+func find_child_items(filter_func:Callable, deep=false, skip_item=null):
 	var results:Array[GameItem] = []
 	if !tree_item or !tree_item.get_child_count():
 		return results
 	var tree_items = tree_item.get_children()
 	for tree_item in tree_items:
 		var game_item = tree_item.get_metadata(0)
-		if game_item == null or !is_instance_valid(game_item):
+		if game_item == null or !is_instance_valid(game_item) or game_item == skip_item:
 			#push_error('game_item unexpectedly null in tree_item with text(0)=', tree_item.get_text(0))
 			# can be null when there's a placeholder for dropping items
 			continue

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bncs0wdryttnb"]
+[gd_scene load_steps=4 format=3 uid="uid://bncs0wdryttnb"]
 
 [ext_resource type="Texture2D" uid="uid://csoc7wlxqb8ix" path="res://assets/icon/menu-settings-icon.png" id="1_el5jf"]
 [ext_resource type="Script" path="res://ui/ItemManageDropdown.gd" id="2_8uily"]
+[ext_resource type="Script" path="res://util/ScreenLimitedPopupMenu.gd" id="3_rj5b7"]
 
 [node name="ItemManageDropdown" type="CenterContainer"]
 anchor_right = 1.0
@@ -17,3 +18,4 @@ texture_normal = ExtResource("1_el5jf")
 
 [node name="PopupMenu" type="PopupMenu" parent="ItemManageButton"]
 size = Vector2i(100, 20)
+script = ExtResource("3_rj5b7")

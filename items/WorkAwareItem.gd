@@ -1,11 +1,36 @@
 extends WorkProvidingItem
 class_name WorkAwareItem
 
+signal active_work_task_paused_updated(paused)
+
 # finish_resolve_item_result args:
 #   work_amounts: dictionary of WorkTypes -> float that's used for inherent_work_amounts
 
 var inherent_work_amounts:Dictionary = {}
 var work_amounts:Dictionary = {}
+
+var active_work_task_id:
+	set(val):
+		active_work_task_id = val
+		__active_work_task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+var active_work_task_owner_id:
+	set(val):
+		active_work_task_owner_id = val
+		__active_work_task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+var __active_work_task
+var active_work_task_paused = true:
+	set(val):
+		if active_work_task_paused != val:
+			active_work_task_paused = val
+			var task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+			if task != null:
+				task.contributor_work_amount_changed()
+			emit_signal('active_work_task_paused_updated', val)
+			if val:
+				if Events.is_connected('game_tick', work_on_active_task):
+					Events.disconnect('game_tick', work_on_active_task)
+			else:
+				Events.connect('game_tick', work_on_active_task)
 
 func post_config(config:Dictionary):
 	if inherent_work_amounts != null:
@@ -16,8 +41,7 @@ func post_config(config:Dictionary):
 		for k in work_amounts:
 			var entry_conf = work_amounts[k]
 			work_amounts[k] = WorkAmount.build_from_config(entry_conf)
-	
-			
+
 func _ready():
 	super._ready()
 	connect('contents_updated', update_work_amounts)
@@ -96,3 +120,44 @@ func get_work_amounts() -> Dictionary: # string->WorkAmount
 	
 func get_work_amount(work_type:String) -> WorkAmount:
 	return work_amounts.get(work_type, null)
+
+func get_work_task_id():
+	return active_work_task_id
+
+func set_active_work_task_id(val):
+	active_work_task_id = val
+
+func get_work_task_owner_id():
+	return active_work_task_owner_id
+
+func set_active_work_task_owner_id(val):
+	active_work_task_owner_id = val
+
+func get_work_task_paused()->bool:
+	return active_work_task_paused
+
+func set_active_work_task_paused(val:bool):
+	active_work_task_paused = val
+
+func get_active_work_task():
+	if __active_work_task == null and active_work_task_id != null:
+		__active_work_task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+	return __active_work_task
+
+func set_current_task(next_task_owner_id, next_task_id):
+	if next_task_owner_id == active_work_task_owner_id and next_task_id == active_work_task_id:
+		return
+	var task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+	if task != null:
+		task.remove_contributor_id(get_id())
+	active_work_task_owner_id = next_task_owner_id
+	active_work_task_id = next_task_id
+	task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+	if task != null:
+		task.add_contributor_id(get_id())
+	__active_work_task = task
+
+func work_on_active_task():
+	if !active_work_task_paused and get_active_work_task() == null:
+		get_active_work_task().apply_effort(self)
+	

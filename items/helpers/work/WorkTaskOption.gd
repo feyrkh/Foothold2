@@ -16,8 +16,17 @@ static func build(task_id, task_name, task_source_id, task_description, location
 	result.location_filter = location_filter
 	return result
 
+func get_id():
+	return task_id
+
+func get_source_id():
+	return task_source_id
+
 func get_label():
 	return task_name
 
 func get_description():
 	return task_description
+
+func get_task_name():
+	return task_name

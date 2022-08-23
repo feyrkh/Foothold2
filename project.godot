@@ -44,7 +44,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://util/Config.gd"
 }, {
-"base": "Control",
+"base": "HBoxContainer",
 "class": &"DropdownMenu",
 "language": &"GDScript",
 "path": "res://util/DropdownMenu.gd"

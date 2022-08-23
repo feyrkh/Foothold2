@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cftx3r7ornp4"]
+
+[ext_resource type="Script" path="res://ui/work/ContributorsEntry.gd" id="1_un1ur"]
+[ext_resource type="Texture2D" uid="uid://p8w5tqfg5m87" path="res://assets/icon/pause.png" id="2_7amvc"]
+[ext_resource type="Texture2D" uid="uid://b1kjd4s5t1wn4" path="res://assets/icon/arrow-right.png" id="3_4pnrd"]
+
+[node name="ContributorsEntry" type="HBoxContainer"]
+script = ExtResource("1_un1ur")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 1.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+
+[node name="PauseButton" type="TextureButton" parent="."]
+offset_left = 5.0
+offset_right = 25.0
+offset_bottom = 23.0
+hint_tooltip = "pause contributions"
+texture_normal = ExtResource("2_7amvc")
+
+[node name="ResumeButton" type="TextureButton" parent="."]
+offset_left = 29.0
+offset_right = 49.0
+offset_bottom = 23.0
+hint_tooltip = "resume contributions"
+texture_normal = ExtResource("3_4pnrd")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(5, 0)
+offset_left = 53.0
+offset_right = 58.0
+offset_bottom = 23.0

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbw0dx2kkw7p5"]
+
+[ext_resource type="Script" path="res://ui/work/ContributorsContainer.gd" id="1_cs1gx"]
+
+[node name="ContributorsContainer" type="HFlowContainer"]
+offset_right = 106.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+script = ExtResource("1_cs1gx")

@@ -46,6 +46,8 @@ func cleanup_dead_items():
 			id_map.erase(k)
 
 func get_item_by_id(id) -> GameItem:
+	if id == null:
+		return null
 	var result = id_map.get(id)
 	if result and !is_instance_valid(result):
 		id_map.erase(id)

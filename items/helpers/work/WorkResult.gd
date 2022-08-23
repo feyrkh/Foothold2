@@ -2,7 +2,10 @@ extends RefCounted
 class_name WorkResult
 
 const KEY_SETUP_ARGS = 'a' # passed to `finish_resolve_item_result` on the new item, if it has that function
+const KEY_FUNCTION_NAME = 'F'
+const KEY_FUNCTION_ARGS = 'f'
 const KEY_GOAL_ID = 'g' # Used with GOAL_PROGRESS_RESULT and GOAL_DATA_RESULT, the ID of the goal to be updated
+const KEY_GAME_ITEM_ID = 'i'
 const KEY_GOAL_DATA_KEY = 'k' # Used with GOAL_DATA_RESULT, the key of the data to update
 const KEY_ITEM_NAME = 'n' # Used with KEY_ITEM_RESULT, the item's label will be set to this
 const KEY_OWNER_ID = 'o' # Used with KEY_ITEM_RESULT, the item will be created under this ID
@@ -15,6 +18,7 @@ const KEY_GOAL_DATA_VAL = 'V' # Used with GOAL_DATA_RESULT, the new value for th
 const ITEM_RESULT = 1
 const GOAL_PROGRESS_RESULT = 2
 const GOAL_DATA_RESULT = 3
+const CALLBACK_RESULT = 4
 
 var pre_complete_desc = "Working..."
 var post_complete_desc = "Work complete!"
@@ -26,6 +30,12 @@ static func build_from_config(config) -> WorkResult:
 	var work_result = WorkResult.new()
 	Config.config(work_result, config)
 	return work_result
+
+func _from_config(config) -> WorkResult:
+	if config == null:
+		return null
+	Config.config(self, config)
+	return self
 
 func new_item_result(item_name:String, item_script:String, target_owner_id, setup_args=null):
 	if target_owner_id is TreeNode:
@@ -42,12 +52,27 @@ func goal_progress(goal_id, progress_val):
 func goal_data(goal_id, data_key, data_val):
 	results.append({KEY_RESULT_TYPE: GOAL_DATA_RESULT, KEY_GOAL_ID: goal_id, KEY_GOAL_DATA_KEY: data_key, KEY_GOAL_DATA_VAL: data_val})
 
+func callback_result(target_game_item_or_id, function_name, args=null):
+	var id = target_game_item_or_id
+	if id is GameItem:
+		id = id.get_id()
+	results.append({KEY_RESULT_TYPE: CALLBACK_RESULT, KEY_GAME_ITEM_ID: id, KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+
 func resolve_results():
 	for result in results:
 		match result.get('t'):
 			ITEM_RESULT: resolve_item_result(result)
 			GOAL_PROGRESS_RESULT: Events.emit_signal('goal_progress', result[KEY_GOAL_ID], result[KEY_GOAL_PROGRESS_VAL])
 			GOAL_DATA_RESULT: Events.emit_signal('goal_data', result[KEY_GOAL_ID], result[KEY_GOAL_DATA_KEY], result[KEY_GOAL_DATA_VAL])
+			CALLBACK_RESULT: 
+				var game_item = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
+				if game_item == null:
+					push_error('Tried to run callback function in nonexistent GameItem: ', result)
+					return
+				if !game_item.has_method(result.get(KEY_FUNCTION_NAME)):
+					push_error('Tried to run nonexistent callback function: ', result)
+					return
+				game_item.callv(result.get(KEY_FUNCTION_NAME), result.get(KEY_FUNCTION_ARGS, null))
 			_: push_error("Tried to resolve unexpected result type: ", result)
 
 func get_result_description() -> String:

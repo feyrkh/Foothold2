@@ -28,6 +28,8 @@ func setup():
 	Events.emit_signal('add_game_item', wizardTower, null, false)
 	var pc:PcItem = Factory.pc('A wanderer')
 	Factory.place_item(pc, wizardTower)
+	var pc2:PcItem = Factory.pc('A 2nd wanderer')
+	Factory.place_item(pc2, wizardTower)
 
 func on_game_tick():
 	match goal_state:

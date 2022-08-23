@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb2smw35jpqtj"]
+
+[ext_resource type="Script" path="res://ui/sections/WorkContributorSection.gd" id="1_lr8to"]
+[ext_resource type="PackedScene" uid="uid://cehav2a7hgva6" path="res://util/DropdownMenu.tscn" id="2_b76rw"]
+[ext_resource type="PackedScene" uid="uid://bastxwqbg4qhs" path="res://ui/work/WorkTaskDisplay.tscn" id="2_m4sa4"]
+
+[node name="WorkContributorSection" type="VBoxContainer"]
+script = ExtResource("1_lr8to")
+
+[node name="CurrentTaskDisplay" parent="." instance=ExtResource("2_m4sa4")]
+offset_right = 320.0
+offset_bottom = 117.0
+
+[node name="NextTaskContainer" type="MarginContainer" parent="."]
+offset_top = 121.0
+offset_right = 320.0
+offset_bottom = 269.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NextTaskContainer"]
+offset_right = 320.0
+offset_bottom = 148.0
+
+[node name="Label" type="Label" parent="NextTaskContainer/VBoxContainer"]
+offset_right = 320.0
+offset_bottom = 26.0
+text = "Next task:"
+
+[node name="GridContainer" type="GridContainer" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 30.0
+offset_right = 320.0
+offset_bottom = 86.0
+columns = 2
+
+[node name="NextTaskTargetHeader" type="Label" parent="NextTaskContainer/VBoxContainer/GridContainer"]
+offset_right = 58.0
+offset_bottom = 26.0
+text = "Source:"
+
+[node name="NextTaskTargetDropdown" parent="NextTaskContainer/VBoxContainer/GridContainer" instance=ExtResource("2_b76rw")]
+offset_top = 0.0
+offset_right = 320.0
+offset_bottom = 26.0
+
+[node name="NextTaskOptionHeader" type="Label" parent="NextTaskContainer/VBoxContainer/GridContainer"]
+offset_top = 30.0
+offset_right = 58.0
+offset_bottom = 56.0
+text = "Task:"
+
+[node name="NextTaskOptionDropdown" parent="NextTaskContainer/VBoxContainer/GridContainer" instance=ExtResource("2_b76rw")]
+offset_right = 320.0
+
+[node name="NextTaskDescriptionLabel" type="Label" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 90.0
+offset_right = 320.0
+offset_bottom = 113.0
+autowrap_mode = 3
+
+[node name="StartTaskButton" type="Button" parent="NextTaskContainer/VBoxContainer"]
+offset_top = 117.0
+offset_right = 320.0
+offset_bottom = 148.0
+text = "Start Task"

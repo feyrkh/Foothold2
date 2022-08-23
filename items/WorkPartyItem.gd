@@ -63,12 +63,12 @@ func init_work_party(label:String, work_party_type:String, work_needed:Dictionar
 	update_percentage_label()
 	return self
 
-func is_work_complete()->bool:
-	return work_needed == null || work_needed.is_empty()
-
 func set_work_result(result:WorkResult):
 	self.work_result = result
 
+func is_work_complete()->bool:
+	return work_needed == null || work_needed.is_empty()
+	
 func on_work_complete(work_party:WorkPartyItem):
 	execute_callback(WORK_COMPLETE_CALLBACK)
 	if auto_resolve:

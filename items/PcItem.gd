@@ -29,9 +29,6 @@ var focus=1000:
 			focus = max(0, min(val, get_max_focus()))
 			emit_signal('status_updated')
 
-var active_work_task_id
-var active_work_task_owner_id
-var active_work_task_paused
 
 func _init():
 	super._init()
@@ -69,7 +66,7 @@ func regen_status():
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description', 'Separator', 'PcStatus', 'Stats', 'WorkProvided', 'Separator', 'WorkTask']
+const ACTION_SECTIONS = ['Description', 'Separator', 'WorkContributor', 'Separator', 'PcStatus', 'Stats', 'WorkProvided']
 func get_action_sections()->Array:
 	return ACTION_SECTIONS
 
@@ -113,21 +110,3 @@ func derive_concentration_work(effort:float, bonus:float)->float:
 func on_effort_applied(work_type:String, applied:float):
 	if work_type == WorkTypes.CONCENTRATION:
 		focus -= applied
-
-func get_active_work_task_id():
-	return active_work_task_id
-
-func set_active_work_task_id(val):
-	active_work_task_id = val
-
-func get_active_work_task_owner_id():
-	return active_work_task_owner_id
-
-func set_active_work_task_owner_id(val):
-	active_work_task_owner_id = val
-
-func get_active_work_task_paused()->bool:
-	return active_work_task_paused
-
-func set_active_work_task_paused(val:bool):
-	active_work_task_paused = val

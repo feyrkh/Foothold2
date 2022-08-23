@@ -14,6 +14,20 @@ func get_ignore_field_names():
 func _init(work_target:GameItem):
 	self.work_target = work_target
 
+func get_task(task_id) -> WorkTask:
+	if in_progress_tasks == null:
+		return null
+	var result = in_progress_tasks.get(task_id, null)
+	if result is Dictionary:
+		result = WorkTask.build_from_config(result)
+		in_progress_tasks[task_id] = result
+	return result
+
+func add_task(task:WorkTask):
+	if in_progress_tasks == null:
+		in_progress_tasks = {}
+	in_progress_tasks[task.get_id()] = task
+
 func filter_task_options(opts, requestor):
 	# Given a map of task_id -> WorkTaskOption, remove any task_ids that are already in progress
 	if in_progress_tasks != null:
@@ -33,6 +47,6 @@ func get_in_progress_tasks(requestor:GameItem=null):
 		var result = {}
 		if in_progress_tasks != null:
 			for k in in_progress_tasks:
-				if in_progress_tasks[k].check_allowed_worker(requestor):
+				if get_task(k).check_allowed_worker(requestor):
 					result[k] = in_progress_tasks[k]
 		return result

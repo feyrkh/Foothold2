@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://bastxwqbg4qhs"]
+
+[ext_resource type="Script" path="res://ui/work/WorkTaskDisplay.gd" id="1_k6h88"]
+[ext_resource type="PackedScene" uid="uid://bbw0dx2kkw7p5" path="res://ui/work/ContributorsContainer.tscn" id="2_44i6g"]
+[ext_resource type="PackedScene" uid="uid://cyjkd5v1wevt8" path="res://ui/work/WorkNeededContainer.tscn" id="3_j5lgj"]
+
+[node name="WorkTaskDisplay" type="VBoxContainer"]
+script = ExtResource("1_k6h88")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 320.0
+offset_bottom = 26.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+offset_right = 96.0
+offset_bottom = 26.0
+text = "Active Task: "
+
+[node name="TaskName" type="Label" parent="HBoxContainer"]
+offset_left = 100.0
+offset_top = 1.0
+offset_right = 101.0
+offset_bottom = 24.0
+
+[node name="TaskDescription" type="Label" parent="."]
+offset_top = 30.0
+offset_right = 320.0
+offset_bottom = 53.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+offset_top = 57.0
+offset_right = 320.0
+offset_bottom = 83.0
+
+[node name="Label2" type="Label" parent="HBoxContainer2"]
+offset_right = 104.0
+offset_bottom = 26.0
+text = "Contributors:"
+
+[node name="ContributorsContainer" parent="HBoxContainer2" instance=ExtResource("2_44i6g")]
+offset_left = 108.0
+offset_right = 108.0
+
+[node name="Label" type="Label" parent="."]
+offset_top = 87.0
+offset_right = 320.0
+offset_bottom = 113.0
+text = "Effort"
+
+[node name="WorkNeededContainer" parent="." instance=ExtResource("3_j5lgj")]
+offset_top = 117.0
+offset_right = 320.0
+offset_bottom = 117.0

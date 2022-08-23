@@ -50,7 +50,7 @@ func get_closest_nonfolder_parent() -> TreeNode:
 	if !tree_item:
 		return null
 	var cur_tree_item = tree_item.get_parent()
-	while cur_tree_item.get_metadata(0).get_tags().has(Tags.TAG_FOLDER):
+	while cur_tree_item.get_metadata(0) is TreeNode and cur_tree_item.get_metadata(0).get_tags().has(Tags.TAG_FOLDER):
 		cur_tree_item = cur_tree_item.get_parent()
 	return cur_tree_item.get_metadata(0)
 

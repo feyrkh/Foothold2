@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyjkd5v1wevt8"]
+
+[ext_resource type="Script" path="res://items/helpers/work/WorkNeededContainer.gd" id="1_vjrrh"]
+[ext_resource type="Script" path="res://ui/sections/WorkNeededSectionEntries.gd" id="2_bnsou"]
+
+[node name="WorkNeededContainer" type="VBoxContainer"]
+offset_right = 106.0
+offset_bottom = 26.0
+script = ExtResource("1_vjrrh")
+
+[node name="Items" type="Tree" parent="."]
+custom_minimum_size = Vector2(320, 0)
+offset_right = 320.0
+columns = 3
+column_titles_visible = true
+script = ExtResource("2_bnsou")

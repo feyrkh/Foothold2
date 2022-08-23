@@ -10,8 +10,35 @@ func get_work_task_options(requestor:GameItem) -> Dictionary:
 		result[TASK_EXPLORE_ROOM] = WorkTaskOption.build(TASK_EXPLORE_ROOM, "Explore the tower", get_id(), "Uncover additional rooms, ancient artifacts, and the like.", WorkTask.LOCATION_INSIDE)
 	return self.work_task_list.filter_task_options(result, requestor)
 
+func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask:
+	match next_task.get_id():
+		TASK_EXPLORE_ROOM: return build_explore_task()
+		_: return null
+
 func has_more_explore_locations():
 	return explore_rooms_found < 2
+
+func build_explore_task():
+	match explore_rooms_found:
+		0: 
+			var work = WorkTask.new()
+			work.set_work_needed({WorkTypes.EXPLORE: 3})
+			var result:WorkResult = WorkResult.new()
+			var chamber_id = IdManager.get_next_id(null)
+			var portal_id = IdManager.get_next_id(null)
+			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.EXPLORE_PARTY_ID, work.get_id())
+			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, chamber_id)
+			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_ID, portal_id)
+			result.new_location_result("Portal Chamber",  get_id(), 10, {'_item_id': chamber_id}, "res://entities/wizard_tower/PortalChamber.gd")
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5, 'prybar': true})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 20, 'crystal': true})
+			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 60, 'portal': portal_id})
+			result.callback_result(get_id(), 'resolve_explore')
+			work.set_work_result(result)
+			return work
+		_: 
+			return null
+	
 
 func get_explore_work_party():
 	match explore_rooms_found:

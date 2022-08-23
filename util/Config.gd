@@ -52,6 +52,8 @@ static func to_config(obj):
 	if obj.has_method('get_ignore_field_names'):
 		object_ignore_field_names = obj.get_ignore_field_names()
 	for prop in props:
+		if prop.name.begins_with('__'):
+			continue
 		if IGNORE_CLASS_NAMES.has(prop['class_name']):
 			continue
 		if IGNORE_FIELD_NAMES.has(prop.name):

@@ -1,16 +1,16 @@
+MarginContainer
+HBoxContainer
+HFlowContainer
+VBoxContainer
+TextureButton
 Label
-GridContainer
-HSeparator
+FancyTree (FancyTree.gd)
 ScreenLimitedPopupMenu (ScreenLimitedPopupMenu.gd)
 Button
-HBoxContainer
+GridContainer
+HSeparator
 PopupMenu
-TextureButton
-VBoxContainer
-MarginContainer
 Section (Section.gd)
-FancyTree (FancyTree.gd)
-HFlowContainer
 ScrollContainer
 RichTextLabel
 Timer

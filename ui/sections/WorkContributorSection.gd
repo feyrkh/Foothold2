@@ -13,15 +13,14 @@ func _ready():
 	find_child('StartTaskButton').connect('pressed', start_next_task)
 	get_game_item().parent_updated.connect(owner_parent_updated)
 	get_game_item().contents_updated.connect(owner_contents_updated)
+	CurrentTaskDisplay.task_resolved.connect(refresh)
 	refresh()
 
 func owner_parent_updated(old_parent, new_parent):
 	check_next_task_still_valid()
-	check_current_task_still_valid()
 	
 func owner_contents_updated():
 	check_next_task_still_valid()
-	check_current_task_still_valid()
 	
 func check_next_task_still_valid():
 	if next_task_owner_id and !has_task_options(get_game_item(), IdManager.get_item_by_id(next_task_owner_id)):
@@ -34,9 +33,6 @@ func check_next_task_still_valid():
 		next_task = null
 		find_child('NextTaskOptionDropdown').reset()
 		refresh()
-
-func check_current_task_still_valid():
-	pass
 
 func refresh():
 	var game_item = get_game_item()
@@ -78,7 +74,9 @@ func set_next_task_option_visible(val):
 
 func has_task_options(requestor, task_source):
 	if task_source.has_method('get_in_progress_work_tasks'):
-		if task_source.get_in_progress_work_tasks(requestor).size() > 0:
+		for task in task_source.get_in_progress_work_tasks(requestor).values():
+			if task.is_work_complete(): continue
+			if !task.is_valid_contributor(requestor): continue
 			return true
 	if task_source.has_method('get_work_task_options'):
 		var options = task_source.get_work_task_options(requestor)
@@ -121,7 +119,8 @@ func populate_next_option_dropdown():
 	var tasks = tasks_and_options.values()
 	tasks.sort_custom(func(a, b): return a.get_label() < b.get_label())
 	for task in tasks:
-		opts.append([task.get_label(), task])
+		if (task is WorkTaskOption) or !task.is_work_complete():
+			opts.append([task.get_label(), task])
 	if opts.is_empty():
 		opts.append(['<no tasks>', null])
 	return opts
@@ -137,6 +136,7 @@ func get_task_options(requestor, task_source):
 	return results
 
 func next_task_option_selected(idx:int, next_task):
+	find_child('NextTaskDescriptionLabel').modulate = Color.WHITE
 	self.next_task = next_task
 	refresh_next_task()
 
@@ -153,9 +153,17 @@ func start_next_task():
 		next_task = next_task_owner.start_work_task(next_task, get_game_item())
 	if next_task == null:
 		err_msg = 'Unable to start task "'+find_child('NextTaskOptionDropdown').selected_text+'" from '+next_task_owner.get_label()
+	if err_msg == null and next_task.is_work_complete():
+		err_msg = "This task is already completed and can't be started"
 	if err_msg:
 		find_child('NextTaskDescriptionLabel').text = err_msg
+		find_child('NextTaskDescriptionLabel').modulate = Color.RED
 	else:
+		find_child('NextTaskDescriptionLabel').modulate = Color.WHITE
 		get_game_item().set_current_task(next_task_owner_id, next_task.get_id())
 		get_game_item().set_active_work_task_paused(false)
-	refresh()
+		next_task_owner_id = null
+		next_task = null
+		find_child('NextTaskTargetDropdown').reset()
+		find_child('NextTaskOptionDropdown').reset()
+		refresh()

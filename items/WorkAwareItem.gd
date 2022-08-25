@@ -34,23 +34,27 @@ var active_work_task_paused = true:
 
 func post_config(config:Dictionary):
 	if inherent_work_amounts != null:
-		for k in inherent_work_amounts:
+		for k in inherent_work_amounts.keys():
 			var entry_conf = inherent_work_amounts[k]
 			inherent_work_amounts[k] = WorkAmount.build_from_config(entry_conf)
 	if work_amounts != null:
-		for k in work_amounts:
+		for k in work_amounts.keys():
 			var entry_conf = work_amounts[k]
 			work_amounts[k] = WorkAmount.build_from_config(entry_conf)
 
 func _ready():
 	super._ready()
-	connect('contents_updated', update_work_amounts)
+	connect('contents_updated', on_contents_updated)
 	connect('parent_updated', _parent_updated)
 	update_work_amounts()
 
+func on_contents_updated():
+	update_work_amounts()
+	check_tasks_valid()
+
 func finish_resolve_item_result(args):
 	var amts = args.get('work_amounts', {})
-	for k in amts:
+	for k in amts.keys():
 		var amt = amts.get(k)
 		if amt != null:
 			inherent_work_amounts[k] = WorkAmount.new(k, amt, 0.0, {get_id():1}, null, null)
@@ -58,6 +62,7 @@ func finish_resolve_item_result(args):
 
 func _parent_updated(old_parent, new_parent):
 	update_work_amounts()
+	check_tasks_valid()
 
 func update_specific_work_amount(work_type):
 	var work_providing_items = get_work_helpers()
@@ -86,12 +91,12 @@ func update_specific_work_amount(work_type):
 func update_work_amounts():
 	var work_providing_items = get_work_helpers()
 	var found_work_amounts = {}
-	for k in inherent_work_amounts:
+	for k in inherent_work_amounts.keys():
 		found_work_amounts[k] = WorkAmount.copy(inherent_work_amounts[k])
 		found_work_amounts[k].helper_ids_used[get_id()] = 1
 	for equip in work_providing_items:
 		var equip_work_amounts = equip.get_work_amounts()
-		for k in equip_work_amounts:
+		for k in equip_work_amounts.keys():
 			var added_work_amount = equip_work_amounts[k]
 			if !found_work_amounts.has(k):
 				found_work_amounts[k] = added_work_amount
@@ -157,7 +162,10 @@ func set_current_task(next_task_owner_id, next_task_id):
 		task.add_contributor_id(get_id())
 	__active_work_task = task
 
+func clear_active_task(calling_task):
+	set_current_task(null, null)
+
 func work_on_active_task():
-	if !active_work_task_paused and get_active_work_task() == null:
+	if !active_work_task_paused and get_active_work_task() != null:
 		get_active_work_task().apply_effort(self)
 	

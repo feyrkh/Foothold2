@@ -31,6 +31,7 @@ func new_game():
 	global_data = {}
 	var settings = Factory.item('Settings', 'res://entities/SettingsFolder.gd')
 	Factory.place_item(settings, null)
+	Factory.place_item(Factory.item("Save/Load", "res://items/settings/SaveLoadItem.gd"), settings)
 	var goals = Factory.item('Goals', 'res://entities/GoalsFolder.gd')
 	Factory.place_item(goals, null)
 	var tutorial = Factory.goal('res://goals/PortalTutorial.gd')

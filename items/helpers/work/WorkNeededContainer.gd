@@ -5,9 +5,18 @@ var task:WorkTask
 
 func refresh(task:WorkTask):
 	if self.task != task:
-		if self.task != null: self.task.work_amounts_updated.disconnect(refresh)
-		if task != null: task.work_amounts_updated.connect(refresh)
+		if self.task != null: 
+			self.task.work_amounts_updated.disconnect(refresh)
+			self.task.work_complete.disconnect(refresh)
+			
+		if task != null: 
+			task.work_amounts_updated.connect(refresh)
+			task.work_complete.connect(refresh)
 	self.task = task
+	if task.is_work_complete():
+		$Items.visible = false
+	else:
+		$Items.visible = true
 	
 	var work_needed:Array = task.get_work_needed().values()
 	var work_provided = task.get_work_amounts()

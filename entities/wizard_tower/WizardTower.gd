@@ -20,9 +20,10 @@ func has_more_explore_locations():
 
 func build_explore_task():
 	match explore_rooms_found:
-		0: 
+		0,1: 
 			var work = WorkTask.new()
-			work.set_work_needed({WorkTypes.EXPLORE: 3})
+			work.set_description("Step into the forbidding edifice, and begin to clear it.", "Shove the creaking door open...")
+			work.set_work_needed({WorkTypes.EXPLORE: 15})
 			var result:WorkResult = WorkResult.new()
 			var chamber_id = IdManager.get_next_id(null)
 			var portal_id = IdManager.get_next_id(null)
@@ -63,7 +64,7 @@ func get_explore_work_party():
 		_:
 			return null
 
-func resolve_explore(work_item):
+func resolve_explore():
 	explore_rooms_found += 1
 
 func get_explore_effort_needed():

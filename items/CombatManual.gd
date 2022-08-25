@@ -86,7 +86,7 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 	var damage_types = damage_type_ratio_dict.keys()
 	var damage_division = []
 	var total_damage_division = 0
-	for k in damage_types:
+	for k in damage_types.keys():
 		damage_division.append(randf() + damage_type_ratio_dict[k])
 		total_damage_division += damage_division[-1]
 	var final_damage = {}

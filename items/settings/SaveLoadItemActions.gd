@@ -11,7 +11,7 @@ func _ready():
 func refresh_action_panel():
 	get_game_item().refresh_save_files()
 	find_child('SaveFileLabel').text = 'Save #' + SaveLoad.find_next_save_slot().trim_suffix('.sav')
-	var save_files:Array[Dictionary] = get_game_item().save_files.values()
+	var save_files:Array[Dictionary] = get_game_item().__save_files.values()
 	save_files.sort_custom(func(a, b): return a.get(SaveLoad.KEY_SAVE_TIME) > b.get(SaveLoad.KEY_SAVE_TIME))
 	SaveLoadContainer.clear_save_files()
 	for save_file_info in save_files:

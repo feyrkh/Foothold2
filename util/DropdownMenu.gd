@@ -53,6 +53,6 @@ func show_dropdown():
 func select_item(idx):
 	selected_idx = idx
 	selected_metadata = menu.get_item_metadata(selected_idx)
-	selected_text = $DropdownLabel.text
 	$DropdownLabel.text = menu.get_item_text(selected_idx)
+	selected_text = $DropdownLabel.text
 	item_selected.emit(selected_idx, selected_metadata)

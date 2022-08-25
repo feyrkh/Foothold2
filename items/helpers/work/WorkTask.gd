@@ -4,6 +4,8 @@ class_name WorkTask
 
 signal contributors_updated(work_task)
 signal work_amounts_updated(work_task)
+signal work_complete(work_task)
+signal work_resolved(work_task)
 
 const LOCATION_SELF = 1 # used to filter work tasks that can only be started by their source object, ex: meditation
 const LOCATION_SHARED_ROOM = 2 # used to filter tasks that can only be started if the worker shares a room with the source object, ex: exercise with equipment
@@ -18,8 +20,11 @@ var work_needed:Dictionary = {} # WorkTypes -> WorkAmount
 var task_name
 var location_filter = DEFAULT_LOCATION_FILTER
 var contributors
+var max_contributors:int = 99
+var auto_resolve = false
 var __contributor_items_cache
 var __work_amounts_cache
+var resolved:bool
 
 var total_work_needed:float
 var total_work_applied:float
@@ -29,19 +34,28 @@ var post_desc # description it gives after the task is complete
 static func build_from_config(c:Dictionary):
 	var result = WorkTask.new()
 	Config.config(result, c)
+	Events.post_load_game.connect(result.post_load_game, ConnectFlags.CONNECT_ONESHOT)
 	return result
 
-func post_config(c):
-	var wn = {}
-	for k in work_needed:
-		wn[k] = WorkAmount.build_from_config(work_needed[k])
-	work_needed = wn
+func post_config(config:Dictionary):
+	if work_needed != null:
+		for k in work_needed.keys():
+			var entry_conf = work_needed[k]
+			work_needed[k] = WorkAmount.build_from_config(entry_conf)
+	work_result = WorkResult.build_from_config(config.get('work_result', null))
+
+func post_load_game():
+	if contributors != null:
+		for k in contributors:
+			work_resolved.connect(IdManager.get_item_by_id(k).clear_active_task)
 
 func set_work_needed(work_needed:Dictionary):
 	self.work_needed = work_needed
 	total_work_needed = 0
 	total_work_applied = 0
 	for work_type in work_needed.keys():
+		if !(work_needed[work_type] is WorkAmount):
+			work_needed[work_type] = WorkAmount.new(work_type, work_needed[work_type], 0, {})
 		total_work_needed += work_needed[work_type].get_total_effort()
 
 func get_work_needed():
@@ -57,10 +71,11 @@ func get_work_amounts()->Dictionary:
 				if worker.active_work_task_paused:
 					continue
 				var amt = worker.get_work_amount(work_type)
-				if total_amt == null: 
-					total_amt = WorkAmount.copy(amt)
-				else:
-					total_amt.add(amt)
+				if amt != null:
+					if total_amt == null: 
+						total_amt = WorkAmount.copy(amt)
+					else:
+						total_amt.add(amt)
 			if total_amt != null:
 				result[work_type] = total_amt
 		__work_amounts_cache = result
@@ -68,63 +83,38 @@ func get_work_amounts()->Dictionary:
 
 func is_work_complete()->bool:
 	return work_needed == null || work_needed.is_empty()
-	
-func on_work_complete(work_party:WorkPartyItem):
-	execute_callback(WORK_COMPLETE_CALLBACK)
-	if auto_resolve:
-		resolve_completion_effects()
-	refresh_action_panel()
 
 func resolve_completion_effects():
+	resolved = true
 	if work_result:
 		work_result.resolve_results()
-	execute_callback(RESOLVE_WORK_CALLBACK)
-	if delete_on_resolve:
-		delete(true)
+	work_resolved.emit(self)
 
-func update_percentage_label():
-	if !tree_item or !is_instance_valid(tree_item):
-		return
-	if total_work_needed == 0:
-		tree_item.set_text(0, label)
-		return
-	var pct = (total_work_applied/total_work_needed) * 100
-	if pct == 0:
-		tree_item.set_text(0, label)
-	else:
-		tree_item.set_text(0, label+' (%.0f%%)'%[pct])
+func is_work_resolved()->bool:
+	return resolved
 
 func apply_effort(worker:WorkAwareItem):
 	if is_work_complete():
-		Events.disconnect('game_tick', game_tick)
 		return
+	var work_amounts = worker.get_work_amounts()
 	for work_type in work_amounts:
 		var needed:WorkAmount = work_needed.get(work_type)
 		var provided:WorkAmount = work_amounts.get(work_type)
 		if !needed or !provided:
 			continue
 		var applied = min(needed.get_total_effort(), provided.get_total_effort())
-
 		if applied >= 0:
-			updated = true
 			total_work_applied += applied
-			refresh_action_panel()
-			update_percentage_label()
 			needed.apply_effort(applied)
 			provided.on_effort_applied(work_type, applied)
 			if needed.get_total_effort() < 0.000001:
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)
 	if is_work_complete():
-		emit_signal('work_complete', self)
-		tree_item.set_icon(0, load("res://assets/icon/pin-1.png"))
-		refresh_action_panel()
+		work_complete.emit(self)
+		if auto_resolve:
+			resolve_completion_effects()
 		return
-	if updated:
-		tree_item.set_icon(0, load("res://assets/icon/arrow-right.png"))
-	else:
-		Events.disconnect('game_tick', game_tick)
-		tree_item.set_icon(0, null)
 
 func set_description(pre_complete, post_complete):
 	pre_desc = pre_complete
@@ -169,12 +159,16 @@ func get_description():
 	else:
 		return post_desc if post_desc != null else ''
 
+func is_valid_contributor(contributor:GameItem) -> bool:
+	return max_contributors > get_contributors().size()
+
 func add_contributor_id(contributor_id):
 	if contributors == null:
 		contributors = {}
 	contributors[contributor_id] = 1
 	__contributor_items_cache = null
 	__work_amounts_cache = null
+	work_resolved.connect(IdManager.get_item_by_id(contributor_id).clear_active_task)
 	contributors_updated.emit(self)
 	work_amounts_updated.emit(self)
 
@@ -186,8 +180,19 @@ func remove_contributor_id(contributor_id):
 		contributors = null
 	__contributor_items_cache = null
 	__work_amounts_cache = null
+	work_resolved.disconnect(IdManager.get_item_by_id(contributor_id).clear_active_task)
 	contributors_updated.emit(self)
 	work_amounts_updated.emit(self)
+
+func check_contributors_valid():
+	if contributors == null: return
+	for contributor in contributors:
+		if !allowed_position_relationship(IdManager.get_item_by_id(task_source_id), IdManager.get_item_by_id(contributor), location_filter):
+			var contributor_item = IdManager.get_item_by_id(contributor)
+			if contributor_item != null:
+				contributor_item.set_current_task(null, null)
+			else:
+				remove_contributor_id(contributor)
 
 func contributor_work_amount_changed():
 	__work_amounts_cache = null

@@ -38,11 +38,11 @@ var work_paused:bool = false:
 
 func post_config(config:Dictionary):
 	if work_needed != null:
-		for k in work_needed:
+		for k in work_needed.keys():
 			var entry_conf = work_needed[k]
 			work_needed[k] = WorkAmount.build_from_config(entry_conf)
 	if work_amounts != null:
-		for k in work_amounts:
+		for k in work_amounts.keys():
 			var entry_conf = work_amounts[k]
 			if entry_conf == null: continue
 			work_amounts[k] = WorkAmount.build_from_config(entry_conf)

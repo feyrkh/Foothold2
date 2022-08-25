@@ -41,7 +41,7 @@ func register_id(id, item:GameItem):
 	id_map[id] = item
 
 func cleanup_dead_items():
-	for k in id_map:
+	for k in id_map.keys():
 		if !id_map[k] or !is_instance_valid(id_map[k]):
 			id_map.erase(k)
 

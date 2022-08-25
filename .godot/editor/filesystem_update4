@@ -73,3 +73,10 @@ res://ui/work/WorkNeededContainer.tscn
 res://util/WorkTypes.gd
 res://goals/PortalTutorial.gd
 res://util/IdManager.gd
+res://ui/GameUI.tscn
+res://entities/SettingsFolder.gd
+res://Game.gd
+res://items/settings/SaveLoadItem.gd
+res://items/settings/SaveLoadItemActions.tscn
+res://items/settings/SaveLoadItemActions.gd
+res://items/EquipmentItem.gd

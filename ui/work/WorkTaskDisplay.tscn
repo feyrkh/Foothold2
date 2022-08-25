@@ -1,53 +1,76 @@
-[gd_scene load_steps=4 format=3 uid="uid://bastxwqbg4qhs"]
+[gd_scene load_steps=5 format=3 uid="uid://bastxwqbg4qhs"]
 
 [ext_resource type="Script" path="res://ui/work/WorkTaskDisplay.gd" id="1_k6h88"]
 [ext_resource type="PackedScene" uid="uid://bbw0dx2kkw7p5" path="res://ui/work/ContributorsContainer.tscn" id="2_44i6g"]
+[ext_resource type="Texture2D" uid="uid://bvcnxvx5ywkjp" path="res://assets/icon/close.png" id="2_b4unj"]
 [ext_resource type="PackedScene" uid="uid://cyjkd5v1wevt8" path="res://ui/work/WorkNeededContainer.tscn" id="3_j5lgj"]
 
 [node name="WorkTaskDisplay" type="VBoxContainer"]
 script = ExtResource("1_k6h88")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="TaskHeader" type="HBoxContainer" parent="."]
 offset_right = 320.0
 offset_bottom = 26.0
 
-[node name="Label" type="Label" parent="HBoxContainer"]
-offset_right = 96.0
+[node name="Label" type="Label" parent="TaskHeader"]
+offset_right = 44.0
 offset_bottom = 26.0
-text = "Active Task: "
+text = "Task: "
 
-[node name="TaskName" type="Label" parent="HBoxContainer"]
-offset_left = 100.0
+[node name="TaskName" type="Label" parent="TaskHeader"]
+offset_left = 48.0
 offset_top = 1.0
-offset_right = 101.0
+offset_right = 296.0
 offset_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="TextureButton" type="TextureButton" parent="TaskHeader"]
+offset_left = 300.0
+offset_right = 320.0
+offset_bottom = 26.0
+texture_normal = ExtResource("2_b4unj")
 
 [node name="TaskDescription" type="Label" parent="."]
 offset_top = 30.0
 offset_right = 320.0
 offset_bottom = 53.0
+autowrap_mode = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+[node name="Contributors" type="VBoxContainer" parent="."]
 offset_top = 57.0
 offset_right = 320.0
-offset_bottom = 83.0
+offset_bottom = 87.0
 
-[node name="Label2" type="Label" parent="HBoxContainer2"]
+[node name="ContributorsCountLabel" type="Label" parent="Contributors"]
 offset_right = 104.0
 offset_bottom = 26.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 text = "Contributors:"
 
-[node name="ContributorsContainer" parent="HBoxContainer2" instance=ExtResource("2_44i6g")]
-offset_left = 108.0
-offset_right = 108.0
+[node name="ContributorsContainer" parent="Contributors" instance=ExtResource("2_44i6g")]
+offset_top = 30.0
+offset_right = 320.0
+offset_bottom = 30.0
 
 [node name="Label" type="Label" parent="."]
-offset_top = 87.0
+visible = false
+offset_top = 91.0
 offset_right = 320.0
-offset_bottom = 113.0
+offset_bottom = 117.0
 text = "Effort"
 
 [node name="WorkNeededContainer" parent="." instance=ExtResource("3_j5lgj")]
-offset_top = 117.0
+offset_top = 91.0
 offset_right = 320.0
-offset_bottom = 117.0
+offset_bottom = 91.0
+
+[node name="WorkCompleteSection" type="VBoxContainer" parent="."]
+offset_top = 95.0
+offset_right = 320.0
+offset_bottom = 126.0
+
+[node name="CompleteButton" type="Button" parent="WorkCompleteSection"]
+offset_right = 320.0
+offset_bottom = 31.0
+text = "Complete Task"

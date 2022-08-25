@@ -17,26 +17,26 @@ offset_right = 1024.0
 offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offset = 300
+split_offset = 200
 
 [node name="ItemTree" parent="SplitPanel" instance=ExtResource("1_o5sk1")]
 custom_minimum_size = Vector2(55, 0)
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_right = 355.0
+offset_right = 255.0
 offset_bottom = 600.0
 size_flags_vertical = 3
 mouse_filter = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="SplitPanel"]
-offset_left = 367.0
+offset_left = 267.0
 offset_right = 1024.0
 offset_bottom = 600.0
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
 [node name="ActionContainer" type="HFlowContainer" parent="SplitPanel/ScrollContainer"]
-offset_right = 649.0
+offset_right = 757.0
 size_flags_horizontal = 3
 
 [connection signal="selected_nodes_changed" from="SplitPanel/ItemTree" to="." method="_on_item_tree_selected_nodes_changed"]

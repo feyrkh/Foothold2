@@ -34,7 +34,7 @@ func update_work_amounts():
 	next_attunement_progress = get_attunement_progress_needed()
 	var attunement = get_attunement_multiplier()
 	work_amounts = {}
-	for k in inherent_work_amounts:
+	for k in inherent_work_amounts.keys():
 		var inherent = inherent_work_amounts[k]
 		work_amounts[k] = WorkAmount.new(inherent.work_type, inherent.effort, inherent.bonus, {get_id():1})
 		work_amounts[k].bonus = attunement

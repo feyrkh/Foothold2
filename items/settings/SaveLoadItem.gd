@@ -1,23 +1,20 @@
 extends GameItem
 
 
-var save_files:Dictionary = {}
-
-func skip_save() -> bool:
-	return true
+var __save_files:Dictionary = {}
 
 func _ready():
 	super._ready()
 	refresh_save_files()
 
 func refresh_save_files():
-	save_files = {}
+	__save_files = {}
 	for save_file_name in get_save_files():
 		var save_info:Dictionary = SaveLoad.open_load_file(SaveLoad.SAVE_DIR+save_file_name)
 		if save_info[SaveLoad.KEY_FILE] and save_info[SaveLoad.KEY_FILE].is_open():
 			save_info[SaveLoad.KEY_FILE].close()
 			save_info.erase(SaveLoad.KEY_FILE)
-			save_files[save_file_name] = save_info
+			__save_files[save_file_name] = save_info
 
 func get_save_files() -> PackedStringArray:
 	var save_dir = SaveLoad.get_save_dir()

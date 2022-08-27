@@ -23,6 +23,9 @@ func setup(unselected_text:String, populate_callback:Callable, selected_idx:int=
 	self.unselected_text = unselected_text
 	self.populate_callback = populate_callback
 	$DropdownLabel.text = unselected_text
+	if selected_idx >= 0:
+		populate_dropdown()
+		select_item(selected_idx)
 
 func populate_dropdown():
 	if menu:
@@ -51,8 +54,15 @@ func show_dropdown():
 	menu.popup_on_screen(label.global_position + Vector2(0, label.size.y+1) )
 
 func select_item(idx):
-	selected_idx = idx
-	selected_metadata = menu.get_item_metadata(selected_idx)
-	$DropdownLabel.text = menu.get_item_text(selected_idx)
-	selected_text = $DropdownLabel.text
+	if menu.item_count > idx:
+		selected_idx = idx
+		selected_metadata = menu.get_item_metadata(selected_idx)
+		$DropdownLabel.text = menu.get_item_text(selected_idx)
+		selected_text = $DropdownLabel.text
+	else:
+		selected_idx = -1
+		selected_metadata = null
+		$DropdownLabel.text = unselected_text
+		selected_text = unselected_text
+		
 	item_selected.emit(selected_idx, selected_metadata)

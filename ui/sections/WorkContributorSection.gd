@@ -6,9 +6,9 @@ var next_task
 @onready var CurrentTaskDisplay = find_child('CurrentTaskDisplay')
 
 func _ready():
-	find_child('NextTaskTargetDropdown').setup('<select task source>', populate_next_target_dropdown, false)
+	find_child('NextTaskTargetDropdown').setup('<select task source>', populate_next_target_dropdown)
 	find_child('NextTaskTargetDropdown').connect('item_selected', next_task_target_selected)
-	find_child('NextTaskOptionDropdown').setup('<select task>', populate_next_option_dropdown, false)
+	find_child('NextTaskOptionDropdown').setup('<select task>', populate_next_option_dropdown)
 	find_child('NextTaskOptionDropdown').connect('item_selected', next_task_option_selected)
 	find_child('StartTaskButton').connect('pressed', start_next_task)
 	get_game_item().parent_updated.connect(owner_parent_updated)
@@ -110,6 +110,7 @@ func next_task_target_selected(idx:int, task_source):
 		next_task_owner_id = task_source.get_id()
 		next_task = null
 		find_child('NextTaskOptionDropdown').reset()
+		find_child('NextTaskOptionDropdown').setup('<select task>', populate_next_option_dropdown, 0)
 		refresh_next_task()
 
 func populate_next_option_dropdown():
@@ -124,6 +125,9 @@ func populate_next_option_dropdown():
 			opts.append([task.get_label(), task])
 	if opts.is_empty():
 		opts.append(['<no tasks>', null])
+	else:
+		if !next_task:
+			next_task_option_selected(0, opts[0][1])
 	return opts
 	
 func get_task_options(requestor, task_source):

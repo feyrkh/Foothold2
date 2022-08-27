@@ -83,3 +83,4 @@ res://items/EquipmentItem.gd
 res://util/Buffs.gd
 res://items/helpers/buff/Buff.gd
 res://items/helpers/buff/BuffList.gd
+res://entities/wizard_tower/PortalDebris.gd

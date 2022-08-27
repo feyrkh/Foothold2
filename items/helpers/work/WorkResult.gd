@@ -117,7 +117,7 @@ func resolve_results():
 				if game_item == null:
 					push_error('Tried to destroy nonexistent GameItem: ', result)
 					return
-				game_item.delete(delete_children)
+				game_item.call_deferred('delete', delete_children)
 			ON_RESOLVE_CALLBACK_RESULT: resolve_callback_result(result)
 			ON_CREATE_CALLBACK_RESULT: pass # handled on creation
 			ON_COMPLETE_CALLBACK_RESULT: pass # handled on completion

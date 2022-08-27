@@ -44,6 +44,7 @@ func start_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask
 	if new_task.post_desc == null:
 		new_task.post_desc = next_task.task_description
 	work_task_list.add_task(new_task)
+	new_task.on_task_created()
 	return new_task
 
 func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask:

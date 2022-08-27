@@ -5,6 +5,7 @@ const GOAL_ID = 'portal_tut'
 
 const GOAL_STARTED = 0
 const GOAL_EXPLORE_PARTY_CREATED = 1
+const GOAL_EXPLORE_PARTY_WORK_COMPLETED = 1.5
 const GOAL_CHAMBER_EXPLORED = 2
 const GOAL_DEBRIS_CLEARED = 3
 const GOAL_PORTAL_FOUND = 4
@@ -69,10 +70,11 @@ func on_goal_progress(new_progress):
 
 func get_description():
 	match goal_state:
-		GOAL_STARTED: return "As the first scout to pass through a portal into a new world, you arrive disoriented and weak in a dilapidated tower.\nYou take a moment to gather your thoughts, and make a plan to explore their new surroundings.\n\n- Form an exploration work party"
-		GOAL_EXPLORE_PARTY_CREATED: return "With the exploration plan firmly in mind, all that remains is to execute it.\n\n- Drag & drop the scout into an exploration work party\n- Wait until exploration is complete"
-		GOAL_CHAMBER_EXPLORED: return "The room is choked with debris, but you see what looks like a return portal behind a particularly large pile of rubble.\n\n- Clear all the debris"
-		GOAL_PORTAL_FOUND: return "You've cleared the portal you came through. It seems undamaged, but it appears the instability caused by your transfer was so high that the tower was severely damaged, and the portal has been completely drained of power.\n\n- Find a power source and place it into the portal to stabilize it."
+		GOAL_STARTED: return "As the first scouts to pass through a portal into a new world, they arrive disoriented and weak in a dilapidated tower.\nThey take a moment to gather their thoughts, and make a plan to explore their new surroundings.\n\n- Form an exploration work party\n- Select a scout and use the 'Next Task' section to select the Ancient Tower\n- Select the 'Explore' task and start it\n- Repeat with the second scout to speed things up"
+		GOAL_EXPLORE_PARTY_CREATED: return "With the exploration plan firmly in mind, all that remains is to execute it.\n\n- Wait until exploration is complete"
+		GOAL_EXPLORE_PARTY_WORK_COMPLETED: return "An interesting room has been uncovered - all that remains is to push the door open.\n\n- Click the 'Complete' button in one of the explorer's task section to see what was discovered"
+		GOAL_CHAMBER_EXPLORED: return "The room is choked with debris, but the explorers see what looks like a return portal behind a particularly large pile of rubble.\n\n- Clear all the debris"
+		GOAL_PORTAL_FOUND: return "The portal seems undamaged, but it appears the instability caused by your transfer was so high that the tower was severely damaged, and the portal has been completely drained of power.\n\n- Find a power source and place it into the portal to stabilize it."
 		GOAL_PORTAL_ACTIVATED: return "The portal is stabilized, at least a bit. You can send supplies back home easily enough, but objects sent through the portal in the other direction require more energy, as they are traveling from a low-energy plane to a high-energy plane."
 
 func get_goal_reward() -> WorkResult:

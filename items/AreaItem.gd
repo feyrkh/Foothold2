@@ -15,15 +15,9 @@ func get_allowed_tags()->Dictionary:
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description', 'Explore']
+const ACTION_SECTIONS = ['Description']
 func get_action_sections()->Array:
 	return ACTION_SECTIONS
 	
 func get_description():
 	pass
-
-func has_more_explore_locations():
-	return false # override in subclasses
-
-func get_next_explore_location():
-	return null

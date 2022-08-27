@@ -27,42 +27,26 @@ func build_explore_task() -> WorkTask:
 			var result:WorkResult = WorkResult.new()
 			var chamber_id = IdManager.get_next_id(null)
 			var portal_id = IdManager.get_next_id(null)
-			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.EXPLORE_PARTY_ID, work.get_id())
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, chamber_id)
 			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_ID, portal_id)
 			result.new_location_result("Portal Chamber",  get_id(), 10, {'_item_id': chamber_id}, "res://entities/wizard_tower/PortalChamber.gd")
 			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5, 'prybar': true})
 			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 20, 'crystal': true})
 			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 60, 'portal': portal_id})
-			result.callback_result(get_id(), 'resolve_explore')
+			result.on_create_callback_result(get_id(), 'start_first_explore')
+			result.on_complete_callback_result(get_id(), 'complete_first_explore')
+			result.on_resolve_callback_result(get_id(), 'resolve_explore')
+			result.goal_progress(PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.GOAL_CHAMBER_EXPLORED)
 			work.set_work_result(result)
 			return work
 		_: 
 			return null
-	
 
-func get_explore_work_party():
-	match explore_rooms_found:
-		0: 
-			var work = Factory.work_party("Explore", Tags.WORK_PARTY_EXPLORE, {WorkTypes.EXPLORE: 3})
-			var result:WorkResult = WorkResult.new()
-			result.pre_complete_desc = "Step into the forbidding edifice, and begin to clear it."
-			result.post_complete_desc = "Shove the creaking door open..."
-			var chamber_id = IdManager.get_next_id(null)
-			var portal_id = IdManager.get_next_id(null)
-			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.EXPLORE_PARTY_ID, work.get_id())
-			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_CHAMBER_ID, chamber_id)
-			Events.emit_signal('goal_item', PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.PORTAL_ID, portal_id)
-			result.new_location_result("Portal Chamber",  get_id(), 10, {'_item_id': chamber_id}, "res://entities/wizard_tower/PortalChamber.gd")
-			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 5, 'prybar': true})
-			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 20, 'crystal': true})
-			result.new_item_result("Scattered debris", "res://entities/wizard_tower/PortalDebris.gd", chamber_id, {'work': 60, 'portal': portal_id})
-			work.set_work_result(result)
-			#work.set_callback(WorkPartyItem.WORK_COMPLETE_CALLBACK, get_id(), 'complete_explore')
-			work.set_callback(WorkPartyItem.RESOLVE_WORK_CALLBACK, get_id(), 'resolve_explore')
-			return work
-		_:
-			return null
+func start_first_explore():
+	Events.goal_progress.emit(PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.GOAL_EXPLORE_PARTY_CREATED)
+
+func complete_first_explore():
+	Events.goal_progress.emit(PortalTutorialGoal.GOAL_ID, PortalTutorialGoal.GOAL_EXPLORE_PARTY_WORK_COMPLETED)
 
 func resolve_explore():
 	explore_rooms_found += 1

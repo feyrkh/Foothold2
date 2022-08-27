@@ -20,10 +20,12 @@ const KEY_GOAL_DATA_VAL = 'V' # Used with GOAL_DATA_RESULT, the new value for th
 const ITEM_RESULT = 1
 const GOAL_PROGRESS_RESULT = 2
 const GOAL_DATA_RESULT = 3
-const CALLBACK_RESULT = 4
+const ON_RESOLVE_CALLBACK_RESULT = 4 # callback for when user clicks the 'complete' button to clear out the completed task
 const DESTROY_RESULT = 5
 const BUFF_ON_COMPLETE_RESULT = 6
 const BUFF_WHILE_WORKING_RESULT = 7
+const ON_CREATE_CALLBACK_RESULT = 8 # callback for when the task is first created
+const ON_COMPLETE_CALLBACK_RESULT = 9 # callback for when the work is completed, but not yet resolved
 
 var pre_complete_desc = "Working..."
 var post_complete_desc = "Work complete!"
@@ -58,12 +60,18 @@ func goal_progress(goal_id, progress_val):
 func goal_data(goal_id, data_key, data_val):
 	results.append({KEY_RESULT_TYPE: GOAL_DATA_RESULT, KEY_GOAL_ID: goal_id, KEY_GOAL_DATA_KEY: data_key, KEY_GOAL_DATA_VAL: data_val})
 
-func callback_result(target_game_item_or_id, function_name, args=[]):
-	results.append({KEY_RESULT_TYPE: CALLBACK_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+func on_resolve_callback_result(target_game_item_or_id, function_name, args=[]):
+	results.append({KEY_RESULT_TYPE: ON_RESOLVE_CALLBACK_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+
+func on_create_callback_result(target_game_item_or_id, function_name, args=[]):
+	results.append({KEY_RESULT_TYPE: ON_CREATE_CALLBACK_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+
+func on_complete_callback_result(target_game_item_or_id, function_name, args=[]):
+	results.append({KEY_RESULT_TYPE: ON_COMPLETE_CALLBACK_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
 
 func buff_on_complete_result(target_game_item_or_id, buff:Buff):
 	results.append({KEY_RESULT_TYPE: BUFF_ON_COMPLETE_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_BUFF: Config.to_config(buff)})
-	
+
 func buff_while_working_result(buff:Buff):
 	var buff_config = Config.to_config(buff)
 	buff_config.buff_id = randi()
@@ -75,19 +83,27 @@ func target_to_id(target_game_item_or_id):
 		id = id.get_id()
 	return id
 
+func resolve_work_created_results():
+	for result in results:
+		match result.get(KEY_RESULT_TYPE):
+			ON_CREATE_CALLBACK_RESULT: resolve_callback_result(result)
+
 # called when a new worker is added to a task
 func resolve_work_start_results(worker_id):
 	for result in results:
 		match result.get(KEY_RESULT_TYPE):
-			BUFF_WHILE_WORKING_RESULT:
-				add_working_buff(result.get(KEY_BUFF), worker_id)
+			BUFF_WHILE_WORKING_RESULT: add_working_buff(result.get(KEY_BUFF), worker_id)
 
 # called when a worker is removed from a task, either because they stopped working, paused working, or the task completed
 func resolve_work_stop_results(worker_id):
 	for result in results:
 		match result.get(KEY_RESULT_TYPE):
-			BUFF_WHILE_WORKING_RESULT:
-				remove_working_buff(result.get(KEY_BUFF), worker_id)
+			BUFF_WHILE_WORKING_RESULT: remove_working_buff(result.get(KEY_BUFF), worker_id)
+
+func resolve_work_completed_results():
+	for result in results:
+		match result.get(KEY_RESULT_TYPE):
+			ON_COMPLETE_CALLBACK_RESULT: resolve_callback_result(result)
 
 func resolve_results():
 	for result in results:
@@ -102,17 +118,9 @@ func resolve_results():
 					push_error('Tried to destroy nonexistent GameItem: ', result)
 					return
 				game_item.delete(delete_children)
-			CALLBACK_RESULT: 
-				var game_item = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
-				if game_item == null:
-					push_error('Tried to run callback function in nonexistent GameItem: ', result)
-					return
-				if !game_item.has_method(result.get(KEY_FUNCTION_NAME)):
-					push_error('Tried to run nonexistent callback function: ', result)
-					return
-				var args = result.get(KEY_FUNCTION_ARGS, [])
-				if args == null: args = []
-				game_item.callv(result.get(KEY_FUNCTION_NAME), args)
+			ON_RESOLVE_CALLBACK_RESULT: resolve_callback_result(result)
+			ON_CREATE_CALLBACK_RESULT: pass # handled on creation
+			ON_COMPLETE_CALLBACK_RESULT: pass # handled on completion
 			BUFF_ON_COMPLETE_RESULT:
 				var game_item = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
 				if game_item == null:
@@ -128,6 +136,18 @@ func resolve_results():
 			BUFF_WHILE_WORKING_RESULT:
 				pass
 			_: push_error("Tried to resolve unexpected result type: ", result)
+
+func resolve_callback_result(result):
+	var game_item = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
+	if game_item == null:
+		push_error('Tried to run callback function in nonexistent GameItem: ', result)
+		return
+	if !game_item.has_method(result.get(KEY_FUNCTION_NAME)):
+		push_error('Tried to run nonexistent callback function: ', result)
+		return
+	var args = result.get(KEY_FUNCTION_ARGS, [])
+	if args == null: args = []
+	game_item.callv(result.get(KEY_FUNCTION_NAME), args)
 
 func add_working_buff(buff_config:Dictionary, target_id):
 	var game_item = IdManager.get_item_by_id(target_id)

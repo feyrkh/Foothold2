@@ -56,7 +56,10 @@ func post_load_game():
 			work_resolved.connect(contributor.clear_active_task)
 			work_result_contributor_connect(contributor)
 				
-
+func on_task_created():
+	if work_result != null:
+		work_result.resolve_work_created_results()
+	
 func work_result_contributor_connect(contributor:WorkAwareItem):
 	if work_result != null and contributor != null:
 		if !__result_connected_contributors.has(contributor._item_id):
@@ -143,6 +146,8 @@ func apply_effort(worker:WorkAwareItem):
 		if work_result != null and contributors != null:
 			for contributor_id in contributors:
 				work_result.resolve_work_stop_results(contributor_id)
+		if work_result != null:
+			work_result.resolve_work_completed_results()
 		if auto_resolve:
 			resolve_completion_effects()
 		return

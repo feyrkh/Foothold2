@@ -14,6 +14,7 @@ func _ready():
 	get_game_item().parent_updated.connect(owner_parent_updated)
 	get_game_item().contents_updated.connect(owner_contents_updated)
 	CurrentTaskDisplay.task_resolved.connect(refresh)
+	CurrentTaskDisplay.task_cancelled.connect(cancel_task)
 	refresh()
 
 func owner_parent_updated(old_parent, new_parent):
@@ -75,7 +76,7 @@ func set_next_task_option_visible(val):
 func has_task_options(requestor, task_source):
 	if task_source.has_method('get_in_progress_work_tasks'):
 		for task in task_source.get_in_progress_work_tasks(requestor).values():
-			if task.is_work_complete(): continue
+			if task.is_work_resolved(): continue
 			if !task.is_valid_contributor(requestor): continue
 			return true
 	if task_source.has_method('get_work_task_options'):
@@ -119,7 +120,7 @@ func populate_next_option_dropdown():
 	var tasks = tasks_and_options.values()
 	tasks.sort_custom(func(a, b): return a.get_label() < b.get_label())
 	for task in tasks:
-		if (task is WorkTaskOption) or !task.is_work_complete():
+		if (task is WorkTaskOption) or !task.is_work_resolved():
 			opts.append([task.get_label(), task])
 	if opts.is_empty():
 		opts.append(['<no tasks>', null])
@@ -153,7 +154,7 @@ func start_next_task():
 		next_task = next_task_owner.start_work_task(next_task, get_game_item())
 	if next_task == null:
 		err_msg = 'Unable to start task "'+find_child('NextTaskOptionDropdown').selected_text+'" from '+next_task_owner.get_label()
-	if err_msg == null and next_task.is_work_complete():
+	if err_msg == null and next_task.is_work_resolved():
 		err_msg = "This task is already completed and can't be started"
 	if err_msg:
 		find_child('NextTaskDescriptionLabel').text = err_msg
@@ -167,3 +168,13 @@ func start_next_task():
 		find_child('NextTaskTargetDropdown').reset()
 		find_child('NextTaskOptionDropdown').reset()
 		refresh()
+
+func cancel_task():
+	get_game_item().set_current_task(null, null)
+	get_game_item().set_active_work_task_paused(true)
+	next_task_owner_id = null
+	next_task = null
+	find_child('NextTaskTargetDropdown').reset()
+	find_child('NextTaskOptionDropdown').reset()
+	refresh()
+	

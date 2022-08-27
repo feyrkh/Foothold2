@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 signal task_resolved()
+signal task_cancelled()
 
 var task_owner_id
 var task_id
@@ -14,6 +15,7 @@ var task_id
 
 func _ready():
 	find_child('CompleteButton').pressed.connect(resolve_task)
+	find_child('CancelTaskButton').pressed.connect(cancel_task)
 
 func set_task(task_owner_id, task_id):
 	if task_owner_id != self.task_owner_id or task_id != self.task_id:
@@ -89,3 +91,7 @@ func resolve_task():
 		push_error('Tried to resolve an incomplete task - the button should not have been visible!')
 		return
 	cur_task.resolve_completion_effects()
+
+func cancel_task():
+	task_cancelled.emit()
+	

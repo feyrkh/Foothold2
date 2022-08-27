@@ -155,6 +155,10 @@ func _get_drag_data(position: Vector2):
 		return
 	var drag_preview = Control.new()
 	var start_pos = get_item_area_rect(selected[0]).position
+	var error_msg = Label.new()
+	error_msg.autowrap_mode = TextServer.AUTOWRAP_WORD
+	error_msg.custom_minimum_size = Vector2(300, 0)
+	var error_container = preload('res://ui/DragErrorMsg.tscn').instantiate()
 	for item in selected:
 		var label := Label.new()
 		label.text = item.get_text(0)
@@ -162,15 +166,17 @@ func _get_drag_data(position: Vector2):
 		drag_preview.add_child(label)
 		label.position = get_item_area_rect(item).position - start_pos
 		#print('item_region: ', get_item_area_rect(item))
+	drag_preview.add_child(error_container)
+	error_container.position = Vector2(drag_preview.get_child(0).size.x + 10, 10)
+
 	set_drag_preview(drag_preview)
 	return selected
 
-func check_valid_drop(target_item, dropped_item_list):	
-	for dropped_item in dropped_item_list:
-		var dropped_node = dropped_item.get_metadata(0)
-		if !target_item.get_metadata(0).can_accept_drop(dropped_node):
-			return false
-	return true
+func check_valid_drop(target_item, dropped_item_list):
+	if target_item == root:
+		Events.drag_error_msg.emit("Can't drop items outside of an existing location")
+		return false
+	return target_item.get_metadata(0).can_accept_multi_drop(dropped_item_list)
 
 func _can_drop_data(position, dropped_item_list):
 	if !(dropped_item_list is Array):

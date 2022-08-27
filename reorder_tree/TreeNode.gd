@@ -81,14 +81,26 @@ func set_label(new_val):
 		tree_item.set_text(0, label)
 	emit_signal("label_updated", label)
 
+func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+	for dropped_item in dropped_item_list:
+		var dropped_node = dropped_item.get_metadata(0)
+		if  !can_accept_drop(dropped_node):
+			return false
+			
+	Events.drag_error_msg.emit(null)
+	return true
+
 func can_accept_drop(dropped_item:TreeNode):
 	if dropped_item == self:
+		Events.drag_error_msg.emit("Can't drop an item on itself")
 		return false
 	if dropped_item.tree_item.get_parent() == tree_item:
 		# always allow things to be moved around inside a container it's already in
+		Events.drag_error_msg.emit(null)
 		return true
 	if dropped_item.get_allowed_owner_lock_id() != null:
 		# an item that's locked to this owner can always be moved onto its owner, and never moved onto a non-owner
+		Events.drag_error_msg.emit("%s is locked to its current owner" % [dropped_item.get_label()])
 		return dropped_item.get_allowed_owner_lock_id() == self.get_owner_lock_id()
 	if dropped_item.get_tags().has(Tags.TAG_FOLDER):
 		var cur_child:TreeItem = dropped_item.tree_item.get_first_child()
@@ -96,9 +108,18 @@ func can_accept_drop(dropped_item:TreeNode):
 			if !can_accept_drop(cur_child.get_metadata(0)):
 				return false
 			cur_child = cur_child.get_next()
+		Events.drag_error_msg.emit(null)
 		return true
 	elif can_contain_tags(dropped_item.get_tags()):
+		Events.drag_error_msg.emit(null)
 		return true
+	var allowed_tags = get_allowed_tags()
+	if allowed_tags == null or allowed_tags.size() == 0:
+		Events.drag_error_msg.emit("%s does not accept any items" % [get_label()])
+	elif allowed_tags.size() == 1:
+		Events.drag_error_msg.emit("%s only accepts items of this type: %s" % [get_label(), Tags.tag_name(get_allowed_tags().keys()[0])])
+	else:
+		Events.drag_error_msg.emit("%s only accepts items of these types: %s" % [get_label(), get_allowed_tags().keys().map(func(k): return Tags.tag_name(k))])
 	return false
 
 func get_drop_preview():

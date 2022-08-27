@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bknt5m8u0kswc"]
+
+[ext_resource type="Script" path="res://ui/DragErrorMsg.gd" id="1_sft0q"]
+
+[node name="DragErrorMsg" type="MarginContainer"]
+script = ExtResource("1_sft0q")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 300.0
+offset_bottom = 23.0
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(300, 0)
+offset_right = 300.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+autowrap_mode = 2

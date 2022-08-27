@@ -84,3 +84,9 @@ res://util/Buffs.gd
 res://items/helpers/buff/Buff.gd
 res://items/helpers/buff/BuffList.gd
 res://entities/wizard_tower/PortalDebris.gd
+res://reorder_tree/ReorderTree.tscn
+res://util/Tags.gd
+res://ui/DragErrorMsg.tscn
+res://ui/DragErrorMsg.gd
+res://items/LocationItem.gd
+res://items/FolderItem.gd

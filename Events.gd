@@ -7,6 +7,7 @@ signal add_goal(new_goal_item)
 signal pin_action_panel(tree_node, is_pinned)
 signal move_action_panel(action_panel, move_right)
 signal quest_progress(quest_name, progress_arg)
+signal drag_error_msg(msg)
 
 signal goal_item(goal_id, item_key, item_id_not_game_item) 
 signal goal_data(goal_id, data_key, data_val)

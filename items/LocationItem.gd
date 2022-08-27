@@ -44,12 +44,16 @@ func get_allowed_tags()->Dictionary:
 func finish_resolve_item_result(args):
 	room_size = args.get(KEY_ROOM_SIZE, 1)
 
-func can_accept_drop(dropped_item:TreeNode):
-	if dropped_item.get_closest_nonfolder_parent() == self:
-		# always allow things to be moved around inside a container it's already in
-		return true
-	if dropped_item.has_method('get_furniture_size'):
-		var furniture_size = dropped_item.get_furniture_size()
-		if occupied_room_size + furniture_size > room_size:
-			return false
-	return super.can_accept_drop(dropped_item)
+func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+	var furniture_size = 0
+	for dropped_item in dropped_item_list:
+		var dropped_node = dropped_item.get_metadata(0)
+		var closest_parent = dropped_node.get_closest_nonfolder_parent()
+		if closest_parent == self:
+			continue # don't count furniture size if the furniture is already in the room
+		if dropped_node.has_method('get_furniture_size'):
+			furniture_size += dropped_node.get_furniture_size()
+	if occupied_room_size + furniture_size > room_size:
+		Events.drag_error_msg.emit("%s is too full to accept this - clear %d space to make this fit" % [get_label(), -(room_size - occupied_room_size - furniture_size)])
+		return false
+	return super.can_accept_multi_drop(dropped_item_list)

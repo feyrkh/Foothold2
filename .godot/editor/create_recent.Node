@@ -1,8 +1,9 @@
+ColorRect
+MarginContainer
+Label
 TextureButton
 VBoxContainer
 Button
-Label
-MarginContainer
 HBoxContainer
 HFlowContainer
 FancyTree (FancyTree.gd)
@@ -17,7 +18,6 @@ Timer
 Tree
 ItemList
 CenterContainer
-ColorRect
 Control
 PanelContainer
 LineEdit

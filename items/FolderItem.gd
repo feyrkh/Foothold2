@@ -8,6 +8,10 @@ func _ready():
 func _contents_updated():
 	get_closest_nonfolder_parent().emit_signal('contents_updated')
 
+func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+	var closest_parent = get_closest_nonfolder_parent()
+	return closest_parent.can_accept_multi_drop(dropped_item_list)
+	
 func can_accept_drop(dropped_item:TreeNode):
 	var closest_parent = get_closest_nonfolder_parent()
 	if dropped_item.get_allowed_owner_lock_id() != null:

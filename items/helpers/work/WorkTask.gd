@@ -31,6 +31,8 @@ var total_work_applied:float
 var pre_desc # description it gives before the task is complete
 var post_desc # description it gives after the task is complete
 
+var __result_connected_contributors = {}
+
 static func build_from_config(c:Dictionary):
 	var result = WorkTask.new()
 	Config.config(result, c)
@@ -47,7 +49,33 @@ func post_config(config:Dictionary):
 func post_load_game():
 	if contributors != null:
 		for k in contributors:
-			work_resolved.connect(IdManager.get_item_by_id(k).clear_active_task)
+			var contributor:WorkAwareItem = IdManager.get_item_by_id(k)
+			if !contributor:
+				push_error('Failed to find contributor to task ', task_name, '(', task_id, ') in post_load_game: ', k)
+				continue
+			work_resolved.connect(contributor.clear_active_task)
+			work_result_contributor_connect(contributor)
+				
+
+func work_result_contributor_connect(contributor:WorkAwareItem):
+	if work_result != null and contributor != null:
+		if !__result_connected_contributors.has(contributor._item_id):
+			var callback = contributor_pause_or_resume.bind(contributor)
+			__result_connected_contributors[contributor._item_id] = callback
+			contributor.active_work_task_paused_updated.connect(callback)
+
+func work_result_contributor_disconnect(contributor:WorkAwareItem):
+	if work_result != null and contributor != null:
+		var callback = __result_connected_contributors.get(contributor._item_id)
+		__result_connected_contributors.erase(contributor._item_id)
+		if callback != null:
+			contributor.active_work_task_paused_updated.disconnect(callback)
+
+func contributor_pause_or_resume(paused, contributor):
+	if !paused:
+		work_result.resolve_work_start_results(contributor.get_id())
+	else:
+		work_result.resolve_work_stop_results(contributor.get_id())
 
 func set_work_needed(work_needed:Dictionary):
 	self.work_needed = work_needed
@@ -112,6 +140,9 @@ func apply_effort(worker:WorkAwareItem):
 				work_amounts.erase(work_type)
 	if is_work_complete():
 		work_complete.emit(self)
+		if work_result != null and contributors != null:
+			for contributor_id in contributors:
+				work_result.resolve_work_stop_results(contributor_id)
 		if auto_resolve:
 			resolve_completion_effects()
 		return
@@ -163,6 +194,12 @@ func is_valid_contributor(contributor:GameItem) -> bool:
 	return max_contributors > get_contributors().size()
 
 func add_contributor_id(contributor_id):
+	if work_result != null:
+		var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
+		if !contributor:
+			push_error('Failed to find contributor to task ', task_name, '(', task_id, ') in add_contributor_id: ', contributor_id)
+		else:
+			work_result_contributor_connect(contributor)
 	if contributors == null:
 		contributors = {}
 	contributors[contributor_id] = 1
@@ -173,6 +210,13 @@ func add_contributor_id(contributor_id):
 	work_amounts_updated.emit(self)
 
 func remove_contributor_id(contributor_id):
+	if work_result != null:
+		work_result.resolve_work_stop_results(contributor_id)
+		var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
+		if !contributor:
+			push_error('Failed to find contributor to task ', task_name, '(', task_id, ') in remove_contributor_id: ', contributor_id)
+		else:
+			work_result_contributor_disconnect(contributor)
 	if contributors == null:
 		return
 	contributors.erase(contributor_id)

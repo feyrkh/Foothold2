@@ -80,3 +80,6 @@ res://items/settings/SaveLoadItem.gd
 res://items/settings/SaveLoadItemActions.tscn
 res://items/settings/SaveLoadItemActions.gd
 res://items/EquipmentItem.gd
+res://util/Buffs.gd
+res://items/helpers/buff/Buff.gd
+res://items/helpers/buff/BuffList.gd

@@ -2,6 +2,8 @@ extends RefCounted
 class_name WorkResult
 
 const KEY_SETUP_ARGS = 'a' # passed to `finish_resolve_item_result` on the new item, if it has that function
+const KEY_BUFF = 'b'
+const KEY_BUFF_ID = 'buff_id' # has to match with the Buff.buff_id field
 const KEY_FUNCTION_NAME = 'F'
 const KEY_FUNCTION_ARGS = 'f'
 const KEY_GOAL_ID = 'g' # Used with GOAL_PROGRESS_RESULT and GOAL_DATA_RESULT, the ID of the goal to be updated
@@ -20,6 +22,8 @@ const GOAL_PROGRESS_RESULT = 2
 const GOAL_DATA_RESULT = 3
 const CALLBACK_RESULT = 4
 const DESTROY_RESULT = 5
+const BUFF_ON_COMPLETE_RESULT = 6
+const BUFF_WHILE_WORKING_RESULT = 7
 
 var pre_complete_desc = "Working..."
 var post_complete_desc = "Work complete!"
@@ -38,10 +42,8 @@ func _from_config(config) -> WorkResult:
 	Config.config(self, config)
 	return self
 
-func new_item_result(item_name:String, item_script:String, target_owner_id, setup_args=null):
-	if target_owner_id is TreeNode:
-		target_owner_id = target_owner_id.get_id()
-	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: item_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_owner_id, KEY_SETUP_ARGS: setup_args})
+func new_item_result(item_name:String, item_script:String, target_game_item_or_id, setup_args=null):
+	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: item_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_to_id(target_game_item_or_id), KEY_SETUP_ARGS: setup_args})
 
 func new_location_result(location_name:String, target_owner_id, room_size=1, setup_args={}, item_script="res://items/LocationItem.gd"):
 	setup_args[LocationItem.KEY_ROOM_SIZE] = room_size
@@ -57,10 +59,35 @@ func goal_data(goal_id, data_key, data_val):
 	results.append({KEY_RESULT_TYPE: GOAL_DATA_RESULT, KEY_GOAL_ID: goal_id, KEY_GOAL_DATA_KEY: data_key, KEY_GOAL_DATA_VAL: data_val})
 
 func callback_result(target_game_item_or_id, function_name, args=[]):
+	results.append({KEY_RESULT_TYPE: CALLBACK_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+
+func buff_on_complete_result(target_game_item_or_id, buff:Buff):
+	results.append({KEY_RESULT_TYPE: BUFF_ON_COMPLETE_RESULT, KEY_GAME_ITEM_ID: target_to_id(target_game_item_or_id), KEY_BUFF: Config.to_config(buff)})
+	
+func buff_while_working_result(buff:Buff):
+	var buff_config = Config.to_config(buff)
+	buff_config.buff_id = randi()
+	results.append({KEY_RESULT_TYPE: BUFF_WHILE_WORKING_RESULT, KEY_BUFF: buff_config})
+
+func target_to_id(target_game_item_or_id):
 	var id = target_game_item_or_id
 	if id is GameItem:
 		id = id.get_id()
-	results.append({KEY_RESULT_TYPE: CALLBACK_RESULT, KEY_GAME_ITEM_ID: id, KEY_FUNCTION_NAME: function_name, KEY_FUNCTION_ARGS: args})
+	return id
+
+# called when a new worker is added to a task
+func resolve_work_start_results(worker_id):
+	for result in results:
+		match result.get(KEY_RESULT_TYPE):
+			BUFF_WHILE_WORKING_RESULT:
+				add_working_buff(result.get(KEY_BUFF), worker_id)
+
+# called when a worker is removed from a task, either because they stopped working, paused working, or the task completed
+func resolve_work_stop_results(worker_id):
+	for result in results:
+		match result.get(KEY_RESULT_TYPE):
+			BUFF_WHILE_WORKING_RESULT:
+				remove_working_buff(result.get(KEY_BUFF), worker_id)
 
 func resolve_results():
 	for result in results:
@@ -86,8 +113,44 @@ func resolve_results():
 				var args = result.get(KEY_FUNCTION_ARGS, [])
 				if args == null: args = []
 				game_item.callv(result.get(KEY_FUNCTION_NAME), args)
+			BUFF_ON_COMPLETE_RESULT:
+				var game_item = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
+				if game_item == null:
+					push_error('Tried to add buff to nonexistent GameItem: ', result)
+					return
+				if !game_item.has_method('add_buff'):
+					push_error('Tried to add buff to GameItem with no add_buff(): ', result)
+					return
+				var buff_config = result.get(KEY_BUFF)
+				var buff = Buff.new()
+				Config.config(buff, buff_config)
+				game_item.add_buff(buff)
+			BUFF_WHILE_WORKING_RESULT:
+				pass
 			_: push_error("Tried to resolve unexpected result type: ", result)
 
+func add_working_buff(buff_config:Dictionary, target_id):
+	var game_item = IdManager.get_item_by_id(target_id)
+	if game_item == null:
+		push_error('Tried to add working buff on nonexistent GameItem (', target_id, '): : ', buff_config)
+		return
+	if !game_item.has_method('add_buff'):
+		push_error('Tried to add working buff on GameItem (', target_id, '):  with no add_buff(): ', buff_config)
+		return
+	var buff = Buff.new()
+	Config.config(buff, buff_config)
+	game_item.add_buff(buff)
+
+func remove_working_buff(buff_config:Dictionary, target_id):
+	var game_item = IdManager.get_item_by_id(target_id)
+	if game_item == null:
+		push_error('Tried to remove working buff on nonexistent GameItem (', target_id, '): ', buff_config)
+		return
+	if !game_item.has_method('remove_buff_by_id'):
+		push_error('Tried to remove working buff on GameItem (', target_id, '):  with no remove_buff_by_id(): ', buff_config)
+		return
+	game_item.remove_buff_by_id(buff_config.get(KEY_BUFF_ID))
+	
 func get_result_description() -> String:
 	if results == null or results.size() == 0:
 		return 'none'

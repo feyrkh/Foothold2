@@ -22,7 +22,7 @@ var active_work_task_paused = true:
 	set(val):
 		if active_work_task_paused != val:
 			active_work_task_paused = val
-			var task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
+			var task:WorkTask = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
 			if task != null:
 				task.contributor_work_amount_changed()
 			emit_signal('active_work_task_paused_updated', val)

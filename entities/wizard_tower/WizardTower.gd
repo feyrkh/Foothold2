@@ -16,11 +16,11 @@ func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask
 		_: return null
 
 func has_more_explore_locations():
-	return explore_rooms_found < 2
+	return explore_rooms_found < 1
 
-func build_explore_task():
+func build_explore_task() -> WorkTask:
 	match explore_rooms_found:
-		0,1: 
+		0: 
 			var work = WorkTask.new()
 			work.set_description("Step into the forbidding edifice, and begin to clear it.", "Shove the creaking door open...")
 			work.set_work_needed({WorkTypes.EXPLORE: 15})

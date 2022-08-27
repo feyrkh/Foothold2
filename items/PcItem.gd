@@ -6,6 +6,9 @@ signal status_updated()
 const TASK_MEDITATE = 'M'
 const TASK_REST = 'R'
 
+const BUFF_FOCUS_REGEN = 'focus regen'
+const BUFF_HP_REGEN = 'hp regen'
+
 var stats:Array = []:
 	set(val):
 		# transform from serialized version
@@ -29,6 +32,19 @@ var focus=1000:
 			focus = max(0, min(val, get_max_focus()))
 			emit_signal('status_updated')
 
+var buff_list:BuffList = BuffList.new()
+
+func add_buff(buff:Buff):
+	buff_list.add_buff(buff, get_id())
+	status_updated.emit()
+
+func remove_buff(buff:Buff):
+	buff_list.remove_buff(buff)
+	status_updated.emit()
+
+func remove_buff_by_id(buff_id):
+	buff_list.remove_buff_by_id(buff_id)
+	status_updated.emit()
 
 func _init():
 	super._init()
@@ -56,6 +72,35 @@ func get_work_task_options(requestor:GameItem) -> Dictionary:
 	result[TASK_MEDITATE] = WorkTaskOption.build(TASK_MEDITATE, "Meditate", get_id(), "Recover your focus.", WorkTask.LOCATION_SELF)
 	result[TASK_REST] = WorkTaskOption.build(TASK_REST, "Rest", get_id(), "Recover your health and stamina.", WorkTask.LOCATION_SELF)
 	return self.work_task_list.filter_task_options(result, requestor)
+
+func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask:
+	match next_task.get_id():
+		TASK_MEDITATE: return build_meditate_task()
+		TASK_REST: return build_rest_task()
+		_: return null
+
+func build_meditate_task() -> WorkTask:
+	var work = WorkTask.new()
+	work.set_description("Sit comfortably, close your eyes, and reflect on your inner being.", "")
+	work.set_work_needed({WorkTypes.CONTINUOUS: 1})
+	var meditate_buff = Buff.build_buff('meditate', get_id(), 0, true)
+	meditate_buff.mult_effect(BUFF_FOCUS_REGEN, 3.0)
+	var result:WorkResult = WorkResult.new()
+	result.buff_while_working_result(meditate_buff)
+	work.set_work_result(result)
+	return work
+
+func build_rest_task() -> WorkTask:
+	var work = WorkTask.new()
+	work.set_description("Perform minor first aid, relax, don't strain yourself.", "")
+	work.set_work_needed({WorkTypes.CONTINUOUS: 999})
+	var meditate_buff = Buff.build_buff('meditate', get_id(), 0, true)
+	meditate_buff.mult_effect(BUFF_HP_REGEN, 3.0)
+	var result:WorkResult = WorkResult.new()
+	result.buff_while_working_result(meditate_buff)
+	work.set_work_result(result)
+	return work
+	
 
 func regen_status():
 	if focus < get_max_focus():
@@ -88,13 +133,13 @@ func get_max_focus():
 	return stats[Stats.WILLPOWER].get_stat_value() * 0.075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.025
 
 func get_focus_regen():
-	return 1.0 / 60
+	return (1.0 / 60) * buff_list.get_multiply_bonus(BUFF_FOCUS_REGEN) + buff_list.get_add_bonus(BUFF_FOCUS_REGEN)
 
 func get_max_hp():
 	return stats[Stats.CONSTITUTION].get_stat_value() * 0.5
 
 func get_hp_regen():
-	return 1.0 / 3600
+	return (1.0 / 3600) * buff_list.get_multiply_bonus(BUFF_HP_REGEN) + buff_list.get_add_bonus(BUFF_HP_REGEN)
 
 func get_stats():
 	return stats

@@ -1,5 +1,8 @@
-extends WorkHeldItem
+extends WorkProvidingItem
 class_name CombatManual
+
+const TASK_PREFIX_BUILD_STYLE = 'bld$'
+const TASK_PREFIX_STUDY_STYLE = 'std$'
 
 # number of stances in the style
 const KEY_STANCE_COUNT = 'CM1'
@@ -43,9 +46,34 @@ var scale_multiplier:float = 0.1
 var study_owner_id # ID of the PC studying this manual; if it changes then we reset any progress they've made and set this to null
 var previous_studiers = {} # ID -> number of times they've created a combat style with this book
 
-func _ready():
-	super._ready()
-	set_callback(self.WORK_COMPLETE_CALLBACK, self.get_id(), 'build_combat_style') # don't forget the callback must take 1 arg, the WorkParty object
+func get_work_task_options(requestor:GameItem) -> Dictionary:
+	var result = {}
+	var student_id = requestor.get_id()
+	var build_task_id = "%s%s" % [TASK_PREFIX_BUILD_STYLE, student_id]
+	var build_task = WorkTaskOption.build(build_task_id, "Create combat style", get_id(), "Study this manual and piece together a unique fighting style based on the philosophy it describes.", WorkTask.LOCATION_HELD | WorkTask.LOCATION_SHARED_ROOM)
+	#TASK_CLEAR_DEBRIS: WorkTaskOption.build(TASK_CLEAR_DEBRIS, "Clear", get_id(), "Tidy up, make space in the room, and possibly uncover useful objects.", WorkTask.LOCATION_SHARED_ROOM)
+	result[build_task_id] = build_task
+	return self.work_task_list.filter_task_options(result, requestor)
+
+func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask:
+	var task_id:String = next_task.get_id()
+	if task_id.begins_with(TASK_PREFIX_BUILD_STYLE):
+		return build_new_style_task(next_task, contributor)
+	return null
+
+func build_new_style_task(next_task:WorkTaskOption, contributor:GameItem):
+	var task = WorkTask.new()
+	var student_id = contributor.get_id()
+	task.set_work_needed({WorkTypes.CONCENTRATION: 10 * (5 * previous_studiers.get(student_id, 0) + 1)})
+	var pre_desc = "Blood, sweat, and intense concentration go into the genesis of a new fighting style.\nLuck and experience play a large role in the quality of the outcome."
+	var work_result = WorkResult.new()
+	task.set_description(pre_desc, null)
+	task.set_work_result(work_result)
+	return task
+
+func pre_work_task_complete(task:WorkTask):
+	var style = build_combat_style()
+	task.post_desc = "A new style is born: "+style.get_label()
 
 # Called when creating object from WorkResult
 func finish_resolve_item_result(args:Dictionary):
@@ -59,7 +87,7 @@ func finish_resolve_item_result(args:Dictionary):
 	scale_multiplier = args.get(KEY_SCALING_MULTIPLIER, 0.1)
 	equipment_type = args.get(KEY_EQUIPMENT_TYPE, Combat.EQUIP_HAND_TO_HAND)
 
-func build_combat_style(work_party):
+func build_combat_style():
 	var stances = []
 	var stance_power = []
 	var stance_power_total = 0
@@ -76,8 +104,7 @@ func build_combat_style(work_party):
 	result.allowed_owner_lock_id = study_owner_id
 	previous_studiers[study_owner_id] = previous_studiers.get(study_owner_id, 0) + 1
 	Events.add_game_item.emit(result, holder, true)
-	clear_work()
-	refresh_action_panel()
+	return result
 
 func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier)->CombatStance:
 	var damage_type_ratio_dict = damage_type_options[randi() % damage_type_options.size()]
@@ -86,7 +113,7 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 	var damage_types = damage_type_ratio_dict.keys()
 	var damage_division = []
 	var total_damage_division = 0
-	for k in damage_types.keys():
+	for k in damage_types:
 		damage_division.append(randf() + damage_type_ratio_dict[k])
 		total_damage_division += damage_division[-1]
 	var final_damage = {}
@@ -103,11 +130,12 @@ func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
 func get_action_sections()->Array:
-	return ['Description', ['FlexibleButton', {
-		'button':'Create Combat Style', 
-		'click':'start_create_combat_style', 
-		'visible':'create_combat_style_visible'}],
-		'WorkNeeded'
+	return ['Description', 
+		#['FlexibleButton', {
+		#'button':'Create Combat Style', 
+		#'click':'start_create_combat_style', 
+		#'visible':'create_combat_style_visible'}],
+		#'WorkNeeded'
 	]
 
 const SELF_TAGS3 = {Tags.TAG_EQUIPMENT:true, Tags.TAG_COMBAT_MANUAL:true}
@@ -121,25 +149,6 @@ func get_allowed_tags()->Dictionary:
 func get_description():
 	return "A collection of notes on various %s combat techniques. A dedicated student could develop one or more fighting styles from this." % [Combat.get_equipment_description(equipment_type)]
 
-func moved_parents(old_parent, new_parent):
-	super(old_parent, new_parent)
-	var holder = get_closest_nonfolder_parent()
-	if holder.get_id() != study_owner_id:
-		study_owner_id = null
-		clear_work()
-
-func clear_work():
-	total_work_needed = 0
-	total_work_applied = 0
-	work_needed = {}
-	work_amounts = {}
-	update_percentage_label()
-	tree_item.set_icon(0, null)
-	work_paused = true
-
-func create_combat_style_visible():
-	return total_work_needed == 0 and get_closest_nonfolder_parent() is PcItem
-
 func start_create_combat_style():
 	var study_owner = get_closest_nonfolder_parent()
 	if !study_owner is PcItem:
@@ -147,9 +156,9 @@ func start_create_combat_style():
 		return
 	study_owner_id = study_owner.get_id()
 	var concentration_needed = pow(5, previous_studiers.get(study_owner_id, 0)) * 10
-	init_work_party(get_label(), Tags.WORK_PARTY_DESIGN_COMBAT_STYLE, {WorkTypes.CONCENTRATION: concentration_needed})
-	work_paused = true
-	update_work_amounts()
+#	init_work_party(get_label(), Tags.WORK_PARTY_DESIGN_COMBAT_STYLE, {WorkTypes.CONCENTRATION: concentration_needed})
+#	work_paused = true
+#	update_work_amounts()
 	refresh_action_panel()
 
 # takes an array of POSITIVE numbers (negatives will cause weird stuff)

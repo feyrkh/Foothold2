@@ -34,7 +34,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://util/Combat.gd"
 }, {
-"base": "WorkHeldItem",
+"base": "WorkProvidingItem",
 "class": &"CombatManual",
 "language": &"GDScript",
 "path": "res://items/CombatManual.gd"

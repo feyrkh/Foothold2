@@ -56,9 +56,9 @@ func remove_task(task:WorkTask):
 
 func filter_task_options(opts, requestor):
 	# Given a map of task_id -> WorkTaskOption, remove any task_ids that are already in progress
-	if in_progress_tasks != null:
-		for k in in_progress_tasks.keys():
-			opts.erase(k)
+#	if in_progress_tasks != null:
+#		for k in in_progress_tasks.keys():
+#			opts.erase(k)
 	var allowed_position_relationship = false
 	for k in opts.keys():
 		var option:WorkTaskOption = opts[k]

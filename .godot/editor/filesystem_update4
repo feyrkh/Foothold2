@@ -90,3 +90,5 @@ res://ui/DragErrorMsg.tscn
 res://ui/DragErrorMsg.gd
 res://items/LocationItem.gd
 res://items/FolderItem.gd
+res://ui/sections/GoalCompleteSection.tscn
+res://ui/sections/GoalCompleteSection.gd

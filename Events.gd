@@ -30,4 +30,7 @@ func safe_connect(signal_name, callable):
 		connect(signal_name, callable)
 
 static func emit_goal_progress(goal_id, progress_data):
-	Events.emit_signal('goal_progress', goal_id, progress_data)
+	Events.goal_progress.emit(goal_id, progress_data)
+
+static func emit_goal_item(goal_id, item_key, item_id_not_game_item):
+	Events.goal_item.emit(goal_id, item_key, item_id_not_game_item)

@@ -27,8 +27,8 @@ const BUFF_WHILE_WORKING_RESULT = 7
 const ON_CREATE_CALLBACK_RESULT = 8 # callback for when the task is first created
 const ON_COMPLETE_CALLBACK_RESULT = 9 # callback for when the work is completed, but not yet resolved
 
-var pre_complete_desc = "Working..."
-var post_complete_desc = "Work complete!"
+var pre_complete_desc = null
+var post_complete_desc = null
 var results = []
 
 static func build_from_config(config) -> WorkResult:
@@ -51,8 +51,8 @@ func new_location_result(location_name:String, target_owner_id, room_size=1, set
 	setup_args[LocationItem.KEY_ROOM_SIZE] = room_size
 	results.append({KEY_RESULT_TYPE: ITEM_RESULT, KEY_ITEM_NAME: location_name, KEY_ITEM_SCRIPT: item_script, KEY_OWNER_ID: target_owner_id, KEY_SETUP_ARGS: setup_args})
 
-func destroy_item_result(item_id, destroy_children:bool):
-	results.append({KEY_RESULT_TYPE: DESTROY_RESULT, KEY_GAME_ITEM_ID: item_id, KEY_FUNCTION_ARGS: destroy_children})
+func destroy_item_result(item_id, keep_children:bool=true):
+	results.append({KEY_RESULT_TYPE: DESTROY_RESULT, KEY_GAME_ITEM_ID: item_id, KEY_FUNCTION_ARGS: keep_children})
 
 func goal_progress(goal_id, progress_val):
 	results.append({KEY_RESULT_TYPE: GOAL_PROGRESS_RESULT, KEY_GOAL_PROGRESS_VAL: progress_val, KEY_GOAL_ID: goal_id})
@@ -113,11 +113,11 @@ func resolve_results():
 			GOAL_DATA_RESULT: Events.emit_signal('goal_data', result[KEY_GOAL_ID], result[KEY_GOAL_DATA_KEY], result[KEY_GOAL_DATA_VAL])
 			DESTROY_RESULT: 
 				var game_item:GameItem = IdManager.get_item_by_id(result.get(KEY_GAME_ITEM_ID))
-				var delete_children = result.get(KEY_FUNCTION_ARGS)
+				var keep_children = result.get(KEY_FUNCTION_ARGS)
 				if game_item == null:
 					push_error('Tried to destroy nonexistent GameItem: ', result)
 					return
-				game_item.call_deferred('delete', delete_children)
+				game_item.call_deferred('delete', keep_children)
 			ON_RESOLVE_CALLBACK_RESULT: resolve_callback_result(result)
 			ON_CREATE_CALLBACK_RESULT: pass # handled on creation
 			ON_COMPLETE_CALLBACK_RESULT: pass # handled on completion

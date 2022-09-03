@@ -44,7 +44,7 @@ func get_allowed_tags()->Dictionary:
 func finish_resolve_item_result(args):
 	room_size = args.get(KEY_ROOM_SIZE, 1)
 
-func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+func can_accept_multi_drop(dropped_item_list:Array)->bool:
 	var furniture_size = 0
 	for dropped_item in dropped_item_list:
 		var dropped_node = dropped_item.get_metadata(0)

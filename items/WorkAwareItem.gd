@@ -86,6 +86,9 @@ func update_specific_work_amount(work_type):
 	else:
 		work_amounts[work_type] = work_amount
 	update_parent_work_amounts()
+	var task = get_active_work_task()
+	if task != null:
+		task.contributor_work_amount_changed()
 	refresh_action_panel()
 	
 func update_work_amounts():
@@ -105,6 +108,9 @@ func update_work_amounts():
 			found_work_amounts[k].helper_ids_used[equip.get_id()] = 1
 	work_amounts = found_work_amounts
 	update_parent_work_amounts()
+	var task = get_active_work_task()
+	if task != null:
+		task.contributor_work_amount_changed()
 	refresh_action_panel()
 
 func update_parent_work_amounts():

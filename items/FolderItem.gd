@@ -8,7 +8,7 @@ func _ready():
 func _contents_updated():
 	get_closest_nonfolder_parent().emit_signal('contents_updated')
 
-func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+func can_accept_multi_drop(dropped_item_list:Array)->bool:
 	var closest_parent = get_closest_nonfolder_parent()
 	return closest_parent.can_accept_multi_drop(dropped_item_list)
 	

@@ -24,7 +24,9 @@ var max_contributors:int = 99
 var auto_resolve = false
 var __contributor_items_cache
 var __work_amounts_cache
+var __last_work_amounts = {}
 var resolved:bool
+var work_metadata
 
 var total_work_needed:float
 var total_work_applied:float
@@ -59,7 +61,13 @@ func post_load_game():
 func on_task_created():
 	if work_result != null:
 		work_result.resolve_work_created_results()
-	
+
+func set_work_metadata(data):
+	work_metadata = data
+
+func get_work_metadata():
+	return work_metadata
+
 func work_result_contributor_connect(contributor:WorkAwareItem):
 	if work_result != null and contributor != null:
 		if !__result_connected_contributors.has(contributor._item_id):
@@ -116,10 +124,15 @@ func is_work_complete()->bool:
 	return work_needed == null || work_needed.is_empty()
 
 func resolve_completion_effects():
+	var source = get_source()
+	if source and source.has_method('pre_work_task_resolved'):
+		source.pre_work_task_resolved(self)
 	resolved = true
 	if work_result:
 		work_result.resolve_results()
 	work_resolved.emit(self)
+	if source and source.has_method('post_work_task_resolved'):
+		source.post_work_task_resolved(self)
 
 func is_work_resolved()->bool:
 	return resolved
@@ -135,6 +148,9 @@ func apply_effort(worker:WorkAwareItem):
 			continue
 		var applied = min(needed.get_total_effort(), provided.get_total_effort())
 		if applied >= 0:
+			if applied != __last_work_amounts.get(needed.work_type, 0):
+				__last_work_amounts[needed.work_type] = applied
+				contributor_work_amount_changed()
 			total_work_applied += applied
 			needed.apply_effort(applied)
 			provided.on_effort_applied(work_type, applied)
@@ -142,12 +158,17 @@ func apply_effort(worker:WorkAwareItem):
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)
 	if is_work_complete():
+		var source = get_source()
+		if source and source.has_method('pre_work_task_complete'):
+			source.pre_work_task_complete(self)
 		work_complete.emit(self)
 		if work_result != null and contributors != null:
 			for contributor_id in contributors:
 				work_result.resolve_work_stop_results(contributor_id)
 		if work_result != null:
 			work_result.resolve_work_completed_results()
+		if source and source.has_method('post_work_task_complete'):
+			source.post_work_task_complete(self)
 		if auto_resolve:
 			resolve_completion_effects()
 		return
@@ -182,7 +203,7 @@ static func allowed_position_relationship(work_target:GameItem, requestor:GameIt
 		if work_target.find_child_items(func(item): return item == requestor).size() > 0:
 			return true
 	if location_filter & LOCATION_HELD:
-		if requestor.find_child_items(func(item): return item == requestor).size() > 0:
+		if requestor.find_child_items(func(item): return item == work_target).size() > 0:
 			return true
 	return false
 
@@ -265,6 +286,9 @@ func get_source_id():
 
 func set_source_id(val):
 	task_source_id = val
+
+func get_source():
+	return IdManager.get_item_by_id(get_source_id())
 
 func get_task_name():
 	return task_name

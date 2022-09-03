@@ -74,8 +74,8 @@ func get_description():
 		GOAL_EXPLORE_PARTY_CREATED: return "With the exploration plan firmly in mind, all that remains is to execute it.\n\n- Wait until exploration is complete"
 		GOAL_EXPLORE_PARTY_WORK_COMPLETED: return "An interesting room has been uncovered - all that remains is to push the door open.\n\n- Click the 'Complete' button in one of the explorer's task section to see what was discovered"
 		GOAL_CHAMBER_EXPLORED: return "The room is choked with debris, but the explorers see what looks like a return portal behind a particularly large pile of rubble.\n\n- Clear all the debris\n- Drag and drop one of the scounts into the newly discovered room\n- There's only space in the room for a single scout until some of the debris has been cleared"
-		GOAL_PORTAL_FOUND: return "The portal seems undamaged, but it appears the instability caused by your transfer was so high that the tower was severely damaged, and the portal has been completely drained of power.\n\n- Find a power source and place it into the portal to stabilize it."
-		GOAL_PORTAL_ACTIVATED: return "The portal is stabilized, at least a bit. You can send supplies back home easily enough, but objects sent through the portal in the other direction require more energy, as they are traveling from a low-energy plane to a high-energy plane."
+		GOAL_PORTAL_FOUND: return "The portal seems undamaged, but it appears the instability caused by your transfer was so high that the tower was severely damaged, and the portal has been completely drained of power.\n\n- Find a power source and place it into the portal to stabilize it.\n- The bit of quartz you found seems to contain some of the energy powering the portal\n- Drag it into the portal to improve the portal's stability, draining the crystal"
+		GOAL_PORTAL_ACTIVATED: return "The portal is stabilized, at least a bit. You can send supplies back home easily enough, but objects sent through the portal in the other direction require more energy, as they are traveling from a low-energy plane to a high-energy plane.\n"
 
 func get_goal_reward() -> WorkResult:
 	match goal_state:

@@ -67,9 +67,10 @@ func delete(keep_children):
 	if self.has_method('on_delete_tree_node'):
 		self.on_delete_tree_node()
 	var parent_tree_node = get_parent_tree_node()
+	tree_item.set_metadata(0, null)
 	tree_item.call_deferred('free')
-	parent_tree_node.emit_signal('contents_updated')
 	self.queue_free()
+	parent_tree_node.emit_signal('contents_updated')
 
 # Text to display on the TreeItem this metadata is associated with
 func get_label():
@@ -81,7 +82,7 @@ func set_label(new_val):
 		tree_item.set_text(0, label)
 	emit_signal("label_updated", label)
 
-func can_accept_multi_drop(dropped_item_list:Array[TreeItem])->bool:
+func can_accept_multi_drop(dropped_item_list:Array)->bool:
 	for dropped_item in dropped_item_list:
 		var dropped_node = dropped_item.get_metadata(0)
 		if  !can_accept_drop(dropped_node):

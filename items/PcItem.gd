@@ -1,7 +1,8 @@
 extends WorkAwareItem
 class_name PcItem
 
-signal status_updated()
+signal status_updated() # hp/focus/etc updates
+signal stats_updated() # str/dex/con/etc updates
 
 const TASK_MEDITATE = 'M'
 const TASK_REST = 'R'
@@ -23,6 +24,8 @@ var hp=1000:
 	set(val):
 		if hp != val:
 			hp = max(0, min(val, get_max_hp()))
+			if val <= 0: set_is_tired(true)
+			elif val >= get_max_hp(): check_tiredness_recovery()
 			emit_signal('status_updated')
 var focus=1000:
 	get:
@@ -30,21 +33,56 @@ var focus=1000:
 	set(val):
 		if focus != val:
 			focus = max(0, min(val, get_max_focus()))
+			if val <= 0: set_is_tired(true)
+			elif val >= get_max_hp(): check_tiredness_recovery()
 			emit_signal('status_updated')
 
 var buff_list:BuffList = BuffList.new()
+var is_tired:bool = false
+
+func check_tiredness_recovery():
+	if is_tired and hp >= get_max_hp() and focus >= get_max_hp():
+		set_is_tired(false)
+
+func get_is_tired():
+	return is_tired
+
+func set_is_tired(val):
+	if val == is_tired: 
+		return
+	print('Setting is_tired: ', val)
+	is_tired = val
+	if is_tired:
+		self.set_label_suffix('_trd', '[tired]')
+	else:
+		self.set_label_suffix('_trd', null)
+	update_work_amounts()
+
+func update_work_amounts():
+	print('update_work_amounts')
+	if get_is_tired():
+		work_amounts = {}
+		update_parent_work_amounts()
+		var task = get_active_work_task()
+		if task != null:
+			task.contributor_work_amount_changed()
+	else:
+		super.update_work_amounts()
 
 func add_buff(buff:Buff):
 	buff_list.add_buff(buff, get_id())
 	status_updated.emit()
+	stats_updated.emit()
 
 func remove_buff(buff:Buff):
 	buff_list.remove_buff(buff)
 	status_updated.emit()
+	stats_updated.emit()
 
 func remove_buff_by_id(buff_id):
 	buff_list.remove_buff_by_id(buff_id)
 	status_updated.emit()
+	stats_updated.emit()
 
 func _init():
 	super._init()
@@ -143,6 +181,12 @@ func get_hp_regen():
 
 func get_stats():
 	return stats
+
+func get_stat(stat_id)->StatEntry:
+	if stat_id >= 0 and stat_id < stats.size():
+		return stats[stat_id]
+	push_error('Invalid stat_id in ', get_label(), ': ', stat_id)
+	return null
 
 func derive_manual_labor_work(effort:float, bonus:float)->float:
 	# manual labor is 

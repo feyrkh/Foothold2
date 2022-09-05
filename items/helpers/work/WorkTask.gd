@@ -4,6 +4,7 @@ class_name WorkTask
 
 signal contributors_updated(work_task)
 signal work_amounts_updated(work_task)
+signal work_progress_updated(work_task)
 signal work_complete(work_task)
 signal work_resolved(work_task)
 
@@ -18,6 +19,7 @@ var task_id # ID of the task inside the task source, calling IdManager.get_game_
 var work_result:WorkResult = WorkResult.new()
 var work_needed:Dictionary = {} # WorkTypes -> WorkAmount
 var task_name
+var short_task_name
 var location_filter = DEFAULT_LOCATION_FILTER
 var contributors
 var max_contributors:int = 99
@@ -141,6 +143,7 @@ func apply_effort(worker:WorkAwareItem):
 	if is_work_complete():
 		return
 	var work_amounts = worker.get_work_amounts()
+	var applied_some_work = false
 	for work_type in work_amounts:
 		var needed:WorkAmount = work_needed.get(work_type)
 		var provided:WorkAmount = work_amounts.get(work_type)
@@ -151,12 +154,15 @@ func apply_effort(worker:WorkAwareItem):
 			if applied != __last_work_amounts.get(needed.work_type, 0):
 				__last_work_amounts[needed.work_type] = applied
 				contributor_work_amount_changed()
+			applied_some_work = true
 			total_work_applied += applied
 			needed.apply_effort(applied)
 			provided.on_effort_applied(work_type, applied)
 			if needed.get_total_effort() < 0.000001:
 				work_needed.erase(work_type)
 				work_amounts.erase(work_type)
+		if applied_some_work:
+			work_progress_updated.emit(self)
 	if is_work_complete():
 		var source = get_source()
 		if source and source.has_method('pre_work_task_complete'):
@@ -210,6 +216,14 @@ static func allowed_position_relationship(work_target:GameItem, requestor:GameIt
 func get_label():
 	return task_name
 
+func get_label_suffix():
+	var complete_percent = 0
+	if total_work_needed > 0:
+		complete_percent = 100.0 * total_work_applied / total_work_needed
+	if complete_percent > 0:
+		return '[%s:%.0f%%]' % [task_name if !short_task_name else short_task_name, complete_percent]
+	return '[%s]' % [task_name if !short_task_name else short_task_name]
+
 func get_description():
 	if total_work_needed > total_work_applied:
 		return pre_desc if pre_desc != null else ''
@@ -220,8 +234,8 @@ func is_valid_contributor(contributor:GameItem) -> bool:
 	return max_contributors > get_contributors().size()
 
 func add_contributor_id(contributor_id):
+	var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
 	if work_result != null:
-		var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
 		if !contributor:
 			push_error('Failed to find contributor to task ', task_name, '(', task_id, ') in add_contributor_id: ', contributor_id)
 		else:
@@ -231,14 +245,14 @@ func add_contributor_id(contributor_id):
 	contributors[contributor_id] = 1
 	__contributor_items_cache = null
 	__work_amounts_cache = null
-	work_resolved.connect(IdManager.get_item_by_id(contributor_id).clear_active_task)
+	work_resolved.connect(contributor.clear_active_task)
 	contributors_updated.emit(self)
 	work_amounts_updated.emit(self)
 
 func remove_contributor_id(contributor_id):
+	var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
 	if work_result != null:
 		work_result.resolve_work_stop_results(contributor_id)
-		var contributor:WorkAwareItem = IdManager.get_item_by_id(contributor_id)
 		if !contributor:
 			push_error('Failed to find contributor to task ', task_name, '(', task_id, ') in remove_contributor_id: ', contributor_id)
 		else:
@@ -250,7 +264,7 @@ func remove_contributor_id(contributor_id):
 		contributors = null
 	__contributor_items_cache = null
 	__work_amounts_cache = null
-	work_resolved.disconnect(IdManager.get_item_by_id(contributor_id).clear_active_task)
+	work_resolved.disconnect(contributor.clear_active_task)
 	contributors_updated.emit(self)
 	work_amounts_updated.emit(self)
 

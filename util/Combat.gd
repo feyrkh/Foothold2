@@ -6,6 +6,12 @@ const PHYSICAL_DEFEND = 1
 const IMPURE_VIS_ATTACK = 2
 const IMPURE_VIS_DEFEND = 3 
 
+static func get_damage_short_element(damage_type:int):
+	match damage_type:
+		PHYSICAL_ATTACK, PHYSICAL_DEFEND: return 'phys'
+		IMPURE_VIS_ATTACK, IMPURE_VIS_DEFEND: return 'vis'
+		_: return 'unknown'
+
 static func is_attack(damage_type:int)->bool:
 	return posmod(damage_type, 2) == 0
 
@@ -22,8 +28,8 @@ static func get_equipment_description(equip_type:int)->String:
 static func get_attack_type_name_opts(power_type, equipment_type, attack_power) -> Array[String]:
 	var attack_type_opts = [] # verbs or '<noun> of'
 	match power_type:
-		Combat.PHYSICAL_ATTACK: attack_type_opts.append_array(['Striking', '', 'Smashing'])
-		Combat.PHYSICAL_DEFEND: attack_type_opts.append_array(['Wall of', '', 'Guardian'])
+		Combat.PHYSICAL_ATTACK: attack_type_opts.append_array(['Striking', '', 'Smashing', 'Hammer', 'Impacting'])
+		Combat.PHYSICAL_DEFEND: attack_type_opts.append_array(['Wall of', '', 'Guardian', 'Blocking', 'Deflecting'])
 		Combat.IMPURE_VIS_ATTACK: 
 			attack_type_opts.append_array(['Force', 'Vis', 'Shoving'])
 		Combat.IMPURE_VIS_DEFEND:
@@ -45,7 +51,7 @@ static func get_equipment_name_opts(power_type, equipment_type, attack_power) ->
 		_:
 			push_error('Unexpected power_type when generating equipment_name in a new style: ', power_type)
 	match equipment_type:
-		Combat.EQUIP_HAND_TO_HAND: equipment_opts.append_array(['Fist', 'Foot', 'Kick', 'Leg', 'Hand', 'Grapple', 'Brawl', 'Grip', 'Knee', 'Elbow'])
+		Combat.EQUIP_HAND_TO_HAND: equipment_opts.append_array(['Fist', 'Foot', 'Kick', 'Leg', 'Hand', 'Grapple', 'Brawl', 'Grip', 'Knee', 'Elbow', 'Sole'])
 		_: 
 			push_error('Unexpected equipment_type when generating equipment_name in a new style: ', equipment_type)
 			equipment_opts.append_array(['Style'])

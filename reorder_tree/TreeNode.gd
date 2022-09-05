@@ -80,7 +80,7 @@ func set_label(new_val):
 	label = new_val
 	if tree_item:
 		tree_item.set_text(0, label)
-	emit_signal("label_updated", label)
+	label_updated.emit(label)
 
 func can_accept_multi_drop(dropped_item_list:Array)->bool:
 	for dropped_item in dropped_item_list:
@@ -99,10 +99,12 @@ func can_accept_drop(dropped_item:TreeNode):
 		# always allow things to be moved around inside a container it's already in
 		Events.drag_error_msg.emit(null)
 		return true
-	if dropped_item.get_allowed_owner_lock_id() != null:
+	var allowed_lock_id = dropped_item.get_allowed_owner_lock_id()
+	if allowed_lock_id != null:
 		# an item that's locked to this owner can always be moved onto its owner, and never moved onto a non-owner
 		Events.drag_error_msg.emit("%s is locked to its current owner" % [dropped_item.get_label()])
-		return dropped_item.get_allowed_owner_lock_id() == self.get_owner_lock_id()
+		var actual_lock_id = self.get_owner_lock_id()
+		return typeof(allowed_lock_id) == typeof(actual_lock_id) and allowed_lock_id == actual_lock_id
 	if dropped_item.get_tags().has(Tags.TAG_FOLDER):
 		var cur_child:TreeItem = dropped_item.tree_item.get_first_child()
 		while cur_child != null:

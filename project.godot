@@ -44,6 +44,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://items/helpers/CombatStance.gd"
 }, {
+"base": "Container",
+"class": &"CombatStanceEntry",
+"language": &"GDScript",
+"path": "res://ui/sections/combat/CombatStanceEntry.gd"
+}, {
 "base": "GameItem",
 "class": &"CombatStyle",
 "language": &"GDScript",
@@ -185,6 +190,11 @@ _global_script_classes=[{
 "path": "res://reorder_tree/TreeNode.gd"
 }, {
 "base": "Object",
+"class": &"Util",
+"language": &"GDScript",
+"path": "res://util/Util.gd"
+}, {
+"base": "Object",
 "class": &"Vis",
 "language": &"GDScript",
 "path": "res://util/Vis.gd"
@@ -247,6 +257,7 @@ _global_script_class_icons={
 "Combat": "",
 "CombatManual": "",
 "CombatStance": "",
+"CombatStanceEntry": "",
 "CombatStyle": "",
 "Config": "",
 "DropdownMenu": "",
@@ -275,6 +286,7 @@ _global_script_class_icons={
 "Stats": "",
 "Tags": "",
 "TreeNode": "",
+"Util": "",
 "Vis": "",
 "WorkAmount": "",
 "WorkAwareItem": "",

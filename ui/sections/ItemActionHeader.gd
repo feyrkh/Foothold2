@@ -7,7 +7,7 @@ func _ready():
 	$MoveRightButton.connect('pressed', func():Events.move_action_panel.emit(get_action_panel_container(), true))
 	if game_item != null:
 		game_item.connect('pin_status_changed', pin_status_changed)
-		game_item.connect('label_updated', func(new_label): $GameItemLabel.text = new_label)
+		game_item.connect('label_updated', $GameItemLabel.set_text)
 		$GameItemLabel.text = get_game_item().get_label()
 		if game_item.has_signal('room_size_updated'):
 			game_item.connect('room_size_updated', on_room_size_updated)

@@ -10,6 +10,7 @@ signal description_updated(game_item)
 var _item_id:int
 var action_panel:GameItemActions
 var callbacks = null
+var label_suffixes
 
 func get_ignore_field_names() -> Dictionary:
 	return {'action_panel':true, 'tree_item':true}
@@ -111,3 +112,31 @@ func find_child_items(filter_func:Callable, deep=false, skip_item=null):
 
 func on_delete_tree_node():
 	Events.emit_signal('deleting_game_item', self)
+
+func set_label_suffix(suffix_key:String, suffix_val):
+	if suffix_val == null:
+		if label_suffixes != null:
+			label_suffixes.erase(suffix_key)
+			if label_suffixes.size() == 0:
+				label_suffixes = null
+	else:
+		if label_suffixes == null:
+			label_suffixes = {}
+		label_suffixes[suffix_key] = suffix_val
+	var label = get_label()
+	if tree_item:
+		tree_item.set_text(0, label)
+	label_updated.emit(label)
+
+func get_label():
+	if label_suffixes == null:
+		return super.get_label()
+	return super.get_label() + ' '+get_label_suffix_string()
+
+func get_label_suffix_string():
+	if label_suffixes == null:
+		return ''
+	var keys = label_suffixes.keys()
+	keys.sort()
+	return ' '+' '.join(keys.map(func(k): return label_suffixes.get(k)))
+

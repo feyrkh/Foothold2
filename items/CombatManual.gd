@@ -50,8 +50,7 @@ func get_work_task_options(requestor:GameItem) -> Dictionary:
 	var result = {}
 	var student_id = requestor.get_id()
 	var build_task_id = "%s%s" % [TASK_PREFIX_BUILD_STYLE, student_id]
-	var build_task = WorkTaskOption.build(build_task_id, "Create combat style", get_id(), "Study this manual and piece together a unique fighting style based on the philosophy it describes.", WorkTask.LOCATION_HELD | WorkTask.LOCATION_SHARED_ROOM)
-	#TASK_CLEAR_DEBRIS: WorkTaskOption.build(TASK_CLEAR_DEBRIS, "Clear", get_id(), "Tidy up, make space in the room, and possibly uncover useful objects.", WorkTask.LOCATION_SHARED_ROOM)
+	var build_task = WorkTaskOption.build(build_task_id, "Study combat", get_id(), "Study this manual and piece together a unique fighting style based on the philosophy it describes.", WorkTask.LOCATION_HELD | WorkTask.LOCATION_SHARED_ROOM)
 	result[build_task_id] = build_task
 	return self.work_task_list.filter_task_options(result, requestor)
 
@@ -63,6 +62,7 @@ func build_work_task(next_task:WorkTaskOption, contributor:GameItem) -> WorkTask
 
 func build_new_style_task(next_task:WorkTaskOption, contributor:GameItem):
 	var task = WorkTask.new()
+	task.auto_resolve = true
 	var student_id = contributor.get_id()
 	task.set_work_needed({WorkTypes.CONCENTRATION: 10 * (5 * previous_studiers.get(student_id, 0) + 1)})
 	var pre_desc = "Blood, sweat, and intense concentration go into the genesis of a new fighting style.\nLuck and experience play a large role in the quality of the outcome."
@@ -72,7 +72,7 @@ func build_new_style_task(next_task:WorkTaskOption, contributor:GameItem):
 	return task
 
 func pre_work_task_complete(task:WorkTask):
-	var style = build_combat_style()
+	var style = build_combat_style(task.get_contributors()[0])
 	task.post_desc = "A new style is born: "+style.get_label()
 
 # Called when creating object from WorkResult
@@ -87,7 +87,7 @@ func finish_resolve_item_result(args:Dictionary):
 	scale_multiplier = args.get(KEY_SCALING_MULTIPLIER, 0.1)
 	equipment_type = args.get(KEY_EQUIPMENT_TYPE, Combat.EQUIP_HAND_TO_HAND)
 
-func build_combat_style():
+func build_combat_style(student:PcItem):
 	var stances = []
 	var stance_power = []
 	var stance_power_total = 0
@@ -97,16 +97,17 @@ func build_combat_style():
 		stance_power.append(randf() + power_variance)
 		stance_power_total += stance_power[i]
 	for i in range(stance_count):
-		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier))
+		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier, 'Stance #'+str(i+1)))
 	var result = CombatStyle.build(stances, equipment_type)
 	var holder = get_closest_nonfolder_parent()
-	study_owner_id = holder.get_id() # just in case...
+	result.__combatant = student
+	study_owner_id = student.get_id() # just in case...
 	result.allowed_owner_lock_id = study_owner_id
 	previous_studiers[study_owner_id] = previous_studiers.get(study_owner_id, 0) + 1
-	Events.add_game_item.emit(result, holder, true)
+	Events.add_game_item.emit(result, student, true)
 	return result
 
-func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier)->CombatStance:
+func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier, stance_name)->CombatStance:
 	var damage_type_ratio_dict = damage_type_options[randi() % damage_type_options.size()]
 	if !(damage_type_ratio_dict is Dictionary):
 		damage_type_ratio_dict = {damage_type_ratio_dict:1.0}
@@ -124,7 +125,7 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 		scaling_stat = scaling_stat_options
 	else:
 		scaling_stat = scaling_stat_options[randi() % scaling_stat_options.size()]
-	return CombatStance.build(damage_types, final_damage, scaling_stat, stat_min, scaling_multiplier)
+	return CombatStance.build(damage_types, final_damage, scaling_stat, stat_min, scaling_multiplier, stance_name)
 
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
@@ -148,18 +149,6 @@ func get_allowed_tags()->Dictionary:
 	
 func get_description():
 	return "A collection of notes on various %s combat techniques. A dedicated student could develop one or more fighting styles from this." % [Combat.get_equipment_description(equipment_type)]
-
-func start_create_combat_style():
-	var study_owner = get_closest_nonfolder_parent()
-	if !study_owner is PcItem:
-		refresh_action_panel()
-		return
-	study_owner_id = study_owner.get_id()
-	var concentration_needed = pow(5, previous_studiers.get(study_owner_id, 0)) * 10
-#	init_work_party(get_label(), Tags.WORK_PARTY_DESIGN_COMBAT_STYLE, {WorkTypes.CONCENTRATION: concentration_needed})
-#	work_paused = true
-#	update_work_amounts()
-	refresh_action_panel()
 
 # takes an array of POSITIVE numbers (negatives will cause weird stuff)
 # adds variance to each - 0 means that given [0, 1] we'll end up with [0, 1] as output; variance=1 means it becomes [0+1, 1+1] => [1, 2] => [0.333, 0.667]

@@ -1,14 +1,16 @@
+Label
+VBoxContainer
+HBoxContainer
+GridContainer
+PanelContainer
+Control
 ColorRect
 MarginContainer
-Label
 TextureButton
-VBoxContainer
 Button
-HBoxContainer
 HFlowContainer
 FancyTree (FancyTree.gd)
 ScreenLimitedPopupMenu (ScreenLimitedPopupMenu.gd)
-GridContainer
 HSeparator
 PopupMenu
 Section (Section.gd)
@@ -18,8 +20,6 @@ Timer
 Tree
 ItemList
 CenterContainer
-Control
-PanelContainer
 LineEdit
 PopupPanel
 HSplitContainer

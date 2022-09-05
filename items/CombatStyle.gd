@@ -3,6 +3,7 @@ class_name CombatStyle
 
 var equipment_type = Combat.EQUIP_HAND_TO_HAND
 var stances:Array # of CombatStance, except in post_config
+var __combatant
 
 static func build(stances, equipment_type) -> CombatStyle:
 	var result = CombatStyle.new()
@@ -22,7 +23,7 @@ func finish_resolve_item_result(args):
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"
 
-const ACTION_SECTIONS = ['Description']
+const ACTION_SECTIONS = ['Description', 'CombatStyle']
 func get_action_sections()->Array:
 	return ACTION_SECTIONS
 
@@ -36,7 +37,6 @@ func get_allowed_tags()->Dictionary:
 	
 func get_description():
 	return null
-
 
 func generate_random_name()->String:
 	var adjective_opts = [] # Bestial, Defensive, etc
@@ -64,23 +64,13 @@ func generate_random_name()->String:
 	if adjective_opts.is_empty(): adjective_opts = [["Unknown", "Generic", "Mediocre"]]
 	if attack_type_opts.is_empty(): attack_type_opts = [[""]]
 	
-	var adj = adjective_opts[randi() % adjective_opts.size()]
-	var att = attack_type_opts[randi() % attack_type_opts.size()]
-	var equ = equipment_opts[randi() % equipment_opts.size()]
-	if adj is Array:
-		adj = adj[randi() % adj.size()]
-	if att is Array:
-		att = att[randi() % att.size()]
-	if equ is Array:
-		equ = equ[randi() % equ.size()]
-	var result = ""
-	if adj: result += adj
-	if att:
-		if result != "" and result[-1] != ' ': result += " "
-		result += att
-	if equ:
-		if result != "" and result[-1] != ' ': result += " "
-		result += equ
-	if result != "" and result[-1] != ' ': result += " "
-	result += "Style"
-	return result
+	return Util.generate_option_string([adjective_opts, attack_type_opts, equipment_opts, 'Style'])
+
+func get_combatant():
+	if __combatant == null:
+		var possible_combatant = get_closest_nonfolder_parent()
+		if possible_combatant.has_method('get_stats'):
+			__combatant = possible_combatant
+		else:
+			push_error("Tried to use non-stat-having item as combatant for a CombatStyle: ", possible_combatant.get_label())
+	return __combatant

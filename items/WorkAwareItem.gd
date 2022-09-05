@@ -135,9 +135,6 @@ func get_work_amount(work_type:String) -> WorkAmount:
 func get_work_task_id():
 	return active_work_task_id
 
-func set_active_work_task_id(val):
-	active_work_task_id = val
-
 func get_work_task_owner_id():
 	return active_work_task_owner_id
 
@@ -149,6 +146,10 @@ func get_work_task_paused()->bool:
 
 func set_active_work_task_paused(val:bool):
 	active_work_task_paused = val
+	if val or !get_active_work_task():
+		self.set_label_suffix('work', null)
+	else:
+		self.set_label_suffix('work', get_active_work_task().get_label_suffix())
 
 func get_active_work_task():
 	if __active_work_task == null and active_work_task_id != null:
@@ -166,7 +167,13 @@ func set_current_task(next_task_owner_id, next_task_id):
 	task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
 	if task != null:
 		task.add_contributor_id(get_id())
+		self.set_label_suffix('work', task.get_label_suffix())
+	else:
+		self.set_label_suffix('work', null)
 	__active_work_task = task
+
+func on_work_applied_to_current_task(task:WorkTask):
+	self.set_label_suffix('work', task.get_label_suffix())
 
 func clear_active_task(calling_task):
 	set_current_task(null, null)

@@ -17,3 +17,8 @@ res://items/GameItem.gd
 res://items/helpers/work/WorkResult.gd
 res://items/WorkAwareItem.gd
 res://items/helpers/work/WorkTask.gd
+res://ui/sections/WorkNeededSection.gd
+res://util/Numbers.gd
+res://Game.tscn
+res://GameTickTimer.gd
+res://Game.gd

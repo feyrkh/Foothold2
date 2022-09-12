@@ -42,6 +42,7 @@ func refresh():
 					var provided = work_provided.get(needed.work_type, null)
 					list.update_work_amount(needed, provided, item)
 		if need_full_refresh:
+			print('need_full_refresh=true')
 			list.clear_items()
 			for needed in work_needed:
 				var provided = work_provided.get(needed.work_type, null)

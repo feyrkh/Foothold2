@@ -20,16 +20,182 @@ static func is_defend(damage_type:int) -> bool:
 
 const EQUIP_HAND_TO_HAND = 0
 
+static func balanced_options(balance, attack_opts, defend_opts, balance_opts=null):
+	match balance:
+		'attack': return attack_opts
+		'defend': return defend_opts
+		_: 
+			if balance_opts == null:
+				var result = []
+				result = result.append_array(attack_opts)
+				result = result.append_array(defend_opts)
+				return result
+			
+
 static func get_equipment_description(equip_type:int)->String:
 	match equip_type:
 		EQUIP_HAND_TO_HAND: return "hand-to-hand"
 		_: return "unknown"
 
-static func get_attack_type_name_opts(power_type, equipment_type, attack_power) -> Array[String]:
+static func get_damage_type_attack_names(damage_type) -> Array:
+	var opts = []
+	match damage_type:
+		Combat.PHYSICAL_ATTACK: 
+			opts.append_array(['Slam', 'Drop', 'Attack', 'Strike', 'Punch', 'Chop'])
+		Combat.PHYSICAL_DEFEND: 
+			opts.append_array(['Block', 'Guard', 'Defense', 'Parry', 'Deflect'])
+		Combat.IMPURE_VIS_ATTACK: 
+			opts.append_array(['Bolt', 'Wave', 'Fan'])
+		Combat.IMPURE_VIS_DEFEND:
+			opts.append_array(['Cloak', 'Aura', 'Shell'])
+	return opts
+
+static func get_damage_type_nouns(power_type) -> Array:
+	var opts = []
+	match power_type:
+		Combat.PHYSICAL_ATTACK: 
+			opts.append_array(['Hammer', 'Twist'])
+		Combat.PHYSICAL_DEFEND: 
+			opts.append_array(['Wall'])
+		Combat.IMPURE_VIS_ATTACK: 
+			opts.append_array(['Spirit'])
+		Combat.IMPURE_VIS_DEFEND:
+			opts.append_array(['Spirit'])
+	return opts
+
+static func get_equipment_type_attack_names(equipment_type, balance) -> Array:
+	var opts = []
+	match equipment_type:
+		Combat.EQUIP_HAND_TO_HAND: 
+			opts.append_array(balanced_options(balance, 
+				['Choke', 'Fist', 'Foot', 'Kick', 'Leg', 'Hand', 'Knee', 'Elbow', 'Sole'], 
+				['Grip', 'Block', 'Dodge', 'Diversion'], 
+				['Brawl', 'Grapple', 'Claw'] 
+			))
+	return opts
+	
+static func get_equipment_type_nouns(equipment_type, balance) -> Array:
+	var opts = []
+	match equipment_type:
+		Combat.EQUIP_HAND_TO_HAND: opts.append_array([])
+	opts.append(['Ghost', 'Spirit', 'Heaven', 'Mouse', 'Monkey', 'Dragon', 'Phoenix', 'Demon', 'Angel', 'Shaman'])
+	return opts
+
+static func get_scaling_stat_attack_names(scaling_stat:int, balance) -> Array:
+	var opts = []
+	match scaling_stat:
+		Stats.STRENGTH:
+			opts.append_array(['Bite', 'Fist', 'Pummel', 'Toss', 'Attack', 'Strike', 'Elbow'])
+		Stats.AGILITY:
+			opts.append_array(['Grab', 'Dart', 'Leap', 'Trip', 'Drop', 'Pose', 'Stance'])
+		Stats.INTELLIGENCE:
+			opts.append_array(['Meditation', 'Insight'])
+		Stats.WILLPOWER:
+			opts.append_array(['Palm', 'Will'])
+		Stats.CONSTITUTION:
+			opts.append_array(['Choke','Grapple', 'Clutch', 'Clinch', 'Tackle'])
+		Stats.PERCEPTION:
+			opts.append_array([])
+	return opts
+
+static func get_scaling_stat_nouns(scaling_stat:int, balance) -> Array:
+	var opts = []
+	match scaling_stat:
+		Stats.STRENGTH:
+			opts.append_array(['Avalanche', 'Bull', 'Bear', 'Muscle', 'Barbarian', 'Hammer',])
+		Stats.AGILITY:
+			opts.append_array(['Shadow', 'Cat', 'Weasel', 'Thief'])
+		Stats.INTELLIGENCE:
+			opts.append_array(['Owl', 'Serpent', 'Dragon', 'Mind', 'Crystal'])
+		Stats.WILLPOWER:
+			opts.append_array(['Cloud', 'Wisdom', 'Palm', 'Panic', 'Ghost', 'Storm', 'Agony'])
+		Stats.CONSTITUTION:
+			opts.append_array(['Ox', 'Boar', 'Madman'])
+		Stats.PERCEPTION:
+			opts.append_array(['Eye', 'Ear', 'Vision', 'Touch', 'Eagle', 'Phantom'])
+	return opts
+
+static func get_scaling_stat_adjectives(scaling_stat:int, balance) -> Array:
+	var opts = []
+	match scaling_stat:
+		Stats.STRENGTH:
+			opts.append_array(['Fatal', 'Terrible', 'Beastly'])
+		Stats.AGILITY:
+			opts.append_array(['Quick', 'Maneuvering', 'Twisted', 'Agile', 'Airborne', 'Assassin'])
+		Stats.INTELLIGENCE:
+			opts.append_array(['Sharp', 'Brilliant', 'Tricky', 'Uncounted', 'Premeditated', 'Thoughtful'])
+		Stats.WILLPOWER:
+			opts.append_array(['Drunken', 'Persistent', 'Adamant', 'Blessed', 'Dreaded'])
+		Stats.CONSTITUTION:
+			opts.append_array(['Terrible', 'Guardian'])
+		Stats.PERCEPTION:
+			opts.append_array(['Invisible', 'Unseen', 'Inescapable'])
+	return opts
+
+static func get_scaling_stat_verbs(scaling_stat:int, balance) -> Array:
+	var opts = []
+	match scaling_stat:
+		Stats.STRENGTH:
+			opts.append_array(['Crushing', 'Smashing'])
+		Stats.AGILITY:
+			opts.append_array(['Floating','Leaping'])
+		Stats.INTELLIGENCE:
+			opts.append_array(['Unveiling', 'Maneuvering', 'Tricking'])
+		Stats.WILLPOWER:
+			opts.append_array(['Submitting', 'Resisting', 'Transforming'])
+		Stats.CONSTITUTION:
+			opts.append_array(['Enduring', 'Fatiguing', ''])
+		Stats.PERCEPTION:
+			opts.append_array(['Revealing', 'Concealing', 'Searching', ])
+	return opts
+
+static func get_damage_type_adjectives(power_type) -> Array:
+	var opts = []
+	match power_type:
+		Combat.PHYSICAL_ATTACK: 
+			opts.append_array([])
+		Combat.PHYSICAL_DEFEND: 
+			opts.append_array(['Guardian'])
+		Combat.IMPURE_VIS_ATTACK: 
+			opts.append_array([])
+		Combat.IMPURE_VIS_DEFEND:
+			opts.append_array([])
+	return opts
+	
+static func get_equipment_type_adjectives(equipment_type, balance) -> Array:
+	var opts = []
+	match equipment_type:
+		Combat.EQUIP_HAND_TO_HAND: opts.append_array(['Unarmed', 'Empty-handed', 'Open', 'Closed'])
+	opts.append_array(balanced_options(balance, ['Mighty'], ['Cowardly'], []))
+	opts.append(['Wicked', 'Righteous', 'Blessed', 'Cursed'])
+	return opts
+	
+static func get_damage_type_verbs(power_type) -> Array:
+	var opts = []
+	match power_type:
+		Combat.PHYSICAL_ATTACK: 
+			opts.append_array(['Striking', 'Smashing', 'Impacting'])
+		Combat.PHYSICAL_DEFEND: 
+			opts.append_array(['Blocking', 'Deflecting'])
+		Combat.IMPURE_VIS_ATTACK: 
+			opts.append_array(['Shoving'])
+		Combat.IMPURE_VIS_DEFEND:
+			opts.append_array(['Veiling'])
+	return opts
+	
+static func get_equipment_type_verbs(equipment_type, balance) -> Array:
+	var opts = []
+	match equipment_type:
+		Combat.EQUIP_HAND_TO_HAND: opts.append_array([])
+	return opts
+	
+static func get_attack_type_name_opts(power_type, equipment_type, attack_power) -> Array:
 	var attack_type_opts = [] # verbs or '<noun> of'
 	match power_type:
-		Combat.PHYSICAL_ATTACK: attack_type_opts.append_array(['Striking', '', 'Smashing', 'Hammer', 'Impacting'])
-		Combat.PHYSICAL_DEFEND: attack_type_opts.append_array(['Wall of', '', 'Guardian', 'Blocking', 'Deflecting'])
+		Combat.PHYSICAL_ATTACK: 
+			attack_type_opts.append_array(['Striking', '', 'Smashing', 'Hammer', 'Impacting'])
+		Combat.PHYSICAL_DEFEND: 
+			attack_type_opts.append_array(['Wall of', '', 'Guardian', 'Blocking', 'Deflecting'])
 		Combat.IMPURE_VIS_ATTACK: 
 			attack_type_opts.append_array(['Force', 'Vis', 'Shoving'])
 		Combat.IMPURE_VIS_DEFEND:
@@ -39,7 +205,7 @@ static func get_attack_type_name_opts(power_type, equipment_type, attack_power) 
 			attack_type_opts.append(null)
 	return attack_type_opts
 
-static func get_equipment_name_opts(power_type, equipment_type, attack_power) -> Array[String]:
+static func get_equipment_name_opts(power_type, equipment_type, attack_power) -> Array:
 	var equipment_opts = [] # nouns
 	match power_type:
 		Combat.PHYSICAL_ATTACK: pass

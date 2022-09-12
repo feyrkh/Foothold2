@@ -162,12 +162,14 @@ func set_current_task(next_task_owner_id, next_task_id):
 	var task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
 	if task != null:
 		task.remove_contributor_id(get_id())
+		task.work_progress_updated.disconnect(on_work_applied_to_current_task)
 	active_work_task_owner_id = next_task_owner_id
 	active_work_task_id = next_task_id
 	task = WorkTask.get_work_task(active_work_task_owner_id, active_work_task_id)
 	if task != null:
 		task.add_contributor_id(get_id())
 		self.set_label_suffix('work', task.get_label_suffix())
+		task.work_progress_updated.disconnect(on_work_applied_to_current_task)
 	else:
 		self.set_label_suffix('work', null)
 	__active_work_task = task

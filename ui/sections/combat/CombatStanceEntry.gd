@@ -47,6 +47,11 @@ func refresh():
 	var total_damage = stance.get_stance_value(combatant)
 	AttackTypes.text = ", ".join(attack_entries.map(damage_type_desc.bind(total_damage)))
 	DefendTypes.text = ", ".join(defend_entries.map(damage_type_desc.bind(total_damage)))
+	var scaling_multiplier = stance.get_stat_scaling_multiplier(combatant)
+	var scaling_stat = Stats.get_stat_name(stance.scaling_stat)
+	var scaling_stat_value = combatant.get_stat(stance.scaling_stat).get_stat_value()
+	AttackTypes.hint_tooltip = "%s scaled by: %.1f%% (min %s: %d)" % [scaling_stat, scaling_multiplier*100, scaling_stat, stance.stat_min]
+	DefendTypes.hint_tooltip = AttackTypes.hint_tooltip
 
 func damage_type_desc(damage_type, total_damage):
 	return Numbers.format_number(total_damage[damage_type])+' '+Combat.get_damage_short_element(damage_type)

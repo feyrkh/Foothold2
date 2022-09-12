@@ -57,7 +57,7 @@ func load_game(save_file_path:String):
 	ui.queue_free()
 	await get_tree().process_frame
 	ui = load('res://ui/GameUI.tscn').instantiate()
-	add_child(ui)
+	find_child('GameUIContainer').add_child(ui)
 	ui.name = 'GameUI'
 	await get_tree().process_frame
 	Events.emit_signal("pre_load_game")

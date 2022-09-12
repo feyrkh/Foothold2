@@ -34,14 +34,14 @@ var focus=1000:
 		if focus != val:
 			focus = max(0, min(val, get_max_focus()))
 			if val <= 0: set_is_tired(true)
-			elif val >= get_max_hp(): check_tiredness_recovery()
+			elif val >= get_max_focus(): check_tiredness_recovery()
 			emit_signal('status_updated')
 
 var buff_list:BuffList = BuffList.new()
 var is_tired:bool = false
 
 func check_tiredness_recovery():
-	if is_tired and hp >= get_max_hp() and focus >= get_max_hp():
+	if is_tired and hp >= get_max_hp() and focus >= get_max_focus():
 		set_is_tired(false)
 
 func get_is_tired():
@@ -54,21 +54,21 @@ func set_is_tired(val):
 	is_tired = val
 	if is_tired:
 		self.set_label_suffix('_trd', '[tired]')
+		self.set_label_suffix('work', null)
 	else:
 		self.set_label_suffix('_trd', null)
 	update_work_amounts()
 
-func update_work_amounts():
-	print('update_work_amounts')
+func get_work_amounts() -> Dictionary: # string->WorkAmount
 	if get_is_tired():
-		work_amounts = {}
-		update_parent_work_amounts()
-		var task = get_active_work_task()
-		if task != null:
-			task.contributor_work_amount_changed()
-	else:
-		super.update_work_amounts()
-
+		return {}
+	return super.get_work_amounts()
+	
+func get_work_amount(work_type:String) -> WorkAmount:
+	if get_is_tired():
+		return null
+	return super.get_work_amount(work_type)
+	
 func add_buff(buff:Buff):
 	buff_list.add_buff(buff, get_id())
 	status_updated.emit()
@@ -103,6 +103,7 @@ func post_config(c):
 
 func _ready():
 	super._ready()
+	check_tiredness_recovery()
 	Events.game_tick.connect(regen_status)
 
 func get_work_task_options(requestor:GameItem) -> Dictionary:
@@ -171,7 +172,7 @@ func get_max_focus():
 	return stats[Stats.WILLPOWER].get_stat_value() * 0.075 + stats[Stats.INTELLIGENCE].get_stat_value() * 0.025
 
 func get_focus_regen():
-	return (1.0 / 60) * buff_list.get_multiply_bonus(BUFF_FOCUS_REGEN) + buff_list.get_add_bonus(BUFF_FOCUS_REGEN)
+	return (1.0 / 6) * buff_list.get_multiply_bonus(BUFF_FOCUS_REGEN) + buff_list.get_add_bonus(BUFF_FOCUS_REGEN)
 
 func get_max_hp():
 	return stats[Stats.CONSTITUTION].get_stat_value() * 0.5

@@ -97,7 +97,7 @@ func build_combat_style(student:PcItem):
 		stance_power.append(randf() + power_variance)
 		stance_power_total += stance_power[i]
 	for i in range(stance_count):
-		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier, 'Stance #'+str(i+1)))
+		stances.append(generate_stance(damage_type_options, (stance_power[i]/stance_power_total) * style_power_adjustment, scaling_stat_options, stat_min, scale_multiplier))
 	var result = CombatStyle.build(stances, equipment_type)
 	var holder = get_closest_nonfolder_parent()
 	result.__combatant = student
@@ -107,7 +107,7 @@ func build_combat_style(student:PcItem):
 	Events.add_game_item.emit(result, student, true)
 	return result
 
-func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier, stance_name)->CombatStance:
+func generate_stance(damage_type_options, base_power, scaling_stat_options, stat_min, scaling_multiplier)->CombatStance:
 	var damage_type_ratio_dict = damage_type_options[randi() % damage_type_options.size()]
 	if !(damage_type_ratio_dict is Dictionary):
 		damage_type_ratio_dict = {damage_type_ratio_dict:1.0}
@@ -120,12 +120,8 @@ func generate_stance(damage_type_options, base_power, scaling_stat_options, stat
 	var final_damage = {}
 	for i in range(damage_types.size()):
 		final_damage[damage_types[i]] = (damage_division[i]/total_damage_division) * base_power
-	var scaling_stat
-	if !(scaling_stat_options is Array):
-		scaling_stat = scaling_stat_options
-	else:
-		scaling_stat = scaling_stat_options[randi() % scaling_stat_options.size()]
-	return CombatStance.build(damage_types, final_damage, scaling_stat, stat_min, scaling_multiplier, stance_name)
+	var scaling_stat = Util.choose_nested_option(scaling_stat_options, Stats.STRENGTH)
+	return CombatStance.build(damage_types, final_damage, scaling_stat, stat_min, scaling_multiplier, equipment_type)
 
 func get_action_panel_scene_path()->String:
 	return "res://items/FlexibleItemActions.tscn"

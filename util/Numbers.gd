@@ -19,7 +19,7 @@ static func format_rate(rate:float) -> String:
 		result = '+'+result
 	return result + UNITS[units]
 
-static func format_number(val) -> String:
+static func format_number(val, format='%.1f') -> String:
 	var exp = 0
 	if val != 0:
 		while val >= 1000:
@@ -28,7 +28,7 @@ static func format_number(val) -> String:
 		while val < 0.001:
 			val *= 1000
 			exp -= 3
-		var result = ("%.3f" % [val]).rstrip('0').trim_suffix('.')
+		var result = (format % [val]).rstrip('0').trim_suffix('.')
 		if exp != 0:
 			result += 'e'+str(exp)
 		return result
